@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - التحليلات المتقدمة</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* نظام الألوان */
+            --bg-primary: #0C0F17;
+            --bg-secondary: #121522;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #E6E6E6;
+            --text-secondary: rgba(230, 230, 230, 0.6);
+            --accent-primary: #FF6D1F;
+            --border-light: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --status-success: #76DE68;
+            --status-warning: #FFB347;
+            --status-info: #4A90E2;
+            
+            /* Spacing */
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* ===== NAVBAR ===== */
+        .seller-navbar {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+            padding: 0 var(--space-lg);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .btn {
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 8px;
+            border: none;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+        }
+
+        /* ===== ANALYTICS GRID ===== */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .analytics-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: var(--space-lg);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .chart-container {
+            height: 200px;
+            position: relative;
+        }
+
+        .analytics-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== INSIGHTS ===== */
+        .insights-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: var(--space-lg);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+
+        .insight-item {
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .insight-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-success { background: rgba(118, 222, 104, 0.1); color: var(--status-success); }
+        .icon-warning { background: rgba(255, 179, 71, 0.1); color: var(--status-warning); }
+        .icon-info { background: rgba(74, 144, 226, 0.1); color: var(--status-info); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: var(--space-md);
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .analytics-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="seller-navbar">
+        <a href="dashboard.html" class="nav-brand">
+            <i class="fas fa-chart-bar"></i>
+            <span>التحليلات المتقدمة</span>
+        </a>
+        <div class="nav-actions">
+            <button class="btn btn-secondary" onclick="window.history.back()">
+                <i class="fas fa-arrow-right"></i>
+                رجوع
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Analytics Grid -->
+        <div class="analytics-grid">
+            <!-- تحويل الزوار -->
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-users"></i>
+                        تحويل الزوار
+                    </h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="conversionChart"></canvas>
+                </div>
+                <div class="analytics-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">4.2%</div>
+                        <div class="stat-label">معدل التحويل</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">1,248</div>
+                        <div class="stat-label">زوار الموقع</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">52</div>
+                        <div class="stat-label">تحويلات</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- مصادر الزوار -->
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-traffic-light"></i>
+                        مصادر الزوار
+                    </h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trafficChart"></canvas>
+                </div>
+                <div class="analytics-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">65%</div>
+                        <div class="stat-label">مباشر</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">22%</div>
+                        <div class="stat-label">السوشيال ميديا</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">13%</div>
+                        <div class="stat-label">بحث</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights -->
+        <div class="insights-section">
+            <h2 class="card-title" style="margin-bottom: var(--space-lg);">
+                <i class="fas fa-lightbulb"></i>
+                رؤى وتحليلات
+            </h2>
+            
+            <div class="insights-grid">
+                <div class="insight-item">
+                    <div class="insight-header">
+                        <div class="insight-icon icon-success">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>نقاط القوة</h4>
+                    </div>
+                    <ul style="color: var(--text-secondary); font-size: 13px; padding-right: var(--space-md);">
+                        <li>معدل التحويل ارتفع 15% هذا الشهر</li>
+                        <li>منتجك "تيشيرت قطني" هو الأكثر مشاهدة</li>
+                        <li>74% من العملاء يزورون من الموبايل</li>
+                    </ul>
+                </div>
+                
+                <div class="insight-item">
+                    <div class="insight-header">
+                        <div class="insight-icon icon-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h4>فرص التحسين</h4>
+                    </div>
+                    <ul style="color: var(--text-secondary); font-size: 13px; padding-right: var(--space-md);">
+                        <li>معدل الخروج من السلة 68% (مرتفع)</li>
+                        <li>صفحات المنتجات تحتاج تحسين SEO</li>
+                        <li>وقت تحميل الصور يمكن تحسينه</li>
+                    </ul>
+                </div>
+                
+                <div class="insight-item">
+                    <div class="insight-header">
+                        <div class="insight-icon icon-info">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h4>اقتراحات</h4>
+                    </div>
+                    <ul style="color: var(--text-secondary); font-size: 13px; padding-right: var(--space-md);">
+                        <li>أضف عروض خاصة للمنتجات قليلة المبيعات</li>
+                        <li>حسن صور المنتجات لجذب المزيد من الزوار</li>
+                        <li>استهدف الجمهور المناسب عبر السوشيال ميديا</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // تهيئة الرسوم البيانية
+        function initializeCharts() {
+            // Conversion Chart
+            const conversionCtx = document.getElementById('conversionChart').getContext('2d');
+            new Chart(conversionCtx, {
+                type: 'line',
+                data: {
+                    labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+                    datasets: [{
+                        label: 'معدل التحويل',
+                        data: [3.2, 3.5, 3.8, 4.0, 4.1, 4.2],
+                        borderColor: '#FF6D1F',
+                        backgroundColor: 'rgba(255, 109, 31, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            ticks: { color: 'rgba(255, 255, 255, 0.6)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        },
+                        x: {
+                            ticks: { color: 'rgba(255, 255, 255, 0.6)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        }
+                    }
+                }
+            });
+
+            // Traffic Chart
+            const trafficCtx = document.getElementById('trafficChart').getContext('2d');
+            new Chart(trafficCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['مباشر', 'السوشيال ميديا', 'بحث', 'إحالات'],
+                    datasets: [{
+                        data: [65, 22, 13, 5],
+                        backgroundColor: ['#FF6D1F', '#4A90E2', '#76DE68', '#FFB347'],
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 255, 255, 0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.6)',
+                                padding: 15
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+        });
+    </script>
+</body>
+</html>

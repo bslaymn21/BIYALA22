@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تواصل معنا - BIYALA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Background -->
+    <div class="page-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-text">BIYALA</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">الرئيسية</a>
+                <a href="terms.html" class="nav-link">الشروط والأحكام</a>
+                <a href="privacy.html" class="nav-link">سياسة الخصوصية</a>
+                <a href="return-policy.html" class="nav-link">سياسة الإرجاع</a>
+                <a href="contact.html" class="nav-link">تواصل معنا</a>
+                <a href="login.html" class="nav-cta">دخول</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="page-wrapper">
+        <div class="content-container">
+            <div class="page-header">
+                <h1 class="page-title">تواصل معنا</h1>
+                <p class="page-subtitle">
+                    نحن هنا لمساعدتك! تواصل مع فريق Biyala للحصول على أي مساعدة أو استفسار.
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-envelope-open-text"></i>
+                    إرسال رسالة
+                </h2>
+
+                <form class="contact-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="name">
+                                <i class="fas fa-user"></i>
+                                الاسم الكامل *
+                            </label>
+                            <input type="text" id="name" class="form-control" required placeholder="أدخل اسمك الكامل">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="email">
+                                <i class="fas fa-envelope"></i>
+                                البريد الإلكتروني *
+                            </label>
+                            <input type="email" id="email" class="form-control" required
+                                placeholder="example@domain.com">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="phone">
+                                <i class="fas fa-phone"></i>
+                                رقم الهاتف *
+                            </label>
+                            <input type="tel" id="phone" class="form-control" required placeholder="01XXXXXXXXX">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="subject">
+                                <i class="fas fa-tag"></i>
+                                نوع الاستفسار *
+                            </label>
+                            <select id="subject" class="form-select" required>
+                                <option value="">اختر نوع الاستفسار</option>
+                                <option value="technical">دعم فني</option>
+                                <option value="sales">استفسارات المبيعات</option>
+                                <option value="returns">إرجاع واستبدال</option>
+                                <option value="complaint">شكوى</option>
+                                <option value="partnership">شراكة وتعاون</option>
+                                <option value="other">أخرى</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="order-number">
+                            <i class="fas fa-receipt"></i>
+                            رقم الطلب (إن وجد)
+                        </label>
+                        <input type="text" id="order-number" class="form-control" placeholder="رقم الطلب إن كان لديك">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="message">
+                            <i class="fas fa-comment-alt"></i>
+                            الرسالة *
+                        </label>
+                        <textarea id="message" class="form-control" required
+                            placeholder="اكتب رسالتك هنا..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="files">
+                            <i class="fas fa-paperclip"></i>
+                            إرفاق ملفات (اختياري)
+                        </label>
+                        <input type="file" id="files" class="form-control" multiple
+                            accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+                        <small style="color: var(--text-muted); display: block; margin-top: var(--space-xs);">
+                            يمكنك رفع الصور أو المستندات الداعمة (الحد الأقصى 5 ملفات، 10MB لكل ملف)
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <i class="fas fa-paper-plane"></i>
+                        إرسال الرسالة
+                    </button>
+                </form>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-headset"></i>
+                    قنوات الاتصال الأخرى
+                </h2>
+
+                <div class="contact-channels">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="contact-card">
+                                <div class="contact-icon" style="background: rgba(37, 211, 102, 0.1);">
+                                    <i class="fab fa-whatsapp" style="color: #25D366;"></i>
+                                </div>
+                                <h3>واتساب</h3>
+                                <p style="color: var(--text-secondary); margin: var(--space-sm) 0;">+20 10 1234 5678</p>
+                                <small style="color: var(--text-muted);">متاح من 9 صباحاً حتى 10 مساءً</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="contact-card">
+                                <div class="contact-icon" style="background: rgba(29, 161, 242, 0.1);">
+                                    <i class="fab fa-telegram" style="color: #1DA1F2;"></i>
+                                </div>
+                                <h3>تيليجرام</h3>
+                                <p style="color: var(--text-secondary); margin: var(--space-sm) 0;">@BiyalaSupport</p>
+                                <small style="color: var(--text-muted);">رد سريع على مدار الساعة</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="contact-card">
+                                <div class="contact-icon" style="background: rgba(255, 109, 31, 0.1);">
+                                    <i class="fas fa-phone-alt" style="color: var(--accent-primary);"></i>
+                                </div>
+                                <h3>الهاتف</h3>
+                                <p style="color: var(--text-secondary); margin: var(--space-sm) 0;">16535</p>
+                                <small style="color: var(--text-muted);">خط ساخن مجاني</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="contact-card">
+                                <div class="contact-icon" style="background: rgba(118, 222, 104, 0.1);">
+                                    <i class="fas fa-envelope" style="color: var(--status-success);"></i>
+                                </div>
+                                <h3>البريد الإلكتروني</h3>
+                                <p style="color: var(--text-secondary); margin: var(--space-sm) 0;">support@biyala.com
+                                </p>
+                                <small style="color: var(--text-muted);">رد خلال 24 ساعة عمل</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-clock"></i>
+                    أوقات العمل
+                </h2>
+
+                <div class="working-hours">
+                    <ul class="section-list">
+                        <li>
+                            <span class="list-item-title">الأحد - الخميس</span>
+                            9:00 صباحاً - 10:00 مساءً
+                        </li>
+                        <li>
+                            <span class="list-item-title">الجمعة</span>
+                            1:00 ظهراً - 10:00 مساءً
+                        </li>
+                        <li>
+                            <span class="list-item-title">السبت</span>
+                            10:00 صباحاً - 8:00 مساءً
+                        </li>
+                        <li>
+                            <span class="list-item-title">الدعم الفني</span>
+                            24/7 عبر البوت الذكي
+                        </li>
+                    </ul>
+
+                    <div class="alert alert-info mt-2">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>ملاحظة:</strong> في العطلات الرسمية، قد تكون أوقات العمل مختلفة.
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    العنوان
+                </h2>
+
+                <div class="address-section">
+                    <div class="address-card">
+                        <i class="fas fa-building"
+                            style="color: var(--accent-primary); font-size: 2rem; margin-bottom: var(--space-md);"></i>
+                        <h3 style="margin-bottom: var(--space-sm);">المقر الرئيسي</h3>
+                        <p style="color: var(--text-secondary); line-height: 1.6;">
+                            مدينة نصر، القاهرة، مصر<br>
+                            شارع مصطفى النحاس، برج التجاريين<br>
+                            الطابق العاشر، مكتب 1002
+                        </p>
+                    </div>
+
+                    <div class="map-placeholder" style="
+                        background: var(--bg-secondary);
+                        border-radius: var(--radius-md);
+                        padding: var(--space-lg);
+                        text-align: center;
+                        margin-top: var(--space-xl);
+                        border: 1px solid var(--border-light);
+                    ">
+                        <i class="fas fa-map"
+                            style="font-size: 3rem; color: var(--text-muted); margin-bottom: var(--space-md);"></i>
+                        <p style="color: var(--text-secondary);">خريطة موقعنا</p>
+                        <small style="color: var(--text-muted);">(سيتم إضافة الخريطة قريباً)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="terms.html"><i class="fas fa-file-contract"></i> الشروط والأحكام</a></li>
+                        <li><a href="privacy.html"><i class="fas fa-shield-alt"></i> سياسة الخصوصية</a></li>
+                        <li><a href="return-policy.html"><i class="fas fa-exchange-alt"></i> سياسة الإرجاع</a></li>
+                        <li><a href="contact.html"><i class="fas fa-envelope"></i> تواصل معنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>الدعم</h3>
+                    <ul class="footer-links">
+                        <li><a href="help-center.html"><i class="fas fa-question-circle"></i> مركز المساعدة</a></li>
+                        <li><a href="how-to-sell.html"><i class="fas fa-store"></i> كيف أبدأ البيع؟</a></li>
+                        <li><a href="faq.html"><i class="fas fa-comments"></i> أسئلة شائعة</a></li>
+                        <li><a href="support.html"><i class="fas fa-headset"></i> الدعم الفني</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>BIYALA</h3>
+                    <p
+                        style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-top: var(--space-md);">
+                        المنصة الأولى لدعم وترويج الماركات المصرية الناشئة
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2024 BIYALA. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .contact-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            text-align: center;
+            height: 100%;
+            transition: all var(--transition-normal);
+        }
+
+        .contact-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-5px);
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-md);
+            font-size: 24px;
+        }
+
+        .address-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+        }
+    </style>
+
+    <script>
+        // Form submission
+        document.querySelector('.contact-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                subject: document.getElementById('subject').value,
+                orderNumber: document.getElementById('order-number').value,
+                message: document.getElementById('message').value
+            };
+
+            // Validation
+            if (!formData.name || !formData.email || !formData.phone || !formData.subject || !formData.message) {
+                alert('يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+
+            // Phone validation
+            const phoneRegex = /^01[0-2,5]{1}[0-9]{8}$/;
+            if (!phoneRegex.test(formData.phone)) {
+                alert('يرجى إدخال رقم هاتف مصري صحيح');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                alert('يرجى إدخال بريد إلكتروني صحيح');
+                return;
+            }
+
+            // Simulate form submission
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+            submitBtn.disabled = true;
+
+            // Simulate API call
+            setTimeout(() => {
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> تم الإرسال بنجاح!';
+                submitBtn.style.background = 'linear-gradient(135deg, var(--status-success), #5CD85A)';
+
+                // Reset form
+                setTimeout(() => {
+                    this.reset();
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = '';
+
+                    // Show success message
+                    alert('شكراً لتواصلك معنا! سنرد عليك في أقرب وقت ممكن.');
+                }, 2000);
+            }, 1500);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            navbar.style.background = window.scrollY > 50
+                ? 'rgba(12, 15, 23, 0.98)'
+                : 'rgba(12, 15, 23, 0.95)';
+        });
+    </script>
+</body>
+
+</html>

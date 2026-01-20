@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - تسجيل الدخول للعملاء</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* نظام الألوان - نفس النسخة */
+            --bg-primary: #0C0F17;
+            --bg-secondary: #121522;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #E6E6E6;
+            --text-secondary: rgba(230, 230, 230, 0.6);
+            --text-muted: rgba(230, 230, 230, 0.4);
+            --accent-primary: #FF6D1F;
+            --accent-hover: #FF8B4A;
+            --status-success: #76DE68;
+            --status-warning: #FFB347;
+            --status-danger: #ED3F27;
+            --status-info: #4A90E2;
+
+            /* Borders */
+            --border-light: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --border-accent: rgba(255, 109, 31, 0.3);
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.16);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.24);
+
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 999px;
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 350ms ease;
+        }
+
+        /* ===== BASE TYPOGRAPHY ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+            font-weight: 400;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .login-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+        }
+
+        .particle-1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .particle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            right: 20%;
+            animation-delay: 5s;
+        }
+
+        .particle-3 {
+            width: 150px;
+            height: 150px;
+            top: 30%;
+            left: 10%;
+            animation-delay: 10s;
+        }
+
+        .particle-4 {
+            width: 250px;
+            height: 250px;
+            bottom: -125px;
+            left: 30%;
+            animation-delay: 15s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(100px, -50px) rotate(90deg);
+            }
+
+            50% {
+                transform: translate(-50px, 100px) rotate(180deg);
+            }
+
+            75% {
+                transform: translate(-100px, -50px) rotate(270deg);
+            }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+            position: relative;
+        }
+
+        /* ===== LOGIN CARD ===== */
+        .login-card {
+            width: 100%;
+            max-width: 450px;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CARD HEADER ===== */
+        .card-header {
+            padding: var(--space-xl);
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+            background: rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--status-success));
+        }
+
+        .brand-logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-md);
+            color: var(--bg-primary);
+            font-size: 28px;
+            box-shadow: 0 8px 24px rgba(255, 109, 31, 0.3);
+            transition: all var(--transition-normal);
+        }
+
+        .brand-logo:hover {
+            transform: rotate(15deg) scale(1.1);
+            box-shadow: 0 12px 32px rgba(255, 109, 31, 0.4);
+        }
+
+        .card-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-xs);
+        }
+
+        .card-header p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        /* ===== CARD BODY ===== */
+        .card-body {
+            padding: var(--space-xl);
+        }
+
+        /* ===== TRUST BADGES ===== */
+        .trust-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+            justify-content: center;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+        }
+
+        .trust-badge:hover {
+            border-color: var(--border-accent);
+            color: var(--text-primary);
+        }
+
+        .trust-badge i {
+            color: var(--accent-primary);
+            font-size: 14px;
+        }
+
+        /* ===== LOGIN FORM ===== */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+            transition: color var(--transition-fast);
+        }
+
+        .form-input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 50px 15px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--text-primary);
+            transition: all var(--transition-normal);
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(255, 109, 31, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 18px;
+            transition: color var(--transition-fast);
+        }
+
+        .form-input:focus+.form-icon {
+            color: var(--accent-primary);
+        }
+
+        .toggle-password {
+            position: absolute;
+            left: 45px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px;
+            transition: color var(--transition-fast);
+            z-index: 2;
+        }
+
+        .toggle-password:hover {
+            color: var(--text-primary);
+        }
+
+        /* ===== FORM OPTIONS ===== */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-primary);
+            cursor: pointer;
+        }
+
+        .remember-me label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            font-size: 13px;
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-fast);
+            position: relative;
+            padding-bottom: 2px;
+        }
+
+        .forgot-password::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent-primary);
+            transition: width var(--transition-normal);
+        }
+
+        .forgot-password:hover {
+            color: var(--accent-hover);
+        }
+
+        .forgot-password:hover::after {
+            width: 100%;
+        }
+
+        /* ===== LOGIN BUTTON ===== */
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--bg-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 109, 31, 0.3);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .login-button:hover::after {
+            left: 100%;
+        }
+
+        .login-button.loading {
+            background: var(--status-info);
+            pointer-events: none;
+        }
+
+        .login-button.success {
+            background: var(--status-success);
+            pointer-events: none;
+        }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: var(--space-lg) 0;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-light);
+        }
+
+        .divider span {
+            padding: 0 var(--space-sm);
+        }
+
+        /* ===== SOCIAL LOGIN ===== */
+        .social-login {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+
+        @media (max-width: 480px) {
+            .social-login {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .social-btn {
+            padding: 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .social-btn:hover {
+            border-color: var(--border-medium);
+            background: rgba(255, 255, 255, 0.03);
+            transform: translateY(-1px);
+        }
+
+        .social-btn.google:hover {
+            border-color: #DB4437;
+            color: #DB4437;
+        }
+
+        .social-btn.facebook:hover {
+            border-color: #1877F2;
+            color: #1877F2;
+        }
+
+        .social-btn i {
+            font-size: 18px;
+        }
+
+        /* ===== REGISTER LINK ===== */
+        .register-link {
+            text-align: center;
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--border-light);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .register-link a {
+            color: var(--accent-primary);
+            font-weight: 600;
+            text-decoration: none;
+            margin-right: 5px;
+            transition: color var(--transition-fast);
+        }
+
+        .register-link a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        /* ===== DEMO SECTION ===== */
+        .demo-section {
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            background: rgba(255, 179, 71, 0.05);
+            border: 1px solid rgba(255, 179, 71, 0.2);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            color: var(--status-warning);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-sm);
+        }
+
+        .demo-header h4 {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .quick-login-btn {
+            background: rgba(255, 179, 71, 0.1);
+            border: 1px solid rgba(255, 179, 71, 0.3);
+            color: var(--status-warning);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .quick-login-btn:hover {
+            background: rgba(255, 179, 71, 0.2);
+            transform: scale(1.05);
+        }
+
+        .demo-credentials {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+            margin-top: var(--space-sm);
+        }
+
+        @media (max-width: 480px) {
+            .demo-credentials {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .credential-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .credential-item strong {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .credential-item span {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        /* ===== ERROR MESSAGES ===== */
+        .error-message {
+            font-size: 12px;
+            color: var(--status-danger);
+            margin-top: 5px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-5px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            pointer-events: none;
+            width: 90%;
+            max-width: 350px;
+        }
+
+        .toast {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md) var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            box-shadow: var(--shadow-lg);
+            animation: toastIn 0.3s ease forwards;
+            pointer-events: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast-icon {
+            font-size: 20px;
+            color: var(--status-success);
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: var(--space-xs);
+            transition: color var(--transition-fast);
+        }
+
+        .toast-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* ===== FOOTER ===== */
+        .login-footer {
+            text-align: center;
+            margin-top: var(--space-xl);
+            padding-top: var(--space-lg);
+            color: var(--text-muted);
+            font-size: 12px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-top: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* ===== MOBILE OPTIMIZATIONS ===== */
+        @media (max-width: 480px) {
+            :root {
+                --space-lg: 16px;
+                --space-xl: 20px;
+            }
+
+            .login-container {
+                padding: var(--space-sm);
+                padding-top: 40px;
+            }
+
+            .login-card {
+                max-width: 100%;
+                border-radius: var(--radius-lg);
+            }
+
+            .card-header {
+                padding: var(--space-lg);
+            }
+
+            .brand-logo {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .card-header h1 {
+                font-size: 22px;
+            }
+
+            .card-body {
+                padding: var(--space-lg);
+            }
+
+            .form-input {
+                padding: 14px 45px 14px 14px;
+                font-size: 14px;
+            }
+
+            .login-button {
+                padding: 14px;
+                font-size: 14px;
+            }
+
+            .social-btn {
+                padding: 12px;
+                font-size: 13px;
+            }
+
+            .demo-credentials {
+                grid-template-columns: 1fr;
+                gap: var(--space-xs);
+            }
+
+            .toast-container {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                width: auto;
+            }
+        }
+
+        /* ===== LOADING STATE ===== */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--bg-primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== PASSWORD STRENGTH ===== */
+        .password-strength {
+            margin-top: 5px;
+            height: 4px;
+            background: var(--border-light);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background 0.3s ease;
+            border-radius: var(--radius-full);
+        }
+
+        .strength-weak {
+            background: var(--status-danger);
+        }
+
+        .strength-medium {
+            background: var(--status-warning);
+        }
+
+        .strength-strong {
+            background: var(--status-success);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="login-bg">
+        <div class="bg-particle particle-1"></div>
+        <div class="bg-particle particle-2"></div>
+        <div class="bg-particle particle-3"></div>
+        <div class="bg-particle particle-4"></div>
+    </div>
+
+    <!-- Main Login Container -->
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Card Header -->
+            <div class="card-header">
+                <div class="brand-logo">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h1>BIYALA للعملاء</h1>
+                <p>تسوق آمن، تواصل مباشر، تجربة فريدة</p>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+                <!-- Trust Badges -->
+                <div class="trust-badges">
+                    <div class="trust-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>آمن 100%</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-bolt"></i>
+                        <span>سرعة</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-headset"></i>
+                        <span>دعم فني</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-lock"></i>
+                        <span>خصوصية</span>
+                    </div>
+                </div>
+
+                <!-- Login Form -->
+                <form class="login-form" id="loginForm">
+                    <!-- Email Input -->
+                    <div class="form-group">
+                        <label class="form-label" for="email">
+                            <i class="fas fa-envelope"></i>
+                            البريد الإلكتروني
+                        </label>
+                        <div class="form-input-wrapper">
+                            <input type="email" class="form-input" id="email" placeholder="أدخل بريدك الإلكتروني"
+                                required autocomplete="email">
+                            <i class="fas fa-envelope form-icon"></i>
+                        </div>
+                        <div class="error-message" id="emailError">
+                            <i class="fas fa-exclamation-circle"></i>
+                            بريد إلكتروني غير صحيح
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="form-group">
+                        <label class="form-label" for="password">
+                            <i class="fas fa-lock"></i>
+                            كلمة المرور
+                        </label>
+                        <div class="form-input-wrapper">
+                            <input type="password" class="form-input" id="password" placeholder="أدخل كلمة المرور"
+                                required minlength="6" autocomplete="current-password">
+                            <i class="fas fa-lock form-icon"></i>
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength">
+                            <div class="strength-bar" id="strengthBar"></div>
+                        </div>
+                        <div class="error-message" id="passwordError">
+                            <i class="fas fa-exclamation-circle"></i>
+                            كلمة المرور يجب أن تكون 6 أحرف على الأقل
+                        </div>
+                    </div>
+
+                    <!-- Form Options -->
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">تذكرني</label>
+                        </label>
+                        <a href="#" class="forgot-password" id="forgotPassword">
+                            نسيت كلمة المرور؟
+                        </a>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="login-button" id="loginButton">
+                        <i class="fas fa-sign-in-alt"></i>
+                        تسجيل الدخول
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span>أو سجل الدخول باستخدام</span>
+                </div>
+
+                <!-- Social Login -->
+                <div class="social-login">
+                    <button type="button" class="social-btn google" id="googleLogin">
+                        <i class="fab fa-google"></i>
+                        Google
+                    </button>
+                    <button type="button" class="social-btn facebook" id="facebookLogin">
+                        <i class="fab fa-facebook-f"></i>
+                        Facebook
+                    </button>
+                </div>
+
+                <!-- Register Link -->
+                <div class="register-link">
+                    <span>ليس لديك حساب؟</span>
+                    <a href="#" id="registerLink">أنشئ حساب جديد</a>
+                </div>
+
+                <!-- Demo Section -->
+                <div class="demo-section">
+                    <div class="demo-header">
+                        <h4>
+                            <i class="fas fa-vial"></i>
+                            بيانات تجريبية للاختبار
+                        </h4>
+                        <button class="quick-login-btn" id="quickLoginBtn">
+                            <i class="fas fa-bolt"></i>
+                            تسجيل سريع
+                        </button>
+                    </div>
+                    <div class="demo-credentials">
+                        <div class="credential-item">
+                            <strong>البريد:</strong>
+                            <span>customer@biyala.com</span>
+                        </div>
+                        <div class="credential-item">
+                            <strong>كلمة المرور:</strong>
+                            <span>123456</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <div>© 2024 BIYALA. جميع الحقوق محفوظة.</div>
+                <div class="footer-links">
+                    <a href="#">الشروط والأحكام</a>
+                    <a href="#">سياسة الخصوصية</a>
+                    <a href="#">الدعم الفني</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // ===== SYSTEM CONFIGURATION =====
+        const CONFIG = {
+            demoUsers: [
+                { email: "customer@biyala.com", password: "123456", name: "العميل التجريبي" },
+                { email: "ahmed@biyala.com", password: "123456", name: "أحمد محمد" },
+                { email: "sara@biyala.com", password: "123456", name: "سارة عبدالله" }
+            ],
+            validationRules: {
+                email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                password: /^(?=.*[A-Za-z])(?=.*\d).{6,}$/
+            },
+            storageKeys: {
+                email: 'biyala_customer_email',
+                password: 'biyala_customer_password',
+                remember: 'biyala_customer_remember'
+            }
+        };
+
+        // ===== CORE SYSTEM =====
+        class LoginSystem {
+            constructor() {
+                this.initialize();
+                this.bindEvents();
+            }
+
+            initialize() {
+                this.loadSavedCredentials();
+                this.setupPasswordStrength();
+                this.showWelcomeMessage();
+            }
+
+            bindEvents() {
+                // Form submission
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+
+                // Toggle password visibility
+                document.getElementById('togglePassword').addEventListener('click', () => {
+                    this.togglePasswordVisibility();
+                });
+
+                // Quick login
+                document.getElementById('quickLoginBtn').addEventListener('click', () => {
+                    this.fillDemoCredentials();
+                });
+
+                // Forgot password
+                document.getElementById('forgotPassword').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleForgotPassword();
+                });
+
+                // Register link
+                document.getElementById('registerLink').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleRegister();
+                });
+
+                // Social login
+                document.getElementById('googleLogin').addEventListener('click', () => {
+                    this.handleSocialLogin('google');
+                });
+
+                document.getElementById('facebookLogin').addEventListener('click', () => {
+                    this.handleSocialLogin('facebook');
+                });
+
+                // Password strength
+                document.getElementById('password').addEventListener('input', () => {
+                    this.updatePasswordStrength();
+                });
+            }
+
+            // ===== CREDENTIALS MANAGEMENT =====
+            loadSavedCredentials() {
+                const savedEmail = localStorage.getItem(CONFIG.storageKeys.email);
+                const savedPassword = localStorage.getItem(CONFIG.storageKeys.password);
+                const rememberMe = localStorage.getItem(CONFIG.storageKeys.remember) === 'true';
+
+                if (savedEmail && savedPassword && rememberMe) {
+                    document.getElementById('email').value = savedEmail;
+                    document.getElementById('password').value = savedPassword;
+                    document.getElementById('rememberMe').checked = true;
+                    this.updatePasswordStrength();
+                }
+            }
+
+            saveCredentials(email, password, remember) {
+                if (remember) {
+                    localStorage.setItem(CONFIG.storageKeys.email, email);
+                    localStorage.setItem(CONFIG.storageKeys.password, password);
+                    localStorage.setItem(CONFIG.storageKeys.remember, 'true');
+                } else {
+                    localStorage.removeItem(CONFIG.storageKeys.email);
+                    localStorage.removeItem(CONFIG.storageKeys.password);
+                    localStorage.removeItem(CONFIG.storageKeys.remember);
+                }
+            }
+
+            // ===== VALIDATION =====
+            validateForm() {
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                let isValid = true;
+
+                this.hideAllErrors();
+
+                // Email validation
+                if (!email || !CONFIG.validationRules.email.test(email)) {
+                    this.showError('emailError', 'يرجى إدخال بريد إلكتروني صحيح');
+                    isValid = false;
+                }
+
+                // Password validation
+                if (!password || password.length < 6) {
+                    this.showError('passwordError', 'كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            showError(elementId, message) {
+                const element = document.getElementById(elementId);
+                element.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+                element.style.display = 'flex';
+
+                const input = element.parentElement.querySelector('.form-input');
+                if (input) {
+                    input.style.borderColor = 'var(--status-danger)';
+                    input.style.animation = 'shake 0.5s ease';
+                    setTimeout(() => {
+                        input.style.animation = '';
+                    }, 500);
+                }
+            }
+
+            hideAllErrors() {
+                document.querySelectorAll('.error-message').forEach(el => {
+                    el.style.display = 'none';
+                });
+
+                document.querySelectorAll('.form-input').forEach(el => {
+                    el.style.borderColor = 'var(--border-light)';
+                });
+            }
+
+            // ===== PASSWORD STRENGTH =====
+            setupPasswordStrength() {
+                this.updatePasswordStrength();
+            }
+
+            updatePasswordStrength() {
+                const password = document.getElementById('password').value;
+                const strengthBar = document.getElementById('strengthBar');
+                let strength = 0;
+
+                if (password.length >= 6) strength = 1;
+                if (password.length >= 8 && /[A-Z]/.test(password)) strength = 2;
+                if (password.length >= 10 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) strength = 3;
+
+                const classes = ['strength-weak', 'strength-medium', 'strength-strong'];
+                const percents = ['33%', '66%', '100%'];
+
+                strengthBar.className = 'strength-bar ' + (strength > 0 ? classes[strength - 1] : '');
+                strengthBar.style.width = strength > 0 ? percents[strength - 1] : '0%';
+            }
+
+            togglePasswordVisibility() {
+                const passwordInput = document.getElementById('password');
+                const icon = document.getElementById('togglePassword').querySelector('i');
+
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+
+                passwordInput.focus();
+            }
+
+            // ===== LOGIN PROCESS =====
+            async handleLogin() {
+                if (!this.validateForm()) return;
+
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const rememberMe = document.getElementById('rememberMe').checked;
+
+                const user = CONFIG.demoUsers.find(u =>
+                    u.email === email && u.password === password
+                );
+
+                if (user) {
+                    this.saveCredentials(email, password, rememberMe);
+                    await this.showLoginSuccess(user.name);
+                    this.redirectToDashboard();
+                } else {
+                    this.showError('passwordError', 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+                }
+            }
+
+            async showLoginSuccess(userName) {
+                const loginBtn = document.getElementById('loginButton');
+                const originalHTML = loginBtn.innerHTML;
+
+                // Show loading
+                loginBtn.innerHTML = '<div class="loading-spinner"></div>';
+                loginBtn.classList.add('loading');
+                loginBtn.disabled = true;
+
+                // Show success toast
+                this.showToast(`مرحباً ${userName}!`, 'success');
+
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Show success state
+                loginBtn.innerHTML = '<i class="fas fa-check"></i> نجحت العملية!';
+                loginBtn.classList.remove('loading');
+                loginBtn.classList.add('success');
+            }
+
+            redirectToDashboard() {
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+            }
+
+            // ===== DEMO FEATURES =====
+            fillDemoCredentials() {
+                const demoUser = CONFIG.demoUsers[0];
+                document.getElementById('email').value = demoUser.email;
+                document.getElementById('password').value = demoUser.password;
+                document.getElementById('rememberMe').checked = true;
+                this.updatePasswordStrength();
+                this.hideAllErrors();
+                this.showToast('تم تعبئة بيانات الدخول التجريبية', 'info');
+            }
+
+            // ===== SOCIAL LOGIN =====
+            handleSocialLogin(provider) {
+                this.showToast(`جاري فتح نافذة تسجيل الدخول بـ ${provider === 'google' ? 'Google' : 'Facebook'}...`, 'info');
+                // In a real app, you would redirect to OAuth endpoint
+            }
+
+            // ===== OTHER HANDLERS =====
+            handleForgotPassword() {
+                const email = document.getElementById('email').value.trim();
+
+                if (!email || !CONFIG.validationRules.email.test(email)) {
+                    this.showToast('يرجى إدخال بريد إلكتروني صحيح أولاً', 'warning');
+                    document.getElementById('email').focus();
+                    return;
+                }
+
+                this.showToast(`سيتم إرسال رابط إعادة تعيين كلمة المرور إلى ${email}`, 'info');
+
+                // Simulate sending reset email
+                setTimeout(() => {
+                    this.showToast('تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني', 'success');
+                }, 1500);
+            }
+
+            handleRegister() {
+                this.showToast('جاري تحويلك إلى صفحة التسجيل...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'register.html';
+                }, 1500);
+            }
+
+            // ===== UI UTILITIES =====
+            showToast(message, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+
+                const icons = {
+                    success: 'fas fa-check-circle',
+                    error: 'fas fa-exclamation-circle',
+                    warning: 'fas fa-exclamation-triangle',
+                    info: 'fas fa-info-circle'
+                };
+
+                const iconColor = {
+                    success: 'var(--status-success)',
+                    error: 'var(--status-danger)',
+                    warning: 'var(--status-warning)',
+                    info: 'var(--status-info)'
+                };
+
+                toast.innerHTML = `
+                    <i class="${icons[type] || icons.info} toast-icon" style="color: ${iconColor[type] || iconColor.info}"></i>
+                    <div class="toast-message">${message}</div>
+                    <button class="toast-close">&times;</button>
+                `;
+
+                container.appendChild(toast);
+
+                // Close button
+                toast.querySelector('.toast-close').addEventListener('click', () => {
+                    toast.style.animation = 'toastIn 0.3s ease reverse forwards';
+                    setTimeout(() => toast.remove(), 300);
+                });
+
+                // Auto remove
+                setTimeout(() => {
+                    if (toast.parentNode === container) {
+                        toast.style.animation = 'toastIn 0.3s ease reverse forwards';
+                        setTimeout(() => toast.remove(), 300);
+                    }
+                }, 5000);
+            }
+
+            showWelcomeMessage() {
+                setTimeout(() => {
+                    this.showToast('مرحباً بك في BIYALA! أفضل تجربة تسوق رقمية', 'info');
+                }, 1000);
+            }
+        }
+
+        // ===== INITIALIZE SYSTEM =====
+        document.addEventListener('DOMContentLoaded', () => {
+            new LoginSystem();
+        });
+
+        // ===== MOBILE OPTIMIZATIONS =====
+        if (window.innerWidth <= 480) {
+            // Prevent zoom on focus
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('focus', () => {
+                    document.body.style.zoom = "100%";
+                });
+            });
+
+            // Better touch feedback
+            document.querySelectorAll('button, a').forEach(element => {
+                element.addEventListener('touchstart', () => {
+                    element.style.opacity = '0.8';
+                });
+
+                element.addEventListener('touchend', () => {
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                    }, 150);
+                });
+            });
+        }
+
+        // ===== PERFORMANCE OPTIMIZATIONS =====
+        // Defer non-critical animations
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.bg-particle').forEach(particle => {
+                    particle.style.animationPlayState = 'running';
+                });
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

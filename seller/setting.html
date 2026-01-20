@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - الإعدادات</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* نظام الألوان */
+            --bg-primary: #0C0F17;
+            --bg-secondary: #121522;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #E6E6E6;
+            --text-secondary: rgba(230, 230, 230, 0.6);
+            --text-muted: rgba(230, 230, 230, 0.4);
+            --accent-primary: #FF6D1F;
+            --accent-hover: #FF8B4A;
+            --status-success: #76DE68;
+            --status-warning: #FFB347;
+            --status-danger: #ED3F27;
+            --status-info: #4A90E2;
+
+            /* Borders */
+            --border-light: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --border-accent: rgba(255, 109, 31, 0.3);
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.16);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 999px;
+        }
+
+        /* ===== BASE TYPOGRAPHY ===== */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+            font-weight: 400;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== NAVBAR ===== */
+        .seller-navbar {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+            padding: 0 var(--space-lg);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .btn {
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-md);
+            border: none;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-danger {
+            background-color: var(--status-danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #FF5252;
+        }
+
+        /* ===== SIDEBAR TOGGLE ===== */
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            padding: var(--space-sm);
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .sidebar-toggle:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ===== MOBILE SIDEBAR OVERLAY ===== */
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* ===== MOBILE SIDEBAR ===== */
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-light);
+            z-index: 2001;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .mobile-sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-header {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 20px;
+            padding: var(--space-xs);
+            border-radius: var(--radius-sm);
+        }
+
+        .sidebar-close:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ===== SIDEBAR CONTENT ===== */
+        .sidebar-content {
+            padding: var(--space-md);
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: var(--space-lg) 0 var(--space-md);
+            padding: 0 var(--space-md);
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .sidebar-item {
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-primary);
+        }
+
+        .sidebar-item.active {
+            background: rgba(255, 109, 31, 0.1);
+            color: var(--accent-primary);
+            border-right: 3px solid var(--accent-primary);
+        }
+
+        .sidebar-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* ===== CURRENT SECTION HEADER ===== */
+        .current-section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+            margin-top: var(--space-lg);
+        }
+
+        .section-header-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 109, 31, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-primary);
+            font-size: 20px;
+        }
+
+        .section-header-text h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        .section-header-text p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+        }
+
+        @media (min-width: 1024px) {
+            .main-container {
+                max-width: 1200px;
+                padding: var(--space-xl);
+            }
+        }
+
+        /* ===== SETTINGS CONTENT ===== */
+        .settings-content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xl);
+        }
+
+        .settings-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            display: none;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        /* ===== FORM STYLES ===== */
+        .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-sm);
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-label.required::after {
+            content: ' *';
+            color: var(--status-danger);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(255, 109, 31, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--space-xs);
+            line-height: 1.4;
+        }
+
+        /* ===== TOGGLE SWITCH ===== */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-sm);
+        }
+
+        .toggle-label {
+            flex: 1;
+        }
+
+        .toggle-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--space-xs);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: var(--radius-full);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: var(--accent-primary);
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* ===== PAYMENT METHODS ===== */
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+        }
+
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--accent-primary);
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .payment-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== SOCIAL LINKS ===== */
+        .social-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .social-input-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .social-prefix {
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 14px;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        /* ===== NOTIFICATION SETTINGS ===== */
+        .notification-category {
+            margin-bottom: var(--space-xl);
+        }
+
+        .notification-category h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        /* ===== DANGER ZONE ===== */
+        .danger-zone {
+            background: rgba(237, 63, 39, 0.05);
+            border: 1px solid rgba(237, 63, 39, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-top: var(--space-xl);
+        }
+
+        .danger-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-lg);
+            background: rgba(237, 63, 39, 0.1);
+            border: 1px solid rgba(237, 63, 39, 0.3);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .danger-info h4 {
+            color: var(--status-danger);
+            margin-bottom: var(--space-xs);
+        }
+
+        .danger-info p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+        }
+
+        /* ===== SAVE BUTTON ===== */
+        .save-section {
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-primary);
+            padding: var(--space-lg);
+            border-top: 1px solid var(--border-light);
+            margin-top: var(--space-xl);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-md);
+        }
+
+        /* ===== DESKTOP SIDEBAR ===== */
+        @media (min-width: 1024px) {
+            .sidebar-toggle {
+                display: none;
+            }
+
+            .mobile-sidebar {
+                position: fixed;
+                right: 0;
+                top: 64px;
+                height: calc(100vh - 64px);
+                width: 280px;
+                z-index: 100;
+                border-left: 1px solid var(--border-light);
+                border-right: none;
+                transform: none;
+                transition: none;
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+
+            .sidebar-close {
+                display: none;
+            }
+
+            .main-container {
+                margin-right: 300px;
+                padding: var(--space-xl);
+                width: calc(100% - 280px);
+            }
+
+            .current-section-header {
+                margin-top: 0;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: var(--space-md);
+            }
+
+            .settings-section {
+                padding: var(--space-lg);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .save-section {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .current-section-header {
+                margin-top: var(--space-md);
+                margin-bottom: var(--space-lg);
+                padding: var(--space-md);
+            }
+
+            .section-header-text h2 {
+                font-size: 20px;
+            }
+
+            .section-header-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .seller-navbar {
+                padding: 0 var(--space-md);
+            }
+
+            .settings-section {
+                padding: var(--space-md);
+            }
+
+            .danger-item {
+                flex-direction: column;
+                gap: var(--space-md);
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .payment-method {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-sm);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="seller-navbar">
+        <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+            <span>القائمة</span>
+        </button>
+
+        <a href="dashboard.html" class="nav-brand">
+            <i class="fas fa-cog"></i>
+            <span>الإعدادات</span>
+        </a>
+
+        <div class="nav-actions">
+            <button class="btn btn-secondary" onclick="window.location.href='dashboard.html'">
+                <i class="fas fa-arrow-right"></i>
+                العودة
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Mobile Sidebar -->
+    <aside class="mobile-sidebar" id="mobileSidebar">
+        <div class="sidebar-header">
+            <h3>إعدادات BIYALA</h3>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="sidebar-content">
+            <div class="sidebar-title">الإعدادات</div>
+            <div class="sidebar-menu">
+                <div class="sidebar-item active" data-section="profile">
+                    <i class="fas fa-user"></i>
+                    <span>الملف الشخصي</span>
+                </div>
+                <div class="sidebar-item" data-section="store">
+                    <i class="fas fa-store"></i>
+                    <span>إعدادات المتجر</span>
+                </div>
+                <div class="sidebar-item" data-section="payment">
+                    <i class="fas fa-credit-card"></i>
+                    <span>طرق الدفع</span>
+                </div>
+                <div class="sidebar-item" data-section="shipping">
+                    <i class="fas fa-truck"></i>
+                    <span>الشحن والتوصيل</span>
+                </div>
+                <div class="sidebar-item" data-section="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span>الإشعارات</span>
+                </div>
+                <div class="sidebar-item" data-section="social">
+                    <i class="fas fa-share-alt"></i>
+                    <span>وسائل التواصل</span>
+                </div>
+                <div class="sidebar-item" data-section="security">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>الأمان</span>
+                </div>
+                <div class="sidebar-item" data-section="danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span style="color: var(--status-danger);">منطقة الخطر</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Current Section Header -->
+        <div class="current-section-header" id="currentSectionHeader">
+            <div class="section-header-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="section-header-text">
+                <h2>الملف الشخصي</h2>
+                <p>قم بتحديث معلوماتك الشخصية وصورة البروفيل</p>
+            </div>
+        </div>
+
+        <!-- Settings Content -->
+        <div class="settings-content">
+            <!-- Profile Settings -->
+            <div class="settings-section active" id="profile-section">
+                <form id="profileForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="fullName">الاسم الكامل</label>
+                            <input type="text" id="fullName" class="form-input" value="محمد أحمد" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="email">البريد الإلكتروني</label>
+                            <input type="email" id="email" class="form-input" value="mohamed@biyala.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="phone">رقم الهاتف</label>
+                            <input type="tel" id="phone" class="form-input" value="+201234567890" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="brandName">اسم البراند</label>
+                            <input type="text" id="brandName" class="form-input" value="Fashion House" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">صورة البروفيل</label>
+                        <div style="display: flex; align-items: center; gap: var(--space-lg);">
+                            <div
+                                style="width: 100px; height: 100px; border-radius: var(--radius-lg); overflow: hidden; background: rgba(255,255,255,0.05);">
+                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop"
+                                    alt="Profile" style="width:100%;height:100%;object-fit:cover;">
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-secondary" id="changeImageBtn">
+                                    <i class="fas fa-upload"></i>
+                                    تغيير الصورة
+                                </button>
+                                <div class="form-hint">الحجم المثالي 400×400 بكسل</div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Store Settings -->
+            <div class="settings-section" id="store-section">
+                <div class="form-group">
+                    <div class="toggle-group">
+                        <div class="toggle-label">
+                            <div>تفعيل المتجر</div>
+                            <div class="toggle-description">عرض متجرك للعملاء</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="storeEnabled" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="toggle-group">
+                        <div class="toggle-label">
+                            <div>قبول طلبات جديدة</div>
+                            <div class="toggle-description">السماح للعملاء بإنشاء طلبات جديدة</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="acceptOrders" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="storeDescription">وصف المتجر</label>
+                    <textarea id="storeDescription" class="form-textarea"
+                        rows="4">متجر متخصص في الملابس الرجالية والإكسسوارات الفاخرة بأسعار مناسبة للجميع</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="workingHours">ساعات العمل</label>
+                    <select id="workingHours" class="form-select">
+                        <option value="9-5">9 صباحاً - 5 مساءً</option>
+                        <option value="10-6" selected>10 صباحاً - 6 مساءً</option>
+                        <option value="24/7">مفتوح 24/7</option>
+                        <option value="custom">مخصص</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Payment Settings -->
+            <div class="settings-section" id="payment-section">
+                <div class="payment-methods">
+                    <div class="payment-method">
+                        <div class="payment-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="payment-info">
+                            <div class="payment-name">الدفع عند الاستلام</div>
+                            <div class="payment-description">العميل يدفع عند استلام الطلب</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="cashOnDelivery" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="payment-method">
+                        <div class="payment-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="payment-info">
+                            <div class="payment-name">فودافون كاش</div>
+                            <div class="payment-description">01012345678</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="vodafoneCash" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="payment-method">
+                        <div class="payment-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="payment-info">
+                            <div class="payment-name">تحويل بنكي</div>
+                            <div class="payment-description">بنك مصر - 123456789</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="bankTransfer">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: var(--space-xl);">
+                    <label class="form-label" for="bankDetails">تفاصيل الحساب البنكي</label>
+                    <textarea id="bankDetails" class="form-textarea" rows="3"
+                        placeholder="اسم البنك، رقم الحساب، اسم صاحب الحساب..."></textarea>
+                    <div class="form-hint">سيتم مشاركة هذه المعلومات مع العملاء للتحويل البنكي</div>
+                </div>
+            </div>
+
+            <!-- Shipping Settings -->
+            <div class="settings-section" id="shipping-section">
+                <div class="form-group">
+                    <div class="toggle-group">
+                        <div class="toggle-label">
+                            <div>الشحن المجاني</div>
+                            <div class="toggle-description">توصيل مجاني للطلبات فوق مبلغ معين</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="freeShipping" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="freeShippingLimit">حد الشحن المجاني (EGP)</label>
+                        <input type="number" id="freeShippingLimit" class="form-input" value="500">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="shippingCost">تكلفة الشحن العادية (EGP)</label>
+                        <input type="number" id="shippingCost" class="form-input" value="50">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="returnPolicy">سياسة الاسترجاع</label>
+                    <textarea id="returnPolicy" class="form-textarea" rows="4">• يمكن استرجاع المنتجات خلال 14 يوم من الاستلام
+• يجب أن يكون المنتج في حالته الأصلية
+• يتم خصم تكلفة الشحن من مبلغ الاسترجاع</textarea>
+                </div>
+            </div>
+
+            <!-- Notification Settings -->
+            <div class="settings-section" id="notifications-section">
+                <div class="notification-category">
+                    <h4><i class="fas fa-shopping-bag"></i> إشعارات الطلبات</h4>
+
+                    <div class="form-group">
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <div>طلبات جديدة</div>
+                                <div class="toggle-description">إشعار عند استلام طلب جديد</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="newOrders" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <div>تحديث حالة الطلب</div>
+                                <div class="toggle-description">إشعار عند تغيير حالة الطلب</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="orderUpdates" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-category">
+                    <h4><i class="fas fa-comment-dots"></i> إشعارات العملاء</h4>
+
+                    <div class="form-group">
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <div>تقييمات جديدة</div>
+                                <div class="toggle-description">إشعار عند إضافة تقييم جديد</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="newReviews" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <div>شكاوى العملاء</div>
+                                <div class="toggle-description">إشعار عند إضافة شكوى جديدة</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="customerComplaints" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-category">
+                    <h4><i class="fas fa-chart-line"></i> إشعارات المبيعات</h4>
+
+                    <div class="form-group">
+                        <div class="toggle-group">
+                            <div class="toggle-label">
+                                <div>تقارير يومية</div>
+                                <div class="toggle-description">إرسال تقرير المبيعات اليومي</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="dailyReports">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Settings -->
+            <div class="settings-section" id="social-section">
+                <div class="social-links">
+                    <div class="form-group">
+                        <label class="form-label" for="facebook">فيسبوك</label>
+                        <div class="social-input-group">
+                            <span class="social-prefix">facebook.com/</span>
+                            <input type="text" id="facebook" class="form-input" placeholder="اسم الصفحة">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="instagram">انستجرام</label>
+                        <div class="social-input-group">
+                            <span class="social-prefix">instagram.com/</span>
+                            <input type="text" id="instagram" class="form-input" placeholder="اسم الحساب">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="whatsapp">واتساب</label>
+                        <input type="tel" id="whatsapp" class="form-input" placeholder="20123456789+">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="website">الموقع الإلكتروني</label>
+                        <input type="url" id="website" class="form-input" placeholder="https://example.com">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="settings-section" id="security-section">
+                <div class="form-group">
+                    <label class="form-label" for="currentPassword">كلمة المرور الحالية</label>
+                    <input type="password" id="currentPassword" class="form-input">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="newPassword">كلمة المرور الجديدة</label>
+                        <input type="password" id="newPassword" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">تأكيد كلمة المرور</label>
+                        <input type="password" id="confirmPassword" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="toggle-group">
+                        <div class="toggle-label">
+                            <div>المصادقة الثنائية</div>
+                            <div class="toggle-description">طلب رمز تحقق إضافي عند تسجيل الدخول</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="twoFactorAuth">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="toggle-group">
+                        <div class="toggle-label">
+                            <div>جلسات النشطة</div>
+                            <div class="toggle-description">عرض وتسجيل خروج من الأجهزة النشطة</div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="viewSessionsBtn">عرض الجلسات</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="settings-section" id="danger-section">
+                <div class="danger-zone">
+                    <div class="danger-item">
+                        <div class="danger-info">
+                            <h4>حذف جميع المنتجات</h4>
+                            <p>حذف جميع منتجات متجرك نهائياً. هذا الإجراء لا يمكن التراجع عنه</p>
+                        </div>
+                        <button type="button" class="btn btn-danger" id="deleteProductsBtn">
+                            <i class="fas fa-trash"></i>
+                            حذف المنتجات
+                        </button>
+                    </div>
+
+                    <div class="danger-item">
+                        <div class="danger-info">
+                            <h4>أرشفة المتجر</h4>
+                            <p>إخفاء متجرك عن العملاء مع الاحتفاظ بالبيانات</p>
+                        </div>
+                        <button type="button" class="btn btn-danger" id="archiveStoreBtn">
+                            <i class="fas fa-archive"></i>
+                            أرشفة المتجر
+                        </button>
+                    </div>
+
+                    <div class="danger-item">
+                        <div class="danger-info">
+                            <h4>حذف الحساب</h4>
+                            <p>حذف حسابك وبيانات متجرك نهائياً. هذا الإجراء لا يمكن التراجع عنه</p>
+                        </div>
+                        <button type="button" class="btn btn-danger" id="deleteAccountBtn">
+                            <i class="fas fa-user-slash"></i>
+                            حذف الحساب
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Buttons -->
+            <div class="save-section" id="saveSection">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">
+                    <i class="fas fa-times"></i>
+                    إلغاء
+                </button>
+                <button type="button" class="btn btn-primary" id="saveBtn">
+                    <i class="fas fa-save"></i>
+                    حفظ التغييرات
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== بيانات الإعدادات =====
+        let settingsData = {
+            profile: {
+                fullName: "محمد أحمد",
+                email: "mohamed@biyala.com",
+                phone: "+201234567890",
+                brandName: "Fashion House"
+            },
+            store: {
+                enabled: true,
+                acceptOrders: true,
+                description: "متجر متخصص في الملابس الرجالية والإكسسوارات الفاخرة بأسعار مناسبة للجميع",
+                workingHours: "10-6"
+            },
+            payment: {
+                cashOnDelivery: true,
+                vodafoneCash: true,
+                bankTransfer: false,
+                bankDetails: ""
+            },
+            shipping: {
+                freeShipping: true,
+                freeShippingLimit: 500,
+                shippingCost: 50,
+                returnPolicy: "• يمكن استرجاع المنتجات خلال 14 يوم من الاستلام\n• يجب أن يكون المنتج في حالته الأصلية\n• يتم خصم تكلفة الشحن من مبلغ الاسترجاع"
+            },
+            notifications: {
+                newOrders: true,
+                orderUpdates: true,
+                newReviews: true,
+                customerComplaints: true,
+                dailyReports: false
+            },
+            social: {
+                facebook: "",
+                instagram: "",
+                whatsapp: "",
+                website: ""
+            },
+            security: {
+                twoFactorAuth: false
+            }
+        };
+
+        // ===== إدارة القائمة الجانبية =====
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const sidebarClose = document.getElementById('sidebarClose');
+
+        // فتح القائمة الجانبية
+        function openSidebar() {
+            sidebarOverlay.classList.add('active');
+            mobileSidebar.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // إغلاق القائمة الجانبية
+        function closeSidebar() {
+            sidebarOverlay.classList.remove('active');
+            mobileSidebar.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // إضافة مستمعين للأحداث
+        sidebarToggle.addEventListener('click', openSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+        sidebarClose.addEventListener('click', closeSidebar);
+
+        // إغلاق القائمة بالضغط على زر ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeSidebar();
+            }
+        });
+
+        // ===== إدارة الأقسام =====
+        const sectionConfig = {
+            profile: {
+                title: "الملف الشخصي",
+                description: "قم بتحديث معلوماتك الشخصية وصورة البروفيل",
+                icon: "fas fa-user"
+            },
+            store: {
+                title: "إعدادات المتجر",
+                description: "إدارة إعدادات متجرك وعرض المنتجات",
+                icon: "fas fa-store"
+            },
+            payment: {
+                title: "طرق الدفع",
+                description: "إدارة طرق الدفع المقبولة في متجرك",
+                icon: "fas fa-credit-card"
+            },
+            shipping: {
+                title: "الشحن والتوصيل",
+                description: "إدارة سياسات الشحن والتوصيل",
+                icon: "fas fa-truck"
+            },
+            notifications: {
+                title: "الإشعارات",
+                description: "إدارة إشعارات البريد الإلكتروني والتطبيق",
+                icon: "fas fa-bell"
+            },
+            social: {
+                title: "وسائل التواصل",
+                description: "ربط حسابات التواصل الاجتماعي لمتجرك",
+                icon: "fas fa-share-alt"
+            },
+            security: {
+                title: "الأمان",
+                description: "إدارة أمان حسابك وكلمة المرور",
+                icon: "fas fa-shield-alt"
+            },
+            danger: {
+                title: "منطقة الخطر",
+                description: "إجراءات لا يمكن التراجع عنها",
+                icon: "fas fa-exclamation-triangle"
+            }
+        };
+
+        // ===== تغيير القسم =====
+        function changeSection(sectionId) {
+            const config = sectionConfig[sectionId];
+            if (!config) return;
+
+            // تحديث الهيدر الحالي
+            const header = document.getElementById('currentSectionHeader');
+            header.innerHTML = `
+                <div class="section-header-icon">
+                    <i class="${config.icon}"></i>
+                </div>
+                <div class="section-header-text">
+                    <h2>${config.title}</h2>
+                    <p>${config.description}</p>
+                </div>
+            `;
+
+            // تحديث القائمة الجانبية
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === sectionId) {
+                    item.classList.add('active');
+                }
+            });
+
+            // إخفاء جميع الأقسام وإظهار القسم المحدد
+            document.querySelectorAll('.settings-section').forEach(section => {
+                section.classList.remove('active');
+                if (section.id === `${sectionId}-section`) {
+                    setTimeout(() => {
+                        section.classList.add('active');
+                    }, 50);
+                }
+            });
+
+            // إغلاق القائمة الجانبية على الموبايل
+            if (window.innerWidth < 1024) {
+                closeSidebar();
+            }
+
+            // تحريك الصفحة للأعلى
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== تحميل الإعدادات =====
+        function loadSettings() {
+            // تحميل إعدادات الملف الشخصي
+            document.getElementById('fullName').value = settingsData.profile.fullName;
+            document.getElementById('email').value = settingsData.profile.email;
+            document.getElementById('phone').value = settingsData.profile.phone;
+            document.getElementById('brandName').value = settingsData.profile.brandName;
+
+            // تحميل إعدادات المتجر
+            document.getElementById('storeEnabled').checked = settingsData.store.enabled;
+            document.getElementById('acceptOrders').checked = settingsData.store.acceptOrders;
+            document.getElementById('storeDescription').value = settingsData.store.description;
+            document.getElementById('workingHours').value = settingsData.store.workingHours;
+
+            // تحميل إعدادات الدفع
+            document.getElementById('cashOnDelivery').checked = settingsData.payment.cashOnDelivery;
+            document.getElementById('vodafoneCash').checked = settingsData.payment.vodafoneCash;
+            document.getElementById('bankTransfer').checked = settingsData.payment.bankTransfer;
+            document.getElementById('bankDetails').value = settingsData.payment.bankDetails;
+
+            // تحميل إعدادات الشحن
+            document.getElementById('freeShipping').checked = settingsData.shipping.freeShipping;
+            document.getElementById('freeShippingLimit').value = settingsData.shipping.freeShippingLimit;
+            document.getElementById('shippingCost').value = settingsData.shipping.shippingCost;
+            document.getElementById('returnPolicy').value = settingsData.shipping.returnPolicy;
+
+            // تحميل إعدادات الإشعارات
+            document.getElementById('newOrders').checked = settingsData.notifications.newOrders;
+            document.getElementById('orderUpdates').checked = settingsData.notifications.orderUpdates;
+            document.getElementById('newReviews').checked = settingsData.notifications.newReviews;
+            document.getElementById('customerComplaints').checked = settingsData.notifications.customerComplaints;
+            document.getElementById('dailyReports').checked = settingsData.notifications.dailyReports;
+
+            // تحميل إعدادات التواصل
+            document.getElementById('facebook').value = settingsData.social.facebook;
+            document.getElementById('instagram').value = settingsData.social.instagram;
+            document.getElementById('whatsapp').value = settingsData.social.whatsapp;
+            document.getElementById('website').value = settingsData.social.website;
+
+            // تحميل إعدادات الأمان
+            document.getElementById('twoFactorAuth').checked = settingsData.security.twoFactorAuth;
+        }
+
+        // ===== حفظ الإعدادات =====
+        function saveSettings() {
+            try {
+                // جمع بيانات الملف الشخصي
+                settingsData.profile.fullName = document.getElementById('fullName').value;
+                settingsData.profile.email = document.getElementById('email').value;
+                settingsData.profile.phone = document.getElementById('phone').value;
+                settingsData.profile.brandName = document.getElementById('brandName').value;
+
+                // جمع بيانات المتجر
+                settingsData.store.enabled = document.getElementById('storeEnabled').checked;
+                settingsData.store.acceptOrders = document.getElementById('acceptOrders').checked;
+                settingsData.store.description = document.getElementById('storeDescription').value;
+                settingsData.store.workingHours = document.getElementById('workingHours').value;
+
+                // جمع بيانات الدفع
+                settingsData.payment.cashOnDelivery = document.getElementById('cashOnDelivery').checked;
+                settingsData.payment.vodafoneCash = document.getElementById('vodafoneCash').checked;
+                settingsData.payment.bankTransfer = document.getElementById('bankTransfer').checked;
+                settingsData.payment.bankDetails = document.getElementById('bankDetails').value;
+
+                // جمع بيانات الشحن
+                settingsData.shipping.freeShipping = document.getElementById('freeShipping').checked;
+                settingsData.shipping.freeShippingLimit = parseFloat(document.getElementById('freeShippingLimit').value) || 0;
+                settingsData.shipping.shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
+                settingsData.shipping.returnPolicy = document.getElementById('returnPolicy').value;
+
+                // جمع بيانات الإشعارات
+                settingsData.notifications.newOrders = document.getElementById('newOrders').checked;
+                settingsData.notifications.orderUpdates = document.getElementById('orderUpdates').checked;
+                settingsData.notifications.newReviews = document.getElementById('newReviews').checked;
+                settingsData.notifications.customerComplaints = document.getElementById('customerComplaints').checked;
+                settingsData.notifications.dailyReports = document.getElementById('dailyReports').checked;
+
+                // جمع بيانات التواصل
+                settingsData.social.facebook = document.getElementById('facebook').value;
+                settingsData.social.instagram = document.getElementById('instagram').value;
+                settingsData.social.whatsapp = document.getElementById('whatsapp').value;
+                settingsData.social.website = document.getElementById('website').value;
+
+                // جمع بيانات الأمان
+                settingsData.security.twoFactorAuth = document.getElementById('twoFactorAuth').checked;
+
+                // في التطبيق الحقيقي: إرسال البيانات للسيرفر
+                console.log('تم حفظ الإعدادات:', settingsData);
+
+                // عرض رسالة نجاح
+                showNotification('تم حفظ الإعدادات بنجاح', 'success');
+
+                // حفظ في localStorage (للتوضيح فقط)
+                localStorage.setItem('biyalaSettings', JSON.stringify(settingsData));
+
+            } catch (error) {
+                console.error('خطأ في حفظ الإعدادات:', error);
+                showNotification('حدث خطأ أثناء حفظ الإعدادات', 'error');
+            }
+        }
+
+        // ===== إعادة التعيين =====
+        function resetChanges() {
+            if (confirm('هل تريد إلغاء جميع التغييرات؟')) {
+                loadSettings();
+                showNotification('تم إلغاء التغييرات', 'info');
+            }
+        }
+
+        // ===== تأكيد الإجراءات الخطرة =====
+        function confirmDeleteProducts() {
+            if (confirm('⚠️ تحذير: هذا الإجراء سيحذف جميع منتجات متجرك نهائياً ولا يمكن التراجع عنه.\n\nهل أنت متأكد من رغبتك في حذف جميع المنتجات؟')) {
+                // محاكاة عملية الحذف
+                showNotification('جاري حذف جميع المنتجات...', 'warning');
+                setTimeout(() => {
+                    showNotification('تم حذف جميع المنتجات بنجاح', 'success');
+                }, 2000);
+            }
+        }
+
+        function confirmArchiveStore() {
+            if (confirm('هل تريد أرشفة متجرك؟\n\n• سيتم إخفاء متجرك عن العملاء\n• يمكنك تفعيله في أي وقت\n• سيتم الاحتفاظ بجميع البيانات')) {
+                // محاكاة عملية الأرشفة
+                showNotification('جاري أرشفة المتجر...', 'warning');
+                setTimeout(() => {
+                    showNotification('تم أرشفة المتجر بنجاح', 'success');
+                }, 2000);
+            }
+        }
+
+        function confirmDeleteAccount() {
+            if (confirm('⚠️ تحذير: هذا الإجراء سيحذف حسابك وبيانات متجرك نهائياً ولا يمكن التراجع عنه.\n\nللتأكيد، اكتب "حذف" في المربع التالي:')) {
+                const confirmation = prompt('اكتب "حذف" للتأكيد:');
+                if (confirmation === 'حذف') {
+                    showNotification('جاري حذف الحساب...', 'warning');
+                    setTimeout(() => {
+                        showNotification('تم حذف الحساب بنجاح', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 1000);
+                    }, 2000);
+                } else {
+                    showNotification('تم إلغاء حذف الحساب', 'error');
+                }
+            }
+        }
+
+        // ===== عرض الجلسات النشطة =====
+        function viewActiveSessions() {
+            alert('عرض الجلسات النشطة:\n\n1. Chrome - Windows (نشط الآن)\n2. iPhone - Safari (قبل ساعتين)\n3. Android - Chrome (قبل يوم)\n\nيمكنك تسجيل الخروج من الأجهزة الأخرى.');
+        }
+
+        // ===== تغيير الصورة =====
+        function changeProfileImage() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+
+            input.onchange = function (e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = document.querySelector('#profile-section img');
+                        if (img) {
+                            img.src = e.target.result;
+                            showNotification('تم تغيير صورة البروفيل بنجاح', 'success');
+                        }
+                    }
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            input.click();
+        }
+
+        // ===== عرض الإشعارات =====
+        function showNotification(message, type = 'info') {
+            // إنشاء عنصر الإشعار
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+
+            // إزالة أي إشعارات قديمة
+            const oldNotifications = document.querySelectorAll('.notification');
+            oldNotifications.forEach(n => n.remove());
+
+            // تنسيق الإشعار
+            const icons = {
+                success: { icon: 'fas fa-check-circle', color: 'var(--status-success)' },
+                error: { icon: 'fas fa-exclamation-circle', color: 'var(--status-danger)' },
+                warning: { icon: 'fas fa-exclamation-triangle', color: 'var(--status-warning)' },
+                info: { icon: 'fas fa-info-circle', color: 'var(--status-info)' }
+            };
+
+            const notifType = icons[type] || icons.info;
+
+            notification.innerHTML = `
+                <i class="${notifType.icon}" style="color: ${notifType.color}; margin-left: 8px;"></i>
+                <span>${message}</span>
+            `;
+
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--bg-secondary);
+                border: 1px solid var(--border-light);
+                border-radius: var(--radius-lg);
+                padding: var(--space-md) var(--space-lg);
+                display: flex;
+                align-items: center;
+                gap: var(--space-md);
+                box-shadow: var(--shadow-lg);
+                z-index: 9999;
+                animation: slideDown 0.3s ease;
+                min-width: 300px;
+                text-align: center;
+            `;
+
+            document.body.appendChild(notification);
+
+            // إضافة أنيميشن
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideDown {
+                    from { opacity: 0; transform: translate(-50%, -20px); }
+                    to { opacity: 1; transform: translate(-50%, 0); }
+                }
+                @keyframes slideUp {
+                    from { opacity: 1; transform: translate(-50%, 0); }
+                    to { opacity: 0; transform: translate(-50%, -20px); }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // إخفاء الإشعار بعد 3 ثواني
+            setTimeout(() => {
+                notification.style.animation = 'slideUp 0.3s ease forwards';
+                setTimeout(() => notification.remove(), 300);
+                style.remove();
+            }, 3000);
+        }
+
+        // ===== تهيئة الصفحة =====
+        document.addEventListener('DOMContentLoaded', function () {
+            // إضافة مستمع لكل عنصر في القائمة
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    const sectionId = this.dataset.section;
+                    changeSection(sectionId);
+                });
+            });
+
+            // تحميل القسم الأول
+            changeSection('profile');
+
+            // تحميل الإعدادات
+            loadSettings();
+
+            // محاولة تحميل الإعدادات المحفوظة
+            try {
+                const savedSettings = localStorage.getItem('biyalaSettings');
+                if (savedSettings) {
+                    settingsData = JSON.parse(savedSettings);
+                    loadSettings();
+                }
+            } catch (error) {
+                console.log('لا توجد إعدادات محفوظة مسبقاً');
+            }
+
+            // إضافة مستمعين للأزرار
+            document.getElementById('saveBtn').addEventListener('click', saveSettings);
+            document.getElementById('cancelBtn').addEventListener('click', resetChanges);
+            document.getElementById('changeImageBtn').addEventListener('click', changeProfileImage);
+            document.getElementById('viewSessionsBtn').addEventListener('click', viewActiveSessions);
+            document.getElementById('deleteProductsBtn').addEventListener('click', confirmDeleteProducts);
+            document.getElementById('archiveStoreBtn').addEventListener('click', confirmArchiveStore);
+            document.getElementById('deleteAccountBtn').addEventListener('click', confirmDeleteAccount);
+
+            // التحقق من حجم الشاشة
+            checkScreenSize();
+        });
+
+        // ===== تحسين لـ Desktop =====
+        function checkScreenSize() {
+            if (window.innerWidth >= 1024) {
+                // على Desktop، القائمة مفتوحة دائماً
+                mobileSidebar.classList.add('active');
+                sidebarToggle.style.display = 'none';
+                sidebarOverlay.style.display = 'none';
+            } else {
+                // على الموبايل، القائمة مغلقة
+                mobileSidebar.classList.remove('active');
+                sidebarToggle.style.display = 'flex';
+            }
+        }
+
+        // التحقق عند تحميل الصفحة وتغيير حجم الشاشة
+        window.addEventListener('load', checkScreenSize);
+        window.addEventListener('resize', checkScreenSize);
+    </script>
+</body>
+
+</html>

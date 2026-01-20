@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز المساعدة - BIYALA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Background -->
+    <div class="page-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-text">BIYALA</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">الرئيسية</a>
+                <a href="terms.html" class="nav-link">الشروط والأحكام</a>
+                <a href="privacy.html" class="nav-link">سياسة الخصوصية</a>
+                <a href="return-policy.html" class="nav-link">سياسة الإرجاع</a>
+                <a href="contact.html" class="nav-link">تواصل معنا</a>
+                <a href="login.html" class="nav-cta">دخول</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="page-wrapper">
+        <div class="content-container">
+            <div class="page-header">
+                <h1 class="page-title">مركز المساعدة</h1>
+                <p class="page-subtitle">
+                    مرحباً بك في مركز مساعدة Biyala. ابحث عن إجابات لأسئلتك أو تواصل مع فريق الدعم.
+                </p>
+            </div>
+
+            <!-- Search Section -->
+            <div class="content-section">
+                <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: var(--text-primary); margin-bottom: var(--space-lg);">
+                        <i class="fas fa-search"></i>
+                        كيف يمكننا مساعدتك؟
+                    </h2>
+
+                    <div style="position: relative;">
+                        <input type="text" id="help-search" class="form-control" placeholder="اكتب كلمة البحث هنا...">
+                        <button class="btn btn-primary"
+                            style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%);">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
+                    <div
+                        style="display: flex; flex-wrap: wrap; gap: var(--space-md); justify-content: center; margin-top: var(--space-lg);">
+                        <span class="search-tag">تسجيل الدخول</span>
+                        <span class="search-tag">الدفع</span>
+                        <span class="search-tag">الشحن</span>
+                        <span class="search-tag">الإرجاع</span>
+                        <span class="search-tag">حسابي</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    روابط سريعة
+                </h2>
+
+                <div class="quick-links-grid">
+                    <div class="quick-link">
+                        <div class="quick-link-icon" style="background: rgba(255, 109, 31, 0.1);">
+                            <i class="fas fa-shopping-cart" style="color: var(--accent-primary);"></i>
+                        </div>
+                        <h3>كيفية الشراء</h3>
+                        <p>خطوات الشراء من البداية للنهاية</p>
+                        <a href="#how-to-buy" class="quick-link-btn">اعرف أكثر</a>
+                    </div>
+
+                    <div class="quick-link">
+                        <div class="quick-link-icon" style="background: rgba(118, 222, 104, 0.1);">
+                            <i class="fas fa-store" style="color: var(--status-success);"></i>
+                        </div>
+                        <h3>كيفية البيع</h3>
+                        <p>ابدأ بيع منتجاتك على Biyala</p>
+                        <a href="how-to-sell.html" class="quick-link-btn">ابدأ الآن</a>
+                    </div>
+
+                    <div class="quick-link">
+                        <div class="quick-link-icon" style="background: rgba(74, 144, 226, 0.1);">
+                            <i class="fas fa-exchange-alt" style="color: var(--status-info);"></i>
+                        </div>
+                        <h3>الإرجاع والاستبدال</h3>
+                        <p>كيفية إرجاع أو استبدال منتج</p>
+                        <a href="return-policy.html" class="quick-link-btn">اقرأ السياسة</a>
+                    </div>
+
+                    <div class="quick-link">
+                        <div class="quick-link-icon" style="background: rgba(255, 179, 71, 0.1);">
+                            <i class="fas fa-shield-alt" style="color: var(--status-warning);"></i>
+                        </div>
+                        <h3>الأمان والخصوصية</h3>
+                        <p>كيف نحافظ على أمان حسابك</p>
+                        <a href="privacy.html" class="quick-link-btn">تعرف أكثر</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Questions -->
+            <div class="content-section">
+                <h2 class="section-title">
+                    <i class="fas fa-question-circle"></i>
+                    الأسئلة الشائعة
+                </h2>
+
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            كيف يمكنني إنشاء حساب جديد؟
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>لإنشاء حساب جديد:</p>
+                            <ol
+                                style="color: var(--text-secondary); padding-right: var(--space-lg); margin: var(--space-md) 0;">
+                                <li>اضغط على زر "تسجيل" في أعلى الصفحة</li>
+                                <li>اختر نوع الحساب (مشتري أو بائع)</li>
+                                <li>املأ المعلومات المطلوبة</li>
+                                <li>اضغط على رابط التفعيل في بريدك الإلكتروني</li>
+                                <li>قم بتسجيل الدخول للمرة الأولى</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            كيف يمكنني إعادة تعيين كلمة المرور؟
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>لإعادة تعيين كلمة المرور:</p>
+                            <ol
+                                style="color: var(--text-secondary); padding-right: var(--space-lg); margin: var(--space-md) 0;">
+                                <li>اضغط على "نسيت كلمة المرور" في صفحة تسجيل الدخول</li>
+                                <li>أدخل بريدك الإلكتروني المسجل</li>
+                                <li>افتح البريد الإلكتروني واضغط على رابط إعادة التعيين</li>
+                                <li>أدخل كلمة المرور الجديدة</li>
+                                <li>قم بتسجيل الدخول باستخدام كلمة المرور الجديدة</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            كم تستغرق عملية الشحن؟
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>مدة الشحن تختلف حسب:</p>
+                            <ul
+                                style="color: var(--text-secondary); padding-right: var(--space-lg); margin: var(--space-md) 0;">
+                                <li><strong>القاهرة والجيزة:</strong> 1-3 أيام عمل</li>
+                                <li><strong>المحافظات الرئيسية:</strong> 3-5 أيام عمل</li>
+                                <li><strong>المناطق النائية:</strong> 5-7 أيام عمل</li>
+                                <li><strong>المنتجات الجاهزة:</strong> أسرع من المنتجات المصنوعة حسب الطلب</li>
+                            </ul>
+                            <p>يمكنك تتبع شحنتك من خلال صفحة "طلباتي".</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            كيف يمكنني تتبع طلبي؟
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>لتتبع طلبك:</p>
+                            <ol
+                                style="color: var(--text-secondary); padding-right: var(--space-lg); margin: var(--space-md) 0;">
+                                <li>سجل الدخول إلى حسابك</li>
+                                <li>اذهب إلى صفحة "طلباتي"</li>
+                                <li>اضغط على الطلب الذي تريد تتبعه</li>
+                                <li>ستظهر لك حالة الطلب الحالية ورقم التتبع</li>
+                                <li>يمكنك أيضاً تتبع الشحنة عبر رسائل SMS على هاتفك</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            ما هي طرق الدفع المتاحة؟
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>نحن نقبل طرق الدفع التالية:</p>
+                            <ul
+                                style="color: var(--text-secondary); padding-right: var(--space-lg); margin: var(--space-md) 0;">
+                                <li><strong>الدفع الإلكتروني:</strong> البطاقات الائتمانية والمدينة</li>
+                                <li><strong>فودافون كاش:</strong> التحويل عبر فودافون كاش</li>
+                                <li><strong>الدفع عند الاستلام:</strong> في بعض المناطق</li>
+                                <li><strong>حوالة بنكية:</strong> للطلبات الكبيرة</li>
+                            </ul>
+                            <p>جميع عمليات الدفع الإلكترونية مشفرة وآمنة 100%.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center" style="margin-top: var(--space-xl);">
+                    <a href="faq.html" class="btn btn-secondary">
+                        <i class="fas fa-list"></i>
+                        عرض جميع الأسئلة الشائعة
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact CTA -->
+            <div class="content-section"
+                style="background: linear-gradient(135deg, var(--bg-secondary), rgba(255, 109, 31, 0.1));">
+                <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: var(--text-primary); margin-bottom: var(--space-md);">
+                        <i class="fas fa-comments"></i>
+                        لم تجد ما تبحث عنه؟
+                    </h2>
+                    <p style="color: var(--text-secondary); margin-bottom: var(--space-xl);">
+                        فريق الدعم لدينا مستعد لمساعدتك على مدار الساعة
+                    </p>
+                    <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
+                        <a href="contact.html" class="btn btn-primary">
+                            <i class="fas fa-envelope"></i>
+                            تواصل معنا
+                        </a>
+                        <a href="support.html" class="btn btn-secondary">
+                            <i class="fas fa-headset"></i>
+                            الدعم الفني
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="terms.html"><i class="fas fa-file-contract"></i> الشروط والأحكام</a></li>
+                        <li><a href="privacy.html"><i class="fas fa-shield-alt"></i> سياسة الخصوصية</a></li>
+                        <li><a href="return-policy.html"><i class="fas fa-exchange-alt"></i> سياسة الإرجاع</a></li>
+                        <li><a href="contact.html"><i class="fas fa-envelope"></i> تواصل معنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>الدعم</h3>
+                    <ul class="footer-links">
+                        <li><a href="help-center.html"><i class="fas fa-question-circle"></i> مركز المساعدة</a></li>
+                        <li><a href="how-to-sell.html"><i class="fas fa-store"></i> كيف أبدأ البيع؟</a></li>
+                        <li><a href="faq.html"><i class="fas fa-comments"></i> أسئلة شائعة</a></li>
+                        <li><a href="support.html"><i class="fas fa-headset"></i> الدعم الفني</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>BIYALA</h3>
+                    <p
+                        style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-top: var(--space-md);">
+                        المنصة الأولى لدعم وترويج الماركات المصرية الناشئة
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2024 BIYALA. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .search-tag {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .search-tag:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+        }
+
+        .quick-link {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+
+        .quick-link:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-5px);
+        }
+
+        .quick-link-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-md);
+            font-size: 28px;
+        }
+
+        .quick-link h3 {
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+            font-size: 1.2rem;
+        }
+
+        .quick-link p {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+            font-size: 14px;
+        }
+
+        .quick-link-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: transparent;
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all var(--transition-normal);
+        }
+
+        .quick-link-btn:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+    </style>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+
+        // Search functionality
+        document.getElementById('help-search').addEventListener('input', function (e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    item.classList.add('active'); // Open matching items
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Search tags
+        document.querySelectorAll('.search-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                const searchInput = document.getElementById('help-search');
+                searchInput.value = tag.textContent;
+                searchInput.dispatchEvent(new Event('input'));
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            navbar.style.background = window.scrollY > 50
+                ? 'rgba(12, 15, 23, 0.98)'
+                : 'rgba(12, 15, 23, 0.95)';
+        });
+    </script>
+</body>
+
+</html>

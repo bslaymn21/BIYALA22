@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - إدارة البوتات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* استيراد النظام المتجاوب */
+        @import url('responsive-system.css');
+        
+        /* أنماط إضافية خاصة بالبوتات */
+        .bot-card {
+            border-top-color: #9C27B0 !important;
+        }
+        
+        .bot-ai-card {
+            border-top-color: #00BCD4 !important;
+        }
+        
+        .bot-status {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .status-online {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-offline {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-warning {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .bot-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .metric-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #9C27B0;
+            display: block;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .bot-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .bot-action-btn {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .logs-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .log-time {
+            color: #888;
+            font-size: 12px;
+        }
+        
+        .log-info {
+            color: #4fc3f7;
+        }
+        
+        .log-error {
+            color: #ff5252;
+        }
+        
+        .log-success {
+            color: #69f0ae;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- الهيدر -->
+        <div class="dashboard-header">
+            <button class="btn btn-outline" onclick="window.location.href='dashboard.html'" style="position: absolute; left: 25px; top: 25px;">
+                <i class="fas fa-arrow-right"></i> العودة
+            </button>
+            <div class="header-content">
+                <div>
+                    <h1><i class="fas fa-robot"></i> إدارة البوتات</h1>
+                    <p>مراقبة وإدارة بوتات Telegram الخاصة بـ BIYALA</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value">5</span>
+                        <span class="stat-label">إجمالي البوتات</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">4</span>
+                        <span class="stat-label">نشطة الآن</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">89%</span>
+                        <span class="stat-label">معدل التشغيل</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">2,189</span>
+                        <span class="stat-label">رسائل اليوم</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- فلتر البحث -->
+        <div class="filter-section">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="ابحث في البوتات...">
+            </div>
+            
+            <button class="btn btn-primary filter-btn active" data-filter="all">
+                <i class="fas fa-layer-group"></i> الكل
+            </button>
+            <button class="btn btn-outline filter-btn" data-filter="online">
+                <i class="fas fa-plug"></i> النشطة
+            </button>
+            <button class="btn btn-outline filter-btn" data-filter="offline">
+                <i class="fas fa-power-off"></i> المتوقفة
+            </button>
+            <button class="btn btn-outline filter-btn" data-filter="telegram">
+                <i class="fab fa-telegram"></i> Telegram
+            </button>
+        </div>
+        
+        <!-- قائمة البوتات -->
+        <div class="cards-grid" id="botsContainer">
+            <!-- البوتات تظهر هنا -->
+        </div>
+        
+        <!-- سجلات النظام -->
+        <div class="card mt-3">
+            <h3><i class="fas fa-clipboard-list"></i> سجلات النظام الحية</h3>
+            <div class="logs-container" id="logsContainer">
+                <!-- السجلات تظهر هنا -->
+            </div>
+            <div class="bot-actions">
+                <button class="btn btn-primary bot-action-btn" onclick="startAllBots()">
+                    <i class="fas fa-play"></i> تشغيل الكل
+                </button>
+                <button class="btn btn-danger bot-action-btn" onclick="stopAllBots()">
+                    <i class="fas fa-stop"></i> إيقاف الكل
+                </button>
+                <button class="btn btn-info bot-action-btn" onclick="clearLogs()">
+                    <i class="fas fa-broom"></i> مسح السجلات
+                </button>
+                <button class="btn btn-warning bot-action-btn" onclick="refreshStatus()">
+                    <i class="fas fa-sync"></i> تحديث الحالة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات البوتات
+        const botsData = [
+            {
+                id: 1,
+                name: "BIYALA Bot #1",
+                type: "telegram",
+                status: "online",
+                token: "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11",
+                users: 450,
+                messages: 1200,
+                uptime: "99.8%",
+                lastActive: "2 دقيقة",
+                location: "EU-West"
+            },
+            {
+                id: 2,
+                name: "BIYALA Bot #2",
+                type: "telegram",
+                status: "online",
+                token: "123457:ABC-DEF1234ghIkl-zyx57W2v1u123ew12",
+                users: 320,
+                messages: 890,
+                uptime: "99.5%",
+                lastActive: "5 دقائق",
+                location: "US-East"
+            },
+            {
+                id: 3,
+                name: "BIYALA Bot #3",
+                type: "telegram",
+                status: "offline",
+                token: "123458:ABC-DEF1234ghIkl-zyx57W2v1u123ew13",
+                users: 210,
+                messages: 560,
+                uptime: "95.2%",
+                lastActive: "2 ساعة",
+                location: "Asia-SG",
+                error: "Connection timeout"
+            },
+            {
+                id: 4,
+                name: "BIYALA Bot #4",
+                type: "telegram",
+                status: "online",
+                token: "123459:ABC-DEF1234ghIkl-zyx57W2v1u123ew14",
+                users: 180,
+                messages: 430,
+                uptime: "98.7%",
+                lastActive: "1 دقيقة",
+                location: "EU-North"
+            },
+            {
+                id: 5,
+                name: "BIYALA AI (Bella)",
+                type: "ai",
+                status: "online",
+                token: "AI-001",
+                users: 1245,
+                messages: 3450,
+                uptime: "100%",
+                lastActive: "الآن",
+                location: "Cloud AI",
+                description: "مساعد الذكاء الاصطناعي للرد الآلي"
+            }
+        ];
+
+        // سجلات النظام
+        const systemLogs = [
+            { time: "14:30:01", type: "info", message: "Bot #1 connected to Telegram API" },
+            { time: "14:30:05", type: "success", message: "Bot #2 processed 5 messages" },
+            { time: "14:31:22", type: "error", message: "Bot #3 connection lost - Retrying..." },
+            { time: "14:32:15", type: "info", message: "BIYALA AI responded to user query" },
+            { time: "14:33:40", type: "success", message: "All active bots synced with database" }
+        ];
+
+        // عرض البوتات
+        function displayBots(bots) {
+            const container = document.getElementById('botsContainer');
+            container.innerHTML = '';
+            
+            bots.forEach(bot => {
+                const statusClass = bot.status === 'online' ? 'status-online' : 
+                                  bot.status === 'offline' ? 'status-offline' : 'status-warning';
+                const statusText = bot.status === 'online' ? 'نشط' : 
+                                 bot.status === 'offline' ? 'متوقف' : 'تحذير';
+                
+                const cardClass = bot.type === 'ai' ? 'card bot-ai-card' : 'card bot-card';
+                
+                container.innerHTML += `
+                    <div class="${cardClass} card-clickable" onclick="viewBotDetails(${bot.id})">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                            <div>
+                                <h3 style="margin-bottom: 5px;">${bot.name}</h3>
+                                <p style="color: #666; font-size: 14px;">
+                                    <i class="fab ${bot.type === 'telegram' ? 'fa-telegram' : 'fa-brain'}"></i>
+                                    ${bot.type === 'telegram' ? 'Telegram Bot' : 'AI Assistant'}
+                                    • ${bot.location}
+                                </p>
+                            </div>
+                            <span class="bot-status ${statusClass}">${statusText}</span>
+                        </div>
+                        
+                        <div class="bot-metrics">
+                            <div class="metric-item">
+                                <span class="metric-value">${bot.users}</span>
+                                <span class="metric-label">مستخدم</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-value">${bot.messages}</span>
+                                <span class="metric-label">رسالة</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-value">${bot.uptime}</span>
+                                <span class="metric-label">معدل التشغيل</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-value">${bot.lastActive}</span>
+                                <span class="metric-label">آخر نشاط</span>
+                            </div>
+                        </div>
+                        
+                        ${bot.error ? `
+                            <div style="background: #fff3e0; color: #ef6c00; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 14px;">
+                                <i class="fas fa-exclamation-circle"></i> ${bot.error}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="bot-actions">
+                            <button class="btn ${bot.status === 'online' ? 'btn-danger' : 'btn-success'} btn-sm" 
+                                    onclick="event.stopPropagation(); toggleBotStatus(${bot.id})">
+                                <i class="fas fa-power-off"></i> ${bot.status === 'online' ? 'إيقاف' : 'تشغيل'}
+                            </button>
+                            <button class="btn btn-info btn-sm" 
+                                    onclick="event.stopPropagation(); restartBot(${bot.id})">
+                                <i class="fas fa-redo"></i> إعادة تشغيل
+                            </button>
+                            <button class="btn btn-outline btn-sm" 
+                                    onclick="event.stopPropagation(); viewBotLogs(${bot.id})">
+                                <i class="fas fa-file-alt"></i> السجلات
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // عرض سجلات النظام
+        function displayLogs() {
+            const container = document.getElementById('logsContainer');
+            container.innerHTML = '';
+            
+            systemLogs.forEach(log => {
+                const logClass = log.type === 'info' ? 'log-info' : 
+                               log.type === 'error' ? 'log-error' : 'log-success';
+                
+                container.innerHTML += `
+                    <div class="log-entry">
+                        <span class="log-time">[${log.time}]</span>
+                        <span class="${logClass}"> ${log.message}</span>
+                    </div>
+                `;
+            });
+            
+            // التمرير للأسفل
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // البحث والفلترة
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = botsData.filter(bot => 
+                bot.name.toLowerCase().includes(searchTerm) ||
+                bot.location.toLowerCase().includes(searchTerm) ||
+                bot.type.toLowerCase().includes(searchTerm)
+            );
+            displayBots(filtered);
+        });
+
+        // أزرار الفلتر
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.classList.remove('btn-primary');
+                    b.classList.add('btn-outline');
+                });
+                
+                this.classList.add('active');
+                this.classList.add('btn-primary');
+                this.classList.remove('btn-outline');
+                
+                const filter = this.dataset.filter;
+                let filtered = botsData;
+                
+                if(filter === 'online') {
+                    filtered = botsData.filter(bot => bot.status === 'online');
+                } else if(filter === 'offline') {
+                    filtered = botsData.filter(bot => bot.status === 'offline');
+                } else if(filter === 'telegram') {
+                    filtered = botsData.filter(bot => bot.type === 'telegram');
+                }
+                
+                displayBots(filtered);
+            });
+        });
+
+        // وظائف الإجراءات
+        function viewBotDetails(botId) {
+            const bot = botsData.find(b => b.id === botId);
+            alert(`تفاصيل البوت:\n\nالاسم: ${bot.name}\nالنوع: ${bot.type}\nالحالة: ${bot.status}\nالمستخدمين: ${bot.users}\nالرسائل: ${bot.messages}\nالمكان: ${bot.location}\nمعدل التشغيل: ${bot.uptime}`);
+        }
+
+        function toggleBotStatus(botId) {
+            const bot = botsData.find(b => b.id === botId);
+            const action = bot.status === 'online' ? 'إيقاف' : 'تشغيل';
+            
+            if(confirm(`هل تريد ${action} البوت "${bot.name}"؟`)) {
+                bot.status = bot.status === 'online' ? 'offline' : 'online';
+                bot.lastActive = 'الآن';
+                displayBots(botsData);
+                
+                // إضافة سجل
+                systemLogs.push({
+                    time: new Date().toLocaleTimeString('ar-EG'),
+                    type: 'info',
+                    message: `Bot #${botId} ${bot.status === 'online' ? 'started' : 'stopped'}`
+                });
+                displayLogs();
+                
+                showNotification(`تم ${action} البوت "${bot.name}"`, 'success');
+            }
+        }
+
+        function restartBot(botId) {
+            const bot = botsData.find(b => b.id === botId);
+            
+            if(confirm(`هل تريد إعادة تشغيل البوت "${bot.name}"؟`)) {
+                bot.status = 'online';
+                bot.lastActive = 'الآن';
+                displayBots(botsData);
+                
+                // إضافة سجل
+                systemLogs.push({
+                    time: new Date().toLocaleTimeString('ar-EG'),
+                    type: 'success',
+                    message: `Bot #${botId} restarted successfully`
+                });
+                displayLogs();
+                
+                showNotification(`تم إعادة تشغيل البوت "${bot.name}"`, 'success');
+            }
+        }
+
+        function viewBotLogs(botId) {
+            const bot = botsData.find(b => b.id === botId);
+            alert(`سجلات البوت: ${bot.name}\n\nآخر 5 سجلات:\n1. Connected at 14:30\n2. Processed 5 messages\n3. User interaction\n4. API call completed\n5. Sync with database`);
+        }
+
+        // وظائف المجموعة
+        function startAllBots() {
+            if(confirm('هل تريد تشغيل جميع البوتات؟')) {
+                botsData.forEach(bot => {
+                    bot.status = 'online';
+                    bot.lastActive = 'الآن';
+                });
+                displayBots(botsData);
+                
+                systemLogs.push({
+                    time: new Date().toLocaleTimeString('ar-EG'),
+                    type: 'success',
+                    message: 'All bots started successfully'
+                });
+                displayLogs();
+                
+                showNotification('تم تشغيل جميع البوتات', 'success');
+            }
+        }
+
+        function stopAllBots() {
+            if(confirm('هل تريد إيقاف جميع البوتات؟\nهذا سيوقف الخدمة مؤقتاً.')) {
+                botsData.forEach(bot => {
+                    bot.status = 'offline';
+                });
+                displayBots(botsData);
+                
+                systemLogs.push({
+                    time: new Date().toLocaleTimeString('ar-EG'),
+                    type: 'warning',
+                    message: 'All bots stopped by admin'
+                });
+                displayLogs();
+                
+                showNotification('تم إيقاف جميع البوتات', 'warning');
+            }
+        }
+
+        function clearLogs() {
+            if(confirm('هل تريد مسح جميع سجلات النظام؟')) {
+                systemLogs.length = 0;
+                displayLogs();
+                showNotification('تم مسح سجلات النظام', 'info');
+            }
+        }
+
+        function refreshStatus() {
+            // محاكاة تحديث الحالة
+            botsData.forEach(bot => {
+                if(bot.status === 'online') {
+                    bot.messages += Math.floor(Math.random() * 10);
+                    bot.users += Math.floor(Math.random() * 3);
+                }
+            });
+            
+            displayBots(botsData);
+            
+            systemLogs.push({
+                time: new Date().toLocaleTimeString('ar-EG'),
+                type: 'info',
+                message: 'System status refreshed'
+            });
+            displayLogs();
+            
+            showNotification('تم تحديث حالة النظام', 'info');
+        }
+
+        // نظام الإشعارات المبسط
+        function showNotification(message, type = 'info') {
+            // إنشاء إشعار بسيط
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#F44336' : type === 'warning' ? '#FF9800' : '#2196F3'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                animation: slideIn 0.3s ease;
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                max-width: 400px;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // إضافة CSS للأنيميشن
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // التهيئة الأولى
+        displayBots(botsData);
+        displayLogs();
+
+        // تحديث السجلات تلقائياً كل 30 ثانية
+        setInterval(() => {
+            if(systemLogs.length < 50) { // منع التراكم
+                systemLogs.push({
+                    time: new Date().toLocaleTimeString('ar-EG'),
+                    type: Math.random() > 0.7 ? 'error' : Math.random() > 0.5 ? 'success' : 'info',
+                    message: `Bot ${Math.floor(Math.random() * 5) + 1} processed message`
+                });
+                displayLogs();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

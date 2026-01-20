@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - عالم تاني من الماركات المصرية</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* نظام الألوان - نفس نسخة صفحة التسجيل */
+            --bg-primary: #0C0F17;
+            --bg-secondary: #121522;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #E6E6E6;
+            --text-secondary: rgba(230, 230, 230, 0.6);
+            --text-muted: rgba(230, 230, 230, 0.4);
+            --accent-primary: #FF6D1F;
+            --accent-hover: #FF8B4A;
+            --status-success: #76DE68;
+            --status-warning: #FFB347;
+            --status-danger: #ED3F27;
+            --status-info: #4A90E2;
+
+            /* Borders */
+            --border-light: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --border-accent: rgba(255, 109, 31, 0.3);
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.16);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.24);
+
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 999px;
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 350ms ease;
+        }
+
+        /* ===== BASE TYPOGRAPHY ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+            font-weight: 400;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .landing-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            opacity: 0.08;
+            animation: float 25s infinite linear;
+        }
+
+        .particle-1 {
+            width: 400px;
+            height: 400px;
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .particle-2 {
+            width: 300px;
+            height: 300px;
+            bottom: -150px;
+            right: 15%;
+            animation-delay: 7s;
+        }
+
+        .particle-3 {
+            width: 250px;
+            height: 250px;
+            top: 40%;
+            left: 5%;
+            animation-delay: 14s;
+        }
+
+        .particle-4 {
+            width: 350px;
+            height: 350px;
+            bottom: -175px;
+            left: 25%;
+            animation-delay: 21s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+
+            25% {
+                transform: translate(150px, -80px) rotate(90deg) scale(1.1);
+            }
+
+            50% {
+                transform: translate(-100px, 150px) rotate(180deg) scale(0.9);
+            }
+
+            75% {
+                transform: translate(-150px, -80px) rotate(270deg) scale(1.05);
+            }
+
+            100% {
+                transform: translate(0, 0) rotate(360deg) scale(1);
+            }
+        }
+
+        /* ===== NAVIGATION ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            background: rgba(12, 15, 23, 0.9);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            padding: var(--space-md) var(--space-xl);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-xl);
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color var(--transition-fast);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: width var(--transition-normal);
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            color: var(--bg-primary);
+            padding: 10px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all var(--transition-normal);
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 109, 31, 0.3);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px var(--space-xl) var(--space-2xl);
+            position: relative;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2xl);
+            align-items: center;
+        }
+
+        .hero-content {
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            background: rgba(255, 109, 31, 0.1);
+            border: 1px solid var(--border-accent);
+            color: var(--accent-primary);
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: var(--space-lg);
+        }
+
+        .hero-badge i {
+            font-size: 14px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: var(--space-lg);
+            background: linear-gradient(135deg, var(--text-primary) 60%, var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
+            line-height: 1.6;
+            max-width: 90%;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .hero-btn {
+            padding: 16px 32px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            transition: all var(--transition-normal);
+            min-width: 180px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            color: var(--bg-primary);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(255, 109, 31, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255, 109, 31, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: var(--space-2xl);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--status-success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: var(--space-xs);
+        }
+
+        /* ===== HERO VISUAL ===== */
+        .hero-visual {
+            position: relative;
+            animation: slideInRight 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .visual-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visual-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--status-success));
+        }
+
+        .platform-mockup {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .mockup-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+
+        .mockup-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 24px rgba(255, 109, 31, 0.1);
+        }
+
+        .mockup-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--accent-primary));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-sm);
+            color: var(--text-primary);
+            font-size: 24px;
+        }
+
+        .mockup-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .mockup-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features-section {
+            padding: var(--space-2xl) var(--space-xl);
+            background: var(--bg-secondary);
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--space-2xl);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-xl);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), transparent);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-lg);
+            color: var(--bg-primary);
+            font-size: 28px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            color: var(--text-primary);
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--space-lg);
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-sm);
+        }
+
+        .feature-list li i {
+            color: var(--accent-primary);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            padding: var(--space-2xl) var(--space-xl);
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: var(--space-2xl);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--status-success));
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: #0A0D14;
+            padding: var(--space-2xl) var(--space-xl) var(--space-xl);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        .footer-col h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            color: var(--text-primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: var(--space-sm);
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: var(--space-xl);
+            border-top: 1px solid var(--border-light);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 992px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .hero-title {
+                font-size: 2.8rem;
+            }
+
+            .hero-visual {
+                order: 1;
+                /* هذا يجعل المربع (الفيجوال) يظهر أولاً */
+                max-width: 600px;
+                margin: 0 auto var(--space-xl);
+            }
+
+            .hero-content {
+                order: -1;
+                /* هذا يجعل المحتوى النصي يظهر ثانياً */
+            }
+        }
+
+
+
+
+
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.1rem;
+            }
+
+            .nav-links {
+                display: none;
+                /* ✅ هذا الصح - يخفي الـ links فقط على الهاتف */
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .hero-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .platform-mockup {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.8rem;
+                line-height: 1.3;
+            }
+
+            .section-title {
+                font-size: 1.7rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .nav-logo {
+                margin-left: 1000px;
+            }
+
+            .platform-mockup {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-btn {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Particles -->
+    <div class="landing-bg">
+        <div class="bg-particle particle-1"></div>
+        <div class="bg-particle particle-2"></div>
+        <div class="bg-particle particle-3"></div>
+        <div class="bg-particle particle-4"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <div class="logo-gif">
+                    <img src="./img/logo.png" alt="Biyala Logo" style="width: 60px; height: 60px;">
+                </div>
+                <span class="logo-text">BIYALA</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#features" class="nav-link">المميزات</a>
+                <a href="./first/about.html" class="nav-link">عنّا</a>
+                <a href="./first/how-to-sell.html
+                " class="nav-link">كيف تعمل</a>
+                <a href="login.html" class="nav-cta">دخول</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-star"></i>
+                    المنصة الأولى للعلامات التجارية المصرية
+                </div>
+
+                <h1 class="hero-title">
+                    عالم <span style="color: var(--accent-primary)">تاني</span> من البحث عن الماركات المصرية
+                </h1>
+
+                <p class="hero-subtitle">
+                    Biyala بنسهل عليك الوصول لأفضل المنتجات المحلية من ملابس، إكسسوارات، وديكورات، في مكان واحد. منصتنا
+                    بتجمع بينك وبين البراندات المصرية الناشئة بسهولة وأمان.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="login.html?role=buyer" class="hero-btn btn-primary">
+                        <i class="fas fa-shopping-cart"></i>
+                        دخول كمشتري
+                    </a>
+                    <a href="signup-seller.html" class="hero-btn btn-secondary">
+                        <i class="fas fa-store"></i>
+                        دخول كبائع
+                    </a>
+                    <a href="./customer/home.html" class="hero-btn btn-secondary">
+                        <i class="fas fa-eye"></i>
+                        تصفح كزائر
+                    </a>
+                    <a href="./seller/index.html" class="hero-btn btn-secondary">
+                        <i class="fas fa-compass"></i>
+                        استكشاف كبراند جديد
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">+500</span>
+                        <span class="stat-label">براند مصري</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">+10K</span>
+                        <span class="stat-label">منتج متنوع</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">98%</span>
+                        <span class="stat-label">رضا العملاء</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="visual-card">
+                    <div class="platform-mockup">
+                        <div class="mockup-item">
+                            <div class="mockup-icon">
+                                <i class="fas fa-tshirt"></i>
+                            </div>
+                            <div class="mockup-label">ملابس</div>
+                            <div class="mockup-desc">رجالي، حريمي، أطفال</div>
+                        </div>
+                        <div class="mockup-item">
+                            <div class="mockup-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <div class="mockup-label">إكسسوارات</div>
+                            <div class="mockup-desc">بكل أنواعها</div>
+                        </div>
+                        <div class="mockup-item">
+                            <div class="mockup-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="mockup-label">ديكور</div>
+                            <div class="mockup-desc">منازل ومكاتب</div>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-secondary); text-align: center; font-size: 14px;">
+                        <i class="fas fa-check-circle" style="color: var(--status-success); margin-left: 5px;"></i>
+                        كل المنتجات مصرية 100% وتوصل لباب بيتك
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="section-header">
+            <h2 class="section-title">ليه تختار Biyala؟</h2>
+            <p class="section-subtitle">
+                لأن النجاح على السوشيال ميديا صعب، ولأن الشباب والبنات بيحتاجوا منصة موثوقة تساعدهم يبدأوا أحلامهم
+                التجارية،
+                Biyala جت عشان تكون الجسر بين البراند والمشتري، من غير وسطاء معقدين.
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="feature-title">دعم البائعين</h3>
+                <p class="feature-desc">
+                    نساعد البراندات الناشئة في الوصول للجمهور المناسب مع داشبورد متكامل للإدارة والمتابعة.
+                </p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check"></i> دخول سهل ومباشر للبراندات</li>
+                    <li><i class="fas fa-check"></i> إحصائيات وتقارير مفصلة</li>
+                    <li><i class="fas fa-check"></i> دعم فني متكامل</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="feature-title">بحث ذكي</h3>
+                <p class="feature-desc">
+                    بحث بالذكاء الاصطناعي يفهم قصده حتى لو مكملش الكلمة، وبيقترح منتجات تناسب ذوقك.
+                </p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check"></i> بحث بالصور</li>
+                    <li><i class="fas fa-check"></i> تصفية متقدمة</li>
+                    <li><i class="fas fa-check"></i> اقتراحات ذكية</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">حماية كاملة</h3>
+                <p class="feature-desc">
+                    نظام تأمين متكامل للدفع والتوصيل، مع سياسة إرجاع واضحة تحمي البائع والمشتري.
+                </p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check"></i> دفع آمن</li>
+                    <li><i class="fas fa-check"></i> تتبع الطلبات</li>
+                    <li><i class="fas fa-check"></i> إرجاع واستبدال</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="about">
+        <div class="cta-card">
+            <h2 class="cta-title">جاهز تدخل عالم Biyala؟</h2>
+            <p class="cta-text">
+                سجّل دلوقتي واستمتع بتجربة تسوق وبيع مميزة. سواء كنت بائع عاوز تطور براندك، أو مشتري عاوز تجربات فريدة،
+                أو حتى زائر عاوز تستكشف، Biyala هتوفرلك كل اللي تحتاجه.
+            </p>
+            <div class="cta-buttons">
+                <a href="signup-seller.html" class="hero-btn btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    ابدأ كبائع
+                </a>
+                <a href="login.html?role=buyer" class="hero-btn btn-secondary">
+                    <i class="fas fa-shopping-bag"></i>
+                    ابدأ كمشتري
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>BIYALA</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                        المنصة الأولى لدعم وترويج الماركات المصرية الناشئة، بنوفر بيئة آمنة وسهلة للبيع والشراء.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="./first/terms.html">الشروط والأحكام</a></li>
+                        <li><a href="./first/privacy.html">سياسة الخصوصية</a></li>
+                        <li><a href="./first/return-policy.html">سياسة الإرجاع</a></li>
+                        <li><a href="./first/contact.html">تواصل معنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>الدعم</h3>
+                    <ul class="footer-links">
+                        <li><a href="./first/help-center.html">مركز المساعدة</a></li>
+                        <li><a href="./first/how-to-sell.html">كيف أبدأ البيع؟</a></li>
+                        <li><a href="./first/faq.html">أسئلة شائعة</a></li>
+                        <li><a href="./first/support.html">الدعم الفني</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2024 BIYALA. جميع الحقوق محفوظة. | تم التطوير بدعم من المبادرة المصرية للعلامات التجارية
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Parallax effect for particles
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const particles = document.querySelectorAll('.bg-particle');
+
+            particles.forEach((particle, index) => {
+                const speed = 0.2 + (index * 0.1);
+                particle.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
+            });
+        });
+
+        // Mobile menu toggle (you can extend this if needed)
+        console.log('BIYALA Landing Page loaded successfully!');
+    </script>
+</body>
+
+</html>

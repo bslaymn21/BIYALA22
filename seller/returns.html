@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - إدارة المرتجعات</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* نظام الألوان */
+            --bg-primary: #0C0F17;
+            --bg-secondary: #121522;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #E6E6E6;
+            --text-secondary: rgba(230, 230, 230, 0.6);
+            --accent-primary: #FF6D1F;
+            --border-light: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --status-success: #76DE68;
+            --status-warning: #FFB347;
+            --status-danger: #ED3F27;
+            --status-info: #4A90E2;
+            
+            /* Spacing */
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* ===== NAVBAR ===== */
+        .seller-navbar {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+            padding: 0 var(--space-lg);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .btn {
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 8px;
+            border: none;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+        }
+
+        /* ===== RETURNS STATS ===== */
+        .returns-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== RETURNS TABLE ===== */
+        .returns-table-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            overflow-x: auto;
+        }
+
+        .returns-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .returns-table th {
+            padding: var(--space-md);
+            text-align: right;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
+            font-size: 13px;
+        }
+
+        .returns-table td {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--border-light);
+            font-size: 13px;
+        }
+
+        .return-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-pending { background: rgba(255, 179, 71, 0.1); color: var(--status-warning); }
+        .status-approved { background: rgba(74, 144, 226, 0.1); color: var(--status-info); }
+        .status-completed { background: rgba(118, 222, 104, 0.1); color: var(--status-success); }
+        .status-rejected { background: rgba(237, 63, 39, 0.1); color: var(--status-danger); }
+
+        .action-btn {
+            padding: 4px 8px;
+            margin: 0 2px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* ===== REASONS ANALYSIS ===== */
+        .reasons-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: var(--space-lg);
+        }
+
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+
+        .reason-item {
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .reason-count {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .reason-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: var(--space-md);
+            }
+            
+            .returns-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-md);
+            }
+            
+            .reasons-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="seller-navbar">
+        <a href="dashboard.html" class="nav-brand">
+            <i class="fas fa-exchange-alt"></i>
+            <span>إدارة المرتجعات</span>
+        </a>
+        <div class="nav-actions">
+            <button class="btn btn-secondary" onclick="window.history.back()">
+                <i class="fas fa-arrow-right"></i>
+                رجوع
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Returns Stats -->
+        <div class="returns-stats">
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--status-warning);">3</div>
+                <div class="stat-label">مرتجعات معلقة</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--status-success);">15</div>
+                <div class="stat-label">مرتجعات مكتملة</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--status-danger);">EGP 2,400</div>
+                <div class="stat-label">قيمة المرتجعات</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value">4.8%</div>
+                <div class="stat-label">معدل المرتجعات</div>
+            </div>
+        </div>
+
+        <!-- Returns Table -->
+        <div class="returns-table-container">
+            <table class="returns-table" id="returnsTable">
+                <thead>
+                    <tr>
+                        <th>رقم المرتجع</th>
+                        <th>العميل</th>
+                        <th>المنتج</th>
+                        <th>القيمة</th>
+                        <th>التاريخ</th>
+                        <th>السبب</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- سيتم ملؤها بواسطة JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Reasons Analysis -->
+        <div class="reasons-section">
+            <h2 style="margin-bottom: var(--space-lg); font-size: 20px; font-weight: 600;">
+                <i class="fas fa-chart-bar" style="color: var(--accent-primary); margin-left: var(--space-sm);"></i>
+                تحليل أسباب المرتجعات
+            </h2>
+            
+            <div class="reasons-grid">
+                <div class="reason-item">
+                    <div class="reason-count">7</div>
+                    <div class="reason-text">حجم غير مناسب</div>
+                </div>
+                
+                <div class="reason-item">
+                    <div class="reason-count">5</div>
+                    <div class="reason-text">تغير في الرأي</div>
+                </div>
+                
+                <div class="reason-item">
+                    <div class="reason-count">4</div>
+                    <div class="reason-text">جودة المنتج</div>
+                </div>
+                
+                <div class="reason-item">
+                    <div class="reason-count">2</div>
+                    <div class="reason-text">تأخير في الشحن</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // بيانات المرتجعات
+        const returnsData = [
+            { 
+                id: "RET-1001", 
+                customer: "أحمد محمد", 
+                product: "تيشيرت قطني أبيض", 
+                amount: 120, 
+                date: "2024-12-15", 
+                reason: "حجم غير مناسب", 
+                status: "pending" 
+            },
+            { 
+                id: "RET-1002", 
+                customer: "سارة علي", 
+                product: "كاب رياضي أسود", 
+                amount: 80, 
+                date: "2024-12-14", 
+                reason: "تغير في الرأي", 
+                status: "approved" 
+            },
+            { 
+                id: "RET-1003", 
+                customer: "محمد حسن", 
+                product: "قميص رسمي أزرق", 
+                amount: 200, 
+                date: "2024-12-13", 
+                reason: "جودة المنتج", 
+                status: "completed" 
+            },
+            { 
+                id: "RET-1004", 
+                customer: "ريم أحمد", 
+                product: "ساعة يدوية", 
+                amount: 250, 
+                date: "2024-12-12", 
+                reason: "تأخير في الشحن", 
+                status: "rejected" 
+            }
+        ];
+
+        // عرض المرتجعات
+        function renderReturnsTable() {
+            const tbody = document.querySelector('#returnsTable tbody');
+            tbody.innerHTML = returnsData.map(returnItem => `
+                <tr>
+                    <td><strong>${returnItem.id}</strong></td>
+                    <td>${returnItem.customer}</td>
+                    <td>${returnItem.product}</td>
+                    <td><strong>EGP ${returnItem.amount}</strong></td>
+                    <td>${returnItem.date}</td>
+                    <td>${returnItem.reason}</td>
+                    <td>
+                        <span class="return-status status-${returnItem.status}">
+                            ${returnItem.status === 'pending' ? 'معلق' : 
+                              returnItem.status === 'approved' ? 'مقبول' : 
+                              returnItem.status === 'completed' ? 'مكتمل' : 'مرفوض'}
+                        </span>
+                    </td>
+                    <td>
+                        ${returnItem.status === 'pending' ? `
+                            <button class="action-btn" onclick="approveReturn('${returnItem.id}')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="action-btn" onclick="rejectReturn('${returnItem.id}')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        ` : ''}
+                        <button class="action-btn" onclick="viewReturn('${returnItem.id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // إدارة المرتجعات
+        function approveReturn(id) {
+            if (confirm(`هل تريد قبول المرتجع ${id}؟`)) {
+                alert(`تم قبول المرتجع ${id}`);
+                // في التطبيق الحقيقي: تحديث الحالة في قاعدة البيانات
+            }
+        }
+
+        function rejectReturn(id) {
+            if (confirm(`هل تريد رفض المرتجع ${id}؟`)) {
+                alert(`تم رفض المرتجع ${id}`);
+                // في التطبيق الحقيقي: تحديث الحالة في قاعدة البيانات
+            }
+        }
+
+        function viewReturn(id) {
+            alert(`سيتم عرض تفاصيل المرتجع ${id}`);
+            // في التطبيق الحقيقي: window.location.href = `return-details.html?id=${id}`;
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            renderReturnsTable();
+        });
+    </script>
+</body>
+</html>

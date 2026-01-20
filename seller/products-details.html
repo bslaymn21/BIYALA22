@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - تفاصيل المنتجات</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* نظام الألوان */
+            --bg-primary: #0C0F17;
+            --bg-secondary: #121522;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #E6E6E6;
+            --text-secondary: rgba(230, 230, 230, 0.6);
+            --accent-primary: #FF6D1F;
+            --border-light: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --status-success: #76DE68;
+            --status-warning: #FFB347;
+            --status-danger: #ED3F27;
+            
+            /* Spacing */
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* ===== NAVBAR ===== */
+        .seller-navbar {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+            padding: 0 var(--space-lg);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .btn {
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 8px;
+            border: none;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+        }
+
+        /* ===== PRODUCTS OVERVIEW ===== */
+        .products-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .overview-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+        .overview-icon {
+            font-size: 32px;
+            color: var(--accent-primary);
+            margin-bottom: var(--space-md);
+        }
+
+        .overview-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+        }
+
+        .overview-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .overview-change {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .overview-change.positive { color: var(--status-success); }
+        .overview-change.negative { color: var(--status-danger); }
+
+        /* ===== PRODUCTS GRID ===== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .product-card:hover {
+            border-color: var(--border-medium);
+            transform: translateY(-2px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.05));
+        }
+
+        .product-info {
+            padding: var(--space-md);
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-sm);
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .product-price {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--accent-primary);
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--space-md);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .product-sales {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .product-stock {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .stock-high { background: rgba(118, 222, 104, 0.1); color: var(--status-success); }
+        .stock-medium { background: rgba(255, 179, 71, 0.1); color: var(--status-warning); }
+        .stock-low { background: rgba(237, 63, 39, 0.1); color: var(--status-danger); }
+
+        /* ===== FILTERS ===== */
+        .filters-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active {
+            background: rgba(255, 109, 31, 0.1);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: var(--space-md);
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-overview {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-md);
+            }
+            
+            .filters-bar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="seller-navbar">
+        <a href="dashboard.html" class="nav-brand">
+            <i class="fas fa-box"></i>
+            <span>تفاصيل المنتجات</span>
+        </a>
+        <div class="nav-actions">
+            <button class="btn btn-primary" onclick="window.location.href='products.html'">
+                <i class="fas fa-plus"></i>
+                إدارة المنتجات
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Products Overview -->
+        <div class="products-overview">
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div class="overview-value">8</div>
+                <div class="overview-label">إجمالي المنتجات</div>
+                <div class="overview-change positive">+2 عن الشهر الماضي</div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="overview-value">45,820</div>
+                <div class="overview-label">إيرادات المنتجات (EGP)</div>
+                <div class="overview-change positive">+12% عن الأسبوع الماضي</div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="overview-value">4.8</div>
+                <div class="overview-label">متوسط التقييم</div>
+                <div class="overview-change positive">+0.2 عن الشهر الماضي</div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="overview-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <div class="overview-value">1,248</div>
+                <div class="overview-label">مشاهدات المنتجات</div>
+                <div class="overview-change positive">+8% عن الأسبوع الماضي</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <button class="filter-btn active" onclick="filterProducts('all')">الكل</button>
+            <button class="filter-btn" onclick="filterProducts('best-selling')">الأكثر مبيعاً</button>
+            <button class="filter-btn" onclick="filterProducts('new')">الأحدث</button>
+            <button class="filter-btn" onclick="filterProducts('low-stock')">قليل المخزون</button>
+            <button class="filter-btn" onclick="filterProducts('no-sales')">بدون مبيعات</button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="productsGrid">
+            <!-- سيتم ملؤها بواسطة JavaScript -->
+        </div>
+    </main>
+
+    <script>
+        // بيانات المنتجات
+        const productsData = [
+            { 
+                id: 1, 
+                name: "تيشيرت قطني أبيض", 
+                price: 120, 
+                stock: 45, 
+                sales: 12, 
+                rating: 4.8,
+                category: "ملابس رجالية",
+                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop"
+            },
+            { 
+                id: 2, 
+                name: "كاب رياضي أسود", 
+                price: 80, 
+                stock: 28, 
+                sales: 8, 
+                rating: 4.5,
+                category: "إكسسوارات",
+                image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=500&fit=crop"
+            },
+            { 
+                id: 3, 
+                name: "قميص رسمي أزرق", 
+                price: 200, 
+                stock: 30, 
+                sales: 5, 
+                rating: 4.9,
+                category: "ملابس رجالية",
+                image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop"
+            },
+            { 
+                id: 4, 
+                name: "ساعة يدوية", 
+                price: 250, 
+                stock: 0, 
+                sales: 20, 
+                rating: 4.7,
+                category: "إكسسوارات",
+                image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&h=500&fit=crop"
+            },
+            { 
+                id: 5, 
+                name: "حذاء رياضي", 
+                price: 350, 
+                stock: 15, 
+                sales: 0, 
+                rating: 4.2,
+                category: "أحذية",
+                image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=500&fit=crop"
+            }
+        ];
+
+        // عرض المنتجات
+        function renderProducts(filter = 'all') {
+            const grid = document.getElementById('productsGrid');
+            let filteredProducts = productsData;
+            
+            if (filter === 'best-selling') {
+                filteredProducts = productsData.filter(p => p.sales >= 10);
+            } else if (filter === 'new') {
+                filteredProducts = productsData.filter(p => p.sales < 5);
+            } else if (filter === 'low-stock') {
+                filteredProducts = productsData.filter(p => p.stock < 20 && p.stock > 0);
+            } else if (filter === 'no-sales') {
+                filteredProducts = productsData.filter(p => p.sales === 0);
+            }
+            
+            grid.innerHTML = filteredProducts.map(product => {
+                let stockClass = 'stock-high';
+                if (product.stock === 0) {
+                    stockClass = 'stock-low';
+                } else if (product.stock < 20) {
+                    stockClass = 'stock-medium';
+                }
+                
+                return `
+                    <div class="product-card" onclick="viewProduct(${product.id})">
+                        <img src="${product.image}" alt="${product.name}" class="product-image">
+                        <div class="product-info">
+                            <div class="product-header">
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-price">EGP ${product.price}</div>
+                            </div>
+                            <div class="product-meta">
+                                <div class="product-sales">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>${product.sales} مبيعات</span>
+                                </div>
+                                <div class="product-sales">
+                                    <i class="fas fa-star"></i>
+                                    <span>${product.rating}</span>
+                                </div>
+                                <div class="product-stock ${stockClass}">
+                                    ${product.stock === 0 ? 'نفذ من المخزون' : `${product.stock} قطعة`}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // فلترة المنتجات
+        function filterProducts(filter) {
+            // تحديث أزرار الفلتر
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderProducts(filter);
+        }
+
+        // عرض تفاصيل المنتج
+        function viewProduct(id) {
+            alert(`سيتم عرض تفاصيل المنتج ${id}`);
+            // في التطبيق الحقيقي: window.location.href = `product-details.html?id=${id}`;
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts();
+        });
+    </script>
+</body>
+</html>

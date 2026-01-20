@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - التسجيل للبائعين والبراندات</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* نظام الألوان - نفس النسخة */
+            --bg-primary: #0C0F17;
+            --bg-secondary: #121522;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #E6E6E6;
+            --text-secondary: rgba(230, 230, 230, 0.6);
+            --text-muted: rgba(230, 230, 230, 0.4);
+            --accent-primary: #FF6D1F;
+            --accent-hover: #FF8B4A;
+            --status-success: #76DE68;
+            --status-warning: #FFB347;
+            --status-danger: #ED3F27;
+            --status-info: #4A90E2;
+
+            /* Borders */
+            --border-light: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --border-accent: rgba(255, 109, 31, 0.3);
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.16);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.24);
+
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 999px;
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 350ms ease;
+        }
+
+        /* ===== BASE TYPOGRAPHY ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+            font-weight: 400;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .seller-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            opacity: 0.08;
+            animation: float 25s infinite linear;
+        }
+
+        .particle-1 {
+            width: 400px;
+            height: 400px;
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .particle-2 {
+            width: 300px;
+            height: 300px;
+            bottom: -150px;
+            right: 15%;
+            animation-delay: 7s;
+        }
+
+        .particle-3 {
+            width: 250px;
+            height: 250px;
+            top: 40%;
+            left: 5%;
+            animation-delay: 14s;
+        }
+
+        .particle-4 {
+            width: 350px;
+            height: 350px;
+            bottom: -175px;
+            left: 25%;
+            animation-delay: 21s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+
+            25% {
+                transform: translate(150px, -80px) rotate(90deg) scale(1.1);
+            }
+
+            50% {
+                transform: translate(-100px, 150px) rotate(180deg) scale(0.9);
+            }
+
+            75% {
+                transform: translate(-150px, -80px) rotate(270deg) scale(1.05);
+            }
+
+            100% {
+                transform: translate(0, 0) rotate(360deg) scale(1);
+            }
+        }
+
+        /* ===== NAVIGATION ===== */
+        .seller-navbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            background: rgba(12, 15, 23, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            padding: var(--space-md) var(--space-xl);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-decoration: none;
+        }
+
+
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-xl);
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color var(--transition-fast);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: width var(--transition-normal);
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .back-home {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            transition: color var(--transition-fast);
+        }
+
+        .back-home:hover {
+            color: var(--accent-primary);
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .seller-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px var(--space-xl) var(--space-2xl);
+            position: relative;
+        }
+
+        /* ===== DUAL CARDS LAYOUT ===== */
+        .seller-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 992px) {
+            .seller-cards {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+        }
+
+        /* ===== SELLER CARD ===== */
+        .seller-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.6s ease-out;
+            position: relative;
+            z-index: 2;
+            height: fit-content;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CARD HEADER ===== */
+        .card-header {
+            padding: var(--space-xl);
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+            background: rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--status-success));
+        }
+
+        .seller-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-md);
+            color: var(--bg-primary);
+            font-size: 28px;
+            box-shadow: 0 8px 24px rgba(255, 109, 31, 0.3);
+            transition: all var(--transition-normal);
+        }
+
+        .seller-icon:hover {
+            transform: rotate(15deg) scale(1.1);
+            box-shadow: 0 12px 32px rgba(255, 109, 31, 0.4);
+        }
+
+        .card-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-xs);
+        }
+
+        .card-header p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        /* ===== CARD BODY ===== */
+        .card-body {
+            padding: var(--space-xl);
+        }
+
+        /* ===== FORM STYLES ===== */
+        .seller-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+            transition: color var(--transition-fast);
+        }
+
+        .form-label i {
+            margin-left: 5px;
+            color: var(--text-muted);
+        }
+
+        .form-input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 50px 15px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--text-primary);
+            transition: all var(--transition-normal);
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(255, 109, 31, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 18px;
+            transition: color var(--transition-fast);
+        }
+
+        .form-input:focus+.form-icon {
+            color: var(--accent-primary);
+        }
+
+        .toggle-password {
+            position: absolute;
+            left: 45px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px;
+            transition: color var(--transition-fast);
+            z-index: 2;
+        }
+
+        .toggle-password:hover {
+            color: var(--text-primary);
+        }
+
+        /* ===== SELECT INPUT ===== */
+        .form-select {
+            width: 100%;
+            padding: 15px 15px 15px 35px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--text-primary);
+            transition: all var(--transition-normal);
+            outline: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(255, 109, 31, 0.1);
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: '⌄';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        /* ===== FILE UPLOAD ===== */
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px dashed var(--border-light);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            text-align: center;
+            justify-content: center;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255, 109, 31, 0.05);
+        }
+
+        .file-upload-label i {
+            font-size: 20px;
+            color: var(--accent-primary);
+        }
+
+        .file-name {
+            margin-top: var(--space-sm);
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* ===== FORM OPTIONS ===== */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-primary);
+            cursor: pointer;
+        }
+
+        .remember-me label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            font-size: 13px;
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-fast);
+            position: relative;
+            padding-bottom: 2px;
+        }
+
+        .forgot-password::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent-primary);
+            transition: width var(--transition-normal);
+        }
+
+        .forgot-password:hover {
+            color: var(--accent-hover);
+        }
+
+        .forgot-password:hover::after {
+            width: 100%;
+        }
+
+        /* ===== BUTTONS ===== */
+        .seller-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--bg-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .seller-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 109, 31, 0.3);
+        }
+
+        .seller-button:active {
+            transform: translateY(0);
+        }
+
+        .seller-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .seller-button:hover::after {
+            left: 100%;
+        }
+
+        .seller-button.loading {
+            background: var(--status-info);
+            pointer-events: none;
+        }
+
+        .seller-button.success {
+            background: var(--status-success);
+            pointer-events: none;
+        }
+
+        /* ===== SWITCH LINK ===== */
+        .switch-link {
+            text-align: center;
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--border-light);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .switch-link a {
+            color: var(--accent-primary);
+            font-weight: 600;
+            text-decoration: none;
+            margin-right: 5px;
+            transition: color var(--transition-fast);
+        }
+
+        .switch-link a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        /* ===== BENEFITS SECTION ===== */
+        .benefits-list {
+            list-style: none;
+            margin-top: var(--space-xl);
+        }
+
+        .benefits-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+            transition: all var(--transition-normal);
+        }
+
+        .benefits-list li:hover {
+            border-color: var(--accent-primary);
+            transform: translateX(-5px);
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+            flex-shrink: 0;
+        }
+
+        .benefit-content h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            color: var(--text-primary);
+        }
+
+        .benefit-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== ERROR MESSAGES ===== */
+        .error-message {
+            font-size: 12px;
+            color: var(--status-danger);
+            margin-top: 5px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-5px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* ===== PASSWORD STRENGTH ===== */
+        .password-strength {
+            margin-top: 5px;
+            height: 4px;
+            background: var(--border-light);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background 0.3s ease;
+            border-radius: var(--radius-full);
+        }
+
+        .strength-weak {
+            background: var(--status-danger);
+        }
+
+        .strength-medium {
+            background: var(--status-warning);
+        }
+
+        .strength-strong {
+            background: var(--status-success);
+        }
+
+        /* ===== VERIFICATION BADGE ===== */
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background: rgba(118, 222, 104, 0.1);
+            border: 1px solid rgba(118, 222, 104, 0.3);
+            color: var(--status-success);
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: var(--space-xs);
+        }
+
+        /* ===== FOOTER ===== */
+        .seller-footer {
+            text-align: center;
+            margin-top: var(--space-xl);
+            padding-top: var(--space-lg);
+            color: var(--text-muted);
+            font-size: 12px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* زر القائمة للهاتف */
+        .mobile-menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .mobile-menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: 0;
+                left: 0;
+                background: rgba(12, 15, 23, 0.98);
+                backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--border-light);
+                padding: 20px;
+                flex-direction: column;
+                gap: 20px;
+                display: none;
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                display: flex;
+                animation: slideDown 0.3s ease;
+            }
+
+            .nav-link,
+            .back-home {
+                padding: 12px 0;
+                border-bottom: 1px solid var(--border-light);
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .link-text {
+                font-size: 16px;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-top: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* ===== MOBILE OPTIMIZATIONS ===== */
+        @media (max-width: 768px) {
+            .seller-cards {
+                padding: 0 var(--space-sm);
+            }
+
+            .seller-card {
+                border-radius: var(--radius-lg);
+            }
+
+            .card-header {
+                padding: var(--space-lg);
+            }
+
+            .seller-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .card-header h1 {
+                font-size: 22px;
+            }
+
+            .card-body {
+                padding: var(--space-lg);
+            }
+
+            .form-input {
+                padding: 14px 45px 14px 14px;
+                font-size: 14px;
+            }
+
+            .seller-button {
+                padding: 14px;
+                font-size: 14px;
+            }
+        }
+
+        /* ===== LOADING SPINNER ===== */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--bg-primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== MOBILE FIXES ===== */
+        @media (max-width: 768px) {
+
+            /* إصلاح التمركز */
+            .seller-container {
+                padding: 100px 15px 50px !important;
+            }
+
+            /* إصلاح عرض الكروت */
+            .seller-cards {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+                padding: 0 10px !important;
+            }
+
+            /* إصلاح حجم النصوص */
+            .card-header h1 {
+                font-size: 22px !important;
+            }
+
+            .card-header p {
+                font-size: 14px !important;
+            }
+
+            /* إصلاح حقول الإدخال */
+            .form-input {
+                padding: 12px 40px 12px 12px !important;
+                font-size: 14px !important;
+            }
+
+            /* إصلاح الأزرار */
+            .seller-button {
+                padding: 14px !important;
+                font-size: 14px !important;
+            }
+
+            /* إصلاح التبديل بين النماذج */
+            .switch-link {
+                font-size: 13px !important;
+                padding-top: 15px !important;
+                margin-top: 15px !important;
+            }
+
+            /* إصلاح فواصل القائمة */
+            .nav-links {
+                display: none !important;
+            }
+
+            /* إصلاح الهيدر */
+            .seller-navbar {
+                display: none;
+            }
+
+            .logo-text {
+                font-size: 18px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            /* إصلاحات للهواتف الصغيرة */
+            .seller-container {
+                padding: 90px 10px 40px !important;
+            }
+
+            .card-header {
+                padding: 20px 15px !important;
+            }
+
+            .seller-icon {
+                width: 50px !important;
+                height: 50px !important;
+                font-size: 20px !important;
+            }
+
+            .card-body {
+                padding: 20px 15px !important;
+            }
+
+            .form-label {
+                font-size: 12px !important;
+            }
+
+            /* إصلاح تحميل الملف */
+            .file-upload-label {
+                padding: 12px !important;
+                font-size: 13px !important;
+            }
+
+            /* إصلاح قائمة المزايا */
+            .benefits-list li {
+                padding: 12px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .benefit-icon {
+                width: 35px !important;
+                height: 35px !important;
+            }
+
+            .benefit-content h3 {
+                font-size: 14px !important;
+            }
+
+            .benefit-content p {
+                font-size: 12px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="seller-navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <div class="logo-icon">
+
+                </div>
+                <span class="logo-text">BIYALA</span>
+            </a>
+
+            <!-- زر القائمة للهاتف -->
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- القائمة للكمبيوتر تظهر فقط على الشاشات الكبيرة -->
+            <div class="nav-links" id="navLinks">
+                <a href="seller-guide.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span class="link-text">دليل البائع</span>
+                </a>
+
+                <a href="index.html" class="back-home">
+                    <i class="fas fa-arrow-right"></i>
+                    <span class="link-text">الرئيسية</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Animated Background -->
+    <div class="seller-bg">
+        <div class="bg-particle particle-1"></div>
+        <div class="bg-particle particle-2"></div>
+        <div class="bg-particle particle-3"></div>
+        <div class="bg-particle particle-4"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="seller-navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <div class="logo-icon">
+                    <span class="logo-text">BIYALA للبائعين</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="./first/how-to-sell.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    كيف تبيع
+                </a>
+                <a href="index.html" class="back-home">
+                    <i class="fas fa-arrow-right"></i>
+                    العودة للرئيسية
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="seller-container">
+        <div class="seller-cards">
+            <!-- Card 1: تسجيل دخول البائع -->
+            <div class="seller-card" id="loginCard">
+                <div class="card-header">
+                    <div class="seller-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h1>تسجيل دخول البائع</h1>
+                    <p>مرحباً بعودتك أدخل بيانات براندك للوصول إلى لوحة التحكم</p>
+                </div>
+
+                <div class="card-body">
+                    <form class="seller-form" id="loginForm">
+                        <!-- Email Input -->
+                        <div class="form-group">
+                            <label class="form-label" for="sellerEmail">
+                                <i class="fas fa-envelope"></i>
+                                البريد الإلكتروني للبراند
+                            </label>
+                            <div class="form-input-wrapper">
+                                <input type="email" class="form-input" id="sellerEmail" placeholder="brand@email.com"
+                                    required autocomplete="email">
+                                <i class="fas fa-envelope form-icon"></i>
+                            </div>
+                            <div class="error-message" id="loginEmailError">
+                                <i class="fas fa-exclamation-circle"></i>
+                                بريد إلكتروني غير صحيح
+                            </div>
+                        </div>
+
+                        <!-- Password Input -->
+                        <div class="form-group">
+                            <label class="form-label" for="sellerPassword">
+                                <i class="fas fa-lock"></i>
+                                كلمة المرور
+                            </label>
+                            <div class="form-input-wrapper">
+                                <input type="password" class="form-input" id="sellerPassword"
+                                    placeholder="أدخل كلمة المرور" required minlength="6"
+                                    autocomplete="current-password">
+                                <i class="fas fa-lock form-icon"></i>
+                                <button type="button" class="toggle-password" id="toggleLoginPassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" id="loginPasswordError">
+                                <i class="fas fa-exclamation-circle"></i>
+                                كلمة المرور يجب أن تكون 6 أحرف على الأقل
+                            </div>
+                        </div>
+
+                        <!-- Form Options -->
+                        <div class="form-options">
+                            <label class="remember-me">
+                                <input type="checkbox" id="rememberSeller">
+                                <label for="rememberSeller">تذكرني على هذا الجهاز</label>
+                            </label>
+                            <a href="#" class="forgot-password" id="forgotPassword">
+                                نسيت كلمة المرور؟
+                            </a>
+                        </div>
+
+                        <!-- Login Button -->
+                        <button type="submit" class="seller-button" id="loginButton">
+                            <i class="fas fa-sign-in-alt"></i>
+                            تسجيل الدخول
+                        </button>
+                    </form>
+
+                    <!-- Switch to Register -->
+                    <div class="switch-link">
+                        <span>ليس لديك حساب بائع؟</span>
+                        <a href="#" id="switchToRegister">سجل براندك الآن</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: تسجيل براند جديد -->
+            <div class="seller-card" id="registerCard" style="display: none;">
+                <div class="card-header">
+                    <div class="seller-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h1>تسجيل براند جديد</h1>
+                    <p>انضم إلى منصة Biyala وابدأ بيع منتجاتك لملايين العملاء</p>
+                </div>
+
+                <div class="card-body">
+                    <form class="seller-form" id="registerForm">
+                        <!-- Brand Name -->
+                        <div class="form-group">
+                            <label class="form-label" for="brandName">
+                                <i class="fas fa-tag"></i>
+                                اسم البراند *
+                            </label>
+                            <div class="form-input-wrapper">
+                                <input type="text" class="form-input" id="brandName" placeholder="اسم براندك التجاري"
+                                    required>
+                                <i class="fas fa-tag form-icon"></i>
+                            </div>
+                            <div class="error-message" id="brandNameError">
+                                <i class="fas fa-exclamation-circle"></i>
+                                يرجى إدخال اسم البراند
+                            </div>
+                        </div>
+
+                        <!-- Seller Name -->
+                        <div class="form-group">
+                            <label class="form-label" for="sellerName">
+                                <i class="fas fa-user"></i>
+                                اسم المالك / المسؤول *
+                            </label>
+                            <div class="form-input-wrapper">
+                                <input type="text" class="form-input" id="sellerName" placeholder="اسمك الكامل"
+                                    required>
+                                <i class="fas fa-user form-icon"></i>
+                            </div>
+                            <div class="error-message" id="sellerNameError">
+                                <i class="fas fa-exclamation-circle"></i>
+                                يرجى إدخال اسم المالك
+                            </div>
+                        </div>
+
+                        <!-- Email Input -->
+                        <div class="form-group">
+                            <label class="form-label" for="registerEmail">
+                                <i class="fas fa-envelope"></i>
+                                البريد الإلكتروني *
+                            </label>
+                            <div class="form-input-wrapper">
+                                <input type="email" class="form-input" id="registerEmail" placeholder="email@brand.com"
+                                    required autocomplete="email">
+                                <i class="fas fa-envelope form-icon"></i>
+                            </div>
+                            <div class="error-message" id="registerEmailError">
+                                <i class="fas fa-exclamation-circle"></i>
+                                بريد إلكتروني غير صحيح
+                            </div>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="form-group">
+                            <label class="form-label" for="sellerPhone">
+                                <i class="fas fa-phone"></i>
+                                رقم الهاتف *
+                            </label>
+                            <div class="form-input-wrapper">
+                                <input type="tel" class="form-input" id="sellerPhone" placeholder="01XXXXXXXXX" required
+                                    pattern="01[0-9]{9}">
+                                <i class="fas fa-phone form-icon"></i>
+                            </div>
+                            <div class="error-message" id="sellerPhoneError">
+                                <i class="fas fa-exclamation-circle"></i>
+                                رقم هاتف مصري صحيح (11 رقم)
+                            </div>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="form-group">
+                            <label class="form-label" for="brandCategory">
+                                <i class="fas fa-list"></i>
+                                فئة المنتجات *
+                            </label>
+                            <div class="select-wrapper">
+                                <select class="form-select" id="brandCategory" required>
+                                    <option value="">اختر فئة منتجاتك</option>
+                                    <option value="clothing">ملابس رجالية</option>
+                                    <option value="women-clothing">ملابس حريمي</option>
+                                    <option value="accessories">إكسسوارات</option>
+                                    <option value="home-decor">ديكور منازل</option>
+                                    <option value="shoes">أحذية</option>
+                                    <option value="bags">حقائب</option>
+                                    <option value="jewelry">مجوهرات</option>
+                                    <option value="other">أخرى</option>
+                                </select>
+                                <i class="fas fa-list form-icon"></i>
+                            </div>
+                            <div class="error-message" id="categoryError">
+                                <i class="fas fa-exclamation-circle"></i>
+                                يرجى اختيار فئة المنتجات
+                            </div>
+                        </div>
+
+                        <!-- Commercial Registration -->
+                        <div class="form-group">
+                            <label class="form-label" for="commercialReg">
+                                <i class="fas fa-file-contract"></i>
+                                السجل التجاري (اختياري)
+                            </label>
+                            <div class="form-input-wrapper">
+                                <input type="text" class="form-input" id="commercialReg"
+                                    placeholder="رقم السجل التجاري">
+                                <i class="fas fa-file-contract form-icon"></i>
+                            </div>
+                            <div class="verification-badge">
+                                <i class="fas fa-badge-check"></i>
+                                التحقق يزيد من ثقة العملاء
+                            </div>
+                        </div>
+
+                        <!-- Brand Logo -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-image"></i>
+                                شعار البراند *
+                            </label>
+                            <div class="file-upload">
+                                <input type="file" class="file-upload-input" id="brandLogo" accept="image/*" required>
+                                <label for="brandLogo" class="file-upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>انقر لرفع شعار البراند</span>
+                                </label>
+                            </div>
+                            <div class="file-name" id="logoFileName"></div>
+                            <div class="error-message" id="logoError">
+                                <i class="fas fa-exclamation-circle"></i>
+                                يرجى رفع شعار للبراند
+                            </div>
+                        </div>
+
+                        <!-- Password Input -->
+                        <div class="form-group">
+                            <label class="form-label" for="sellerPassword">
+                                <i class="fas fa-lock"></i>
+                                كلمة المرور *
+                            </label>
+                            <div class="form-input-wrapper">
+                                <input type="password" class="form-input" id="sellerRegisterPassword"
+                                    placeholder="كلمة مرور قوية (6 أحرف على الأقل)" required minlength="6"
+                                    autocomplete="new-password">
+                                <i class="fas fa-lock form-icon"></i>
+                                <button type="button" class="toggle-password" id="toggleRegisterPassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-bar" id="sellerStrengthBar"></div>
+                            </div>
+                            <div class="error-message" id="sellerPasswordError">
+                                <i class="fas fa-exclamation-circle"></i>
+                                كلمة المرور يجب أن تكون 6 أحرف على الأقل
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="form-group">
+                            <label class="form-label" for="confirmSellerPassword">
+                                <i class="fas fa-lock"></i>
+                                تأكيد كلمة المرور *
+                            </label>
+                            <div class="form-input-wrapper">
+                                <input type="password" class="form-input" id="confirmSellerPassword"
+                                    placeholder="أعد إدخال كلمة المرور" required minlength="6"
+                                    autocomplete="new-password">
+                                <i class="fas fa-lock form-icon"></i>
+                                <button type="button" class="toggle-password" id="toggleConfirmSellerPassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" id="confirmSellerPasswordError">
+                                <i class="fas fa-exclamation-circle"></i>
+                                كلمات المرور غير متطابقة
+                            </div>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="form-options">
+                            <label class="remember-me">
+                                <input type="checkbox" id="acceptSellerTerms" required>
+                                <label for="acceptSellerTerms">
+                                    أوافق على
+                                    <a href="./first/terms.html" style="color: var(--accent-primary);">شروط البائع</a>
+                                    و
+                                    <a href="./first/privacy.html" style="color: var(--accent-primary);">سياسة
+                                        الخصوصية</a>
+                                </label>
+                            </label>
+                        </div>
+
+                        <!-- Register Button -->
+                        <button type="submit" class="seller-button" id="registerButton">
+                            <i class="fas fa-rocket"></i>
+                            تسجيل البراند
+                        </button>
+                    </form>
+
+                    <!-- Switch to Login -->
+                    <div class="switch-link">
+                        <span>لديك حساب بائع بالفعل؟</span>
+                        <a href="#" id="switchToLogin">سجل الدخول</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Benefits for Sellers -->
+            <div class="seller-card">
+                <div class="card-header">
+                    <div class="seller-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h1>مزايا البيع على Biyala</h1>
+                    <p>لماذا تختار Biyala كمنصة لتسويق براندك؟</p>
+                </div>
+
+                <div class="card-body">
+                    <ul class="benefits-list">
+                        <li>
+                            <div class="benefit-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h3>وصول لأكثر من مليون عميل</h3>
+                                <p>عرض منتجاتك على أكبر قاعدة عملاء تبحث عن ماركات مصرية</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="benefit-icon">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h3>أدوات بيع متكاملة</h3>
+                                <p>داشبورد متكامل، إحصائيات مفصلة، إدارة طلبات سهلة</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="benefit-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h3>حماية كاملة للبائع</h3>
+                                <p>ضمان استلام المبالغ، سياسة إرجاع واضحة، دعم فني متخصص</p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="benefit-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h3>ترويج مجاني</h3>
+                                <p>ظهور في الصفحة الرئيسية، عروض خاصة، توصيات ذكية</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="benefit-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h3>عمولات تنافسية</h3>
+                                <p>لايوجد مصاريف علي اي طلب او حتي باقه شهريه </p>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <!-- Commission Info -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="seller-footer">
+        <div>© 2024 BIYALA للبائعين. جميع الحقوق محفوظة.</div>
+        <div class="footer-links">
+            <a href="./first/terms.html">شروط البائع</a>
+            <a href="./first/terms.html">سياسة الخصوصية</a>
+            <a href="./first/support.html">دعم البائعين</a>
+            <a href="./first/contact.html">اتصل بنا</a>
+        </div>
+    </div>
+
+    <script>
+        // ===== SYSTEM CONFIGURATION =====
+        const SELLER_CONFIG = {
+            demoSellers: [
+                { email: "brand@biyala.com", password: "brand123", brand: "ماركة تجريبية" },
+                { email: "fashion@biyala.com", password: "fashion123", brand: "دار أزياء" },
+                { email: "accessory@biyala.com", password: "accessory123", brand: "إكسسوارات فاخرة" }
+            ],
+            validationRules: {
+                email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                phone: /^01[0-9]{9}$/,
+                password: /^(?=.*[A-Za-z])(?=.*\d).{6,}$/
+            },
+            storageKeys: {
+                email: 'biyala_seller_email',
+                password: 'biyala_seller_password',
+                remember: 'biyala_seller_remember'
+            }
+        };
+
+        // ===== DOM ELEMENTS =====
+        const loginCard = document.getElementById('loginCard');
+        const registerCard = document.getElementById('registerCard');
+        const switchToRegister = document.getElementById('switchToRegister');
+        const switchToLogin = document.getElementById('switchToLogin');
+
+        // ===== TOGGLE BETWEEN LOGIN & REGISTER =====
+        if (switchToRegister) {
+            switchToRegister.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginCard.style.display = 'none';
+                registerCard.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        if (switchToLogin) {
+            switchToLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                registerCard.style.display = 'none';
+                loginCard.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // ===== PASSWORD TOGGLE =====
+        function setupPasswordToggle(inputId, toggleId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleButton = document.getElementById(toggleId);
+
+            if (passwordInput && toggleButton) {
+                toggleButton.addEventListener('click', () => {
+                    const icon = toggleButton.querySelector('i');
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        passwordInput.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                    passwordInput.focus();
+                });
+            }
+        }
+
+        // Setup all password toggles
+        setupPasswordToggle('sellerPassword', 'toggleLoginPassword');
+        setupPasswordToggle('sellerRegisterPassword', 'toggleRegisterPassword');
+        setupPasswordToggle('confirmSellerPassword', 'toggleConfirmSellerPassword');
+
+        // ===== FILE UPLOAD HANDLER =====
+        const brandLogoInput = document.getElementById('brandLogo');
+        const logoFileName = document.getElementById('logoFileName');
+
+        if (brandLogoInput && logoFileName) {
+            brandLogoInput.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Check file size (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('حجم الملف كبير جداً! الحد الأقصى 5MB');
+                        this.value = '';
+                        logoFileName.textContent = '';
+                        return;
+                    }
+
+                    // Check file type
+                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+                    if (!validTypes.includes(file.type)) {
+                        alert('نوع الملف غير مدعوم! يرجى رفع صورة (JPEG, PNG, GIF)');
+                        this.value = '';
+                        logoFileName.textContent = '';
+                        return;
+                    }
+
+                    logoFileName.textContent = `✅ ${file.name} (${(file.size / 1024).toFixed(1)}KB)`;
+                    logoFileName.style.color = 'var(--status-success)';
+                }
+            });
+        }
+
+        // ===== PASSWORD STRENGTH =====
+        const sellerPasswordInput = document.getElementById('sellerRegisterPassword');
+        const sellerStrengthBar = document.getElementById('sellerStrengthBar');
+
+        if (sellerPasswordInput && sellerStrengthBar) {
+            sellerPasswordInput.addEventListener('input', function () {
+                const password = this.value;
+                let strength = 0;
+
+                if (password.length >= 6) strength = 1;
+                if (password.length >= 8 && /[A-Z]/.test(password)) strength = 2;
+                if (password.length >= 10 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) strength = 3;
+
+                const classes = ['strength-weak', 'strength-medium', 'strength-strong'];
+                const percents = ['33%', '66%', '100%'];
+
+                sellerStrengthBar.className = 'strength-bar ' + (strength > 0 ? classes[strength - 1] : '');
+                sellerStrengthBar.style.width = strength > 0 ? percents[strength - 1] : '0%';
+            });
+        }
+
+        // ===== FORM VALIDATION FUNCTIONS =====
+        function validateEmail(email) {
+            return SELLER_CONFIG.validationRules.email.test(email);
+        }
+
+        function validatePhone(phone) {
+            return SELLER_CONFIG.validationRules.phone.test(phone);
+        }
+
+        function validatePassword(password) {
+            return password.length >= 6;
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+                element.style.display = 'flex';
+            }
+        }
+
+        function hideError(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.style.display = 'none';
+            }
+        }
+
+        // ===== LOGIN FORM HANDLER =====
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const email = document.getElementById('sellerEmail').value.trim();
+                const password = document.getElementById('sellerPassword').value;
+                const rememberMe = document.getElementById('rememberSeller').checked;
+
+                // Reset errors
+                hideError('loginEmailError');
+                hideError('loginPasswordError');
+
+                let isValid = true;
+
+                // Validate email
+                if (!email || !validateEmail(email)) {
+                    showError('loginEmailError', 'يرجى إدخال بريد إلكتروني صحيح');
+                    isValid = false;
+                }
+
+                // Validate password
+                if (!password || !validatePassword(password)) {
+                    showError('loginPasswordError', 'كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    const loginBtn = document.getElementById('loginButton');
+                    const originalHTML = loginBtn.innerHTML;
+
+                    // Show loading
+                    loginBtn.innerHTML = '<div class="loading-spinner"></div>';
+                    loginBtn.classList.add('loading');
+
+                    // Simulate API call
+                    setTimeout(() => {
+                        // Check if demo seller
+                        const seller = SELLER_CONFIG.demoSellers.find(s =>
+                            s.email === email && s.password === password
+                        );
+
+                        if (seller) {
+                            // Save credentials if remember me is checked
+                            if (rememberMe) {
+                                localStorage.setItem(SELLER_CONFIG.storageKeys.email, email);
+                                localStorage.setItem(SELLER_CONFIG.storageKeys.password, password);
+                                localStorage.setItem(SELLER_CONFIG.storageKeys.remember, 'true');
+                            }
+
+                            // Show success
+                            loginBtn.innerHTML = '<i class="fas fa-check"></i> تم تسجيل الدخول!';
+                            loginBtn.classList.remove('loading');
+                            loginBtn.classList.add('success');
+
+                            // Redirect after 1 second
+                            setTimeout(() => {
+                                window.location.href = 'seller-dashboard.html';
+                            }, 1000);
+                        } else {
+                            showError('loginPasswordError', 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+                            loginBtn.innerHTML = originalHTML;
+                            loginBtn.classList.remove('loading');
+                        }
+                    }, 1500);
+                }
+            });
+        }
+
+        // ===== REGISTER FORM HANDLER =====
+        const registerForm = document.getElementById('registerForm');
+        if (registerForm) {
+            registerForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const brandName = document.getElementById('brandName').value.trim();
+                const sellerName = document.getElementById('sellerName').value.trim();
+                const email = document.getElementById('registerEmail').value.trim();
+                const phone = document.getElementById('sellerPhone').value.trim();
+                const category = document.getElementById('brandCategory').value;
+                const commercialReg = document.getElementById('commercialReg').value.trim();
+                const brandLogo = document.getElementById('brandLogo').files[0];
+                const password = document.getElementById('sellerRegisterPassword').value;
+                const confirmPassword = document.getElementById('confirmSellerPassword').value;
+                const acceptTerms = document.getElementById('acceptSellerTerms').checked;
+
+                // Reset errors
+                hideError('brandNameError');
+                hideError('sellerNameError');
+                hideError('registerEmailError');
+                hideError('sellerPhoneError');
+                hideError('categoryError');
+                hideError('logoError');
+                hideError('sellerPasswordError');
+                hideError('confirmSellerPasswordError');
+
+                let isValid = true;
+
+                // Validate brand name
+                if (!brandName || brandName.length < 2) {
+                    showError('brandNameError', 'يرجى إدخال اسم براند صحيح');
+                    isValid = false;
+                }
+
+                // Validate seller name
+                if (!sellerName || sellerName.length < 3) {
+                    showError('sellerNameError', 'يرجى إدخال اسم المالك (3 أحرف على الأقل)');
+                    isValid = false;
+                }
+
+                // Validate email
+                if (!email || !validateEmail(email)) {
+                    showError('registerEmailError', 'يرجى إدخال بريد إلكتروني صحيح');
+                    isValid = false;
+                }
+
+                // Validate phone
+                if (!phone || !validatePhone(phone)) {
+                    showError('sellerPhoneError', 'يرجى إدخال رقم هاتف مصري صحيح (11 رقم)');
+                    isValid = false;
+                }
+
+                // Validate category
+                if (!category) {
+                    showError('categoryError', 'يرجى اختيار فئة المنتجات');
+                    isValid = false;
+                }
+
+                // Validate logo
+                if (!brandLogo) {
+                    showError('logoError', 'يرجى رفع شعار للبراند');
+                    isValid = false;
+                }
+
+                // Validate password
+                if (!password || !validatePassword(password)) {
+                    showError('sellerPasswordError', 'كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                    isValid = false;
+                }
+
+                // Validate confirm password
+                if (password !== confirmPassword) {
+                    showError('confirmSellerPasswordError', 'كلمات المرور غير متطابقة');
+                    isValid = false;
+                }
+
+                // Validate terms
+                if (!acceptTerms) {
+                    alert('يرجى الموافقة على شروط البائع وسياسة الخصوصية');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    const registerBtn = document.getElementById('registerButton');
+                    const originalHTML = registerBtn.innerHTML;
+
+                    // Show loading
+                    registerBtn.innerHTML = '<div class="loading-spinner"></div>';
+                    registerBtn.classList.add('loading');
+
+                    // Simulate file upload and registration
+                    setTimeout(() => {
+                        // Prepare seller data
+                        const sellerData = {
+                            brand: brandName,
+                            owner: sellerName,
+                            email: email,
+                            phone: phone,
+                            category: category,
+                            commercialReg: commercialReg || 'غير مسجل',
+                            logo: brandLogo ? brandLogo.name : 'no-logo.png',
+                            status: 'pending', // تحت المراجعة
+                            joinedAt: new Date().toISOString()
+                        };
+
+                        // Save seller data (in real app, send to backend)
+                        localStorage.setItem('biyala_seller_application', JSON.stringify(sellerData));
+
+                        // Show success
+                        registerBtn.innerHTML = '<i class="fas fa-check"></i> تم تقديم الطلب!';
+                        registerBtn.classList.remove('loading');
+                        registerBtn.classList.add('success');
+
+                        // Show success message
+                        setTimeout(() => {
+                            const successMessage = `
+                                <div style="background: rgba(118, 222, 104, 0.1); border: 1px solid rgba(118, 222, 104, 0.3); padding: var(--space-lg); border-radius: var(--radius-md); margin-top: var(--space-lg);">
+                                    <h3 style="color: var(--status-success); margin-bottom: var(--space-sm);">
+                                        <i class="fas fa-check-circle"></i>
+                                        تم تقديم طلب التسجيل بنجاح!
+                                    </h3>
+                                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                                        شكراً لتسجيل براندك <strong>${brandName}</strong> على منصة Biyala.<br>
+                                        سيتم مراجعة طلبك خلال 24-48 ساعة وسيتم إعلامك عبر البريد الإلكتروني.
+                                    </p>
+                                    <p style="color: var(--status-warning); margin-top: var(--space-sm); font-size: 13px;">
+                                        <i class="fas fa-clock"></i>
+                                        يمكنك تسجيل الدخول بعد تفعيل حسابك.
+                                    </p>
+                                </div>
+                            `;
+
+                            // Insert success message
+                            const cardBody = document.querySelector('#registerCard .card-body');
+                            const form = document.getElementById('registerForm');
+                            form.style.display = 'none';
+                            cardBody.insertAdjacentHTML('beforeend', successMessage);
+
+                            // Show login link
+                            setTimeout(() => {
+                                const loginLink = document.createElement('div');
+                                loginLink.className = 'switch-link';
+                                loginLink.style.marginTop = 'var(--space-lg)';
+                                loginLink.innerHTML = `
+                                    <a href="#" id="goToLogin" style="display: inline-block; padding: 12px 24px; background: var(--accent-primary); color: white; border-radius: var(--radius-md); text-decoration: none;">
+                                        <i class="fas fa-arrow-left"></i>
+                                        العودة لتسجيل الدخول
+                                    </a>
+                                `;
+                                cardBody.appendChild(loginLink);
+
+                                document.getElementById('goToLogin').addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    registerCard.style.display = 'none';
+                                    loginCard.style.display = 'block';
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                });
+                            }, 1000);
+                        }, 500);
+                    }, 2000);
+                }
+            });
+        }
+
+        // ===== FORGOT PASSWORD =====
+        const forgotPassword = document.getElementById('forgotPassword');
+        if (forgotPassword) {
+            forgotPassword.addEventListener('click', function (e) {
+                e.preventDefault();
+                const email = document.getElementById('sellerEmail').value.trim();
+
+                if (!email || !validateEmail(email)) {
+                    alert('يرجى إدخال بريد إلكتروني صحيح أولاً');
+                    document.getElementById('sellerEmail').focus();
+                    return;
+                }
+
+                alert(`سيتم إرسال رابط إعادة تعيين كلمة المرور إلى ${email}\n(هذه ميزة تجريبية للبائعين)`);
+            });
+        }
+
+        // ===== LOAD SAVED CREDENTIALS =====
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedEmail = localStorage.getItem(SELLER_CONFIG.storageKeys.email);
+            const savedPassword = localStorage.getItem(SELLER_CONFIG.storageKeys.password);
+            const rememberMe = localStorage.getItem(SELLER_CONFIG.storageKeys.remember) === 'true';
+
+            if (savedEmail && savedPassword && rememberMe) {
+                document.getElementById('sellerEmail').value = savedEmail;
+                document.getElementById('sellerPassword').value = savedPassword;
+                document.getElementById('rememberSeller').checked = true;
+            }
+        });
+
+        console.log('✅ Seller login page loaded successfully!');
+        // Mobile menu functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        if (mobileMenuToggle && navLinks) {
+            mobileMenuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = mobileMenuToggle.querySelector('i');
+
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!navLinks.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - إدارة الطلبات</title>
+    <!-- استيراد النظام الأساسي -->
+    <link rel="stylesheet" href="responsive-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- أنماط إضافية خاصة بالطلبات -->
+    <style>
+        /* نظام ألوان ثابت */
+        :root {
+            --order-pending: #FF9800;
+            --order-processing: #2196F3;
+            --order-shipped: #00BCD4;
+            --order-delivered: #4CAF50;
+            --order-cancelled: #F44336;
+            --order-returned: #795548;
+            --order-high: #D32F2F;
+            --order-medium: #FF9800;
+            --order-low: #689F38;
+        }
+        
+        /* بطاقات الطلبات */
+        .order-card {
+            border-top: 4px solid var(--order-pending);
+            transition: all var(--transition-speed);
+        }
+        
+        .order-card.processing { border-top-color: var(--order-processing); }
+        .order-card.shipped { border-top-color: var(--order-shipped); }
+        .order-card.delivered { border-top-color: var(--order-delivered); }
+        .order-card.cancelled { border-top-color: var(--order-cancelled); }
+        .order-card.returned { border-top-color: var(--order-returned); }
+        
+        /* حالة الطلب */
+        .order-status {
+            padding: 6px 12px;
+            border-radius: var(--border-radius);
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .status-pending {
+            background: color-mix(in srgb, var(--order-pending) 15%, white);
+            color: var(--order-pending);
+            border: 1px solid color-mix(in srgb, var(--order-pending) 30%, white);
+        }
+        
+        .status-processing {
+            background: color-mix(in srgb, var(--order-processing) 15%, white);
+            color: var(--order-processing);
+            border: 1px solid color-mix(in srgb, var(--order-processing) 30%, white);
+        }
+        
+        .status-shipped {
+            background: color-mix(in srgb, var(--order-shipped) 15%, white);
+            color: var(--order-shipped);
+            border: 1px solid color-mix(in srgb, var(--order-shipped) 30%, white);
+        }
+        
+        .status-delivered {
+            background: color-mix(in srgb, var(--order-delivered) 15%, white);
+            color: var(--order-delivered);
+            border: 1px solid color-mix(in srgb, var(--order-delivered) 30%, white);
+        }
+        
+        .status-cancelled {
+            background: color-mix(in srgb, var(--order-cancelled) 15%, white);
+            color: var(--order-cancelled);
+            border: 1px solid color-mix(in srgb, var(--order-cancelled) 30%, white);
+        }
+        
+        /* أولوية الطلب */
+        .order-priority {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .priority-high {
+            background: color-mix(in srgb, var(--order-high) 15%, white);
+            color: var(--order-high);
+        }
+        
+        .priority-medium {
+            background: color-mix(in srgb, var(--order-medium) 15%, white);
+            color: var(--order-medium);
+        }
+        
+        .priority-low {
+            background: color-mix(in srgb, var(--order-low) 15%, white);
+            color: var(--order-low);
+        }
+        
+        /* تتبع المراحل */
+        .timeline-container {
+            position: relative;
+            padding-right: 30px;
+            margin: 20px 0;
+        }
+        
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            right: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e0e0e0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 15px;
+            padding-right: 10px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            right: -24px;
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #bdbdbd;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #e0e0e0;
+        }
+        
+        .timeline-item.completed::before {
+            background: var(--order-delivered);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--order-delivered) 30%, white);
+        }
+        
+        .timeline-item.current::before {
+            background: var(--order-processing);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--order-processing) 30%, white);
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* المنتجات */
+        .products-list {
+            max-height: 150px;
+            overflow-y: auto;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .product-item:last-child {
+            border-bottom: none;
+        }
+        
+        .product-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--order-pending), color-mix(in srgb, var(--order-pending) 70%, black));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        /* إحصائيات الطلبات */
+        .orders-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card-order {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            border-top: 4px solid;
+            transition: transform var(--transition-speed);
+        }
+        
+        .stat-card-order:hover {
+            transform: translateY(-3px);
+        }
+        
+        /* أزرار خاصة بالطلبات */
+        .order-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .order-action-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all var(--transition-speed);
+        }
+        
+        .btn-order-update {
+            background: color-mix(in srgb, var(--order-processing) 10%, white);
+            color: var(--order-processing);
+            border: 1px solid color-mix(in srgb, var(--order-processing) 30%, white);
+        }
+        
+        .btn-order-update:hover {
+            background: var(--order-processing);
+            color: white;
+        }
+        
+        .btn-order-print {
+            background: color-mix(in srgb, #607D8B 10%, white);
+            color: #607D8B;
+            border: 1px solid color-mix(in srgb, #607D8B 30%, white);
+        }
+        
+        .btn-order-print:hover {
+            background: #607D8B;
+            color: white;
+        }
+        
+        /* أنيميشن */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .new-order {
+            animation: slideIn 0.5s ease;
+        }
+        
+        /* تحسينات للشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .order-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .orders-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .product-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .product-image {
+                align-self: flex-start;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .order-actions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .orders-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-container {
+                padding-right: 25px;
+            }
+            
+            .timeline-item::before {
+                right: -20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- نظام الإشعارات (مدمج في responsive-system.css) -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- مودال تأكيد مخصص (بدون alert) -->
+    <div id="confirmModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="confirmTitle"></h3>
+                <button class="close-modal" onclick="closeConfirmModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage"></p>
+                <div class="modal-actions">
+                    <button id="confirmYes" class="btn btn-primary">
+                        <i class="fas fa-check"></i> نعم
+                    </button>
+                    <button id="confirmNo" class="btn btn-outline">
+                        <i class="fas fa-times"></i> لا
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- الهيدر باستخدام النظام الأساسي -->
+        <div class="dashboard-header">
+            <button class="btn btn-outline back-btn" onclick="window.location.href='dashboard.html'">
+                <i class="fas fa-arrow-right"></i> العودة
+            </button>
+            <div class="header-content">
+                <div>
+                    <h1><i class="fas fa-shopping-cart"></i> إدارة الطلبات</h1>
+                    <p>عرض وتتبع جميع طلبات العملاء</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value">156</span>
+                        <span class="stat-label">طلبات اليوم</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">89</span>
+                        <span class="stat-label">قيد المعالجة</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">1,245</span>
+                        <span class="stat-label">إجمالي الطلبات</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">24,850 ج.م</span>
+                        <span class="stat-label">إجمالي المبيعات</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- فلتر البحث باستخدام النظام الأساسي -->
+        <div class="filter-section">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="ابحث برقم الطلب أو اسم العميل...">
+            </div>
+            
+            <button class="btn btn-primary filter-btn active" data-filter="all">
+                <i class="fas fa-layer-group"></i> الكل
+            </button>
+            <button class="btn btn-outline filter-btn" data-filter="pending">
+                <i class="fas fa-clock"></i> قيد الانتظار
+            </button>
+            <button class="btn btn-outline filter-btn" data-filter="processing">
+                <i class="fas fa-cog"></i> قيد المعالجة
+            </button>
+            <button class="btn btn-outline filter-btn" data-filter="delivered">
+                <i class="fas fa-check-circle"></i> تم التوصيل
+            </button>
+            <button class="btn btn-outline filter-btn" data-filter="today">
+                <i class="fas fa-calendar-day"></i> طلبات اليوم
+            </button>
+        </div>
+        
+        <!-- إحصائيات الطلبات -->
+        <div class="orders-stats">
+            <div class="stat-card-order" style="border-top-color: var(--order-pending);">
+                <span class="stat-value">45</span>
+                <span class="stat-label">قيد الانتظار</span>
+                <div class="stat-change positive">+5 جديد</div>
+            </div>
+            <div class="stat-card-order" style="border-top-color: var(--order-processing);">
+                <span class="stat-value">89</span>
+                <span class="stat-label">قيد المعالجة</span>
+                <div class="stat-change positive">+12 أسبوعي</div>
+            </div>
+            <div class="stat-card-order" style="border-top-color: var(--order-delivered);">
+                <span class="stat-value">890</span>
+                <span class="stat-label">تم التوصيل</span>
+                <div class="stat-change positive">98% رضاء</div>
+            </div>
+            <div class="stat-card-order" style="border-top-color: var(--order-cancelled);">
+                <span class="stat-value">23</span>
+                <span class="stat-label">ملغية</span>
+                <div class="stat-change negative">-2 شهري</div>
+            </div>
+        </div>
+        
+        <!-- قائمة الطلبات -->
+        <div class="cards-grid" id="ordersContainer">
+            <!-- الطلبات تظهر هنا عبر JavaScript -->
+        </div>
+        
+        <!-- التصفح -->
+        <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <span class="page-dots">...</span>
+            <button class="page-btn">12</button>
+        </div>
+    </div>
+
+    <!-- مودال تحديث حالة الطلب -->
+    <div id="updateStatusModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> تحديث حالة الطلب</h3>
+                <button class="close-modal" onclick="closeModal('updateStatusModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- المحتوى يضاف عبر JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // نظام إدارة الطلبات - متوافق مع جميع القواعد
+        // ============================================
+        
+        // بيانات الطلبات (وهمية للتطوير)
+        const ordersData = [
+            {
+                id: 1,
+                orderNumber: "ORD-2024-00123",
+                customer: { name: "أحمد محمد", phone: "01123456789", email: "ahmed@example.com" },
+                date: "2024-01-25 10:30",
+                total: 1250,
+                payment: "بطاقة ائتمان",
+                status: "pending",
+                priority: "high",
+                address: "القاهرة - مصر الجديدة",
+                products: [
+                    { id: 1, name: "حذاء Nike Air Max", quantity: 1, price: 350, image: "N" },
+                    { id: 2, name: "تيشيرت Adidas", quantity: 2, price: 225, image: "A" }
+                ],
+                timeline: [
+                    { step: "تم استلام الطلب", time: "2024-01-25 10:30", completed: true },
+                    { step: "قيد المراجعة", time: "2024-01-25 11:00", completed: true },
+                    { step: "قيد التجهيز", time: "", completed: false, current: true },
+                    { step: "جاهز للشحن", time: "", completed: false },
+                    { step: "تم التوصيل", time: "", completed: false }
+                ],
+                notes: "العميل يريد التوصيل سريعاً"
+            },
+            {
+                id: 2,
+                orderNumber: "ORD-2024-00124",
+                customer: { name: "سارة خالد", phone: "01098765432", email: "sara@example.com" },
+                date: "2024-01-25 09:15",
+                total: 890,
+                payment: "الدفع عند الاستلام",
+                status: "processing",
+                priority: "medium",
+                address: "الجيزة - الدقي",
+                products: [
+                    { id: 3, name: "هاتف Samsung A54", quantity: 1, price: 890, image: "S" }
+                ],
+                timeline: [
+                    { step: "تم استلام الطلب", time: "2024-01-25 09:15", completed: true },
+                    { step: "قيد المراجعة", time: "2024-01-25 09:30", completed: true },
+                    { step: "قيد التجهيز", time: "2024-01-25 10:00", completed: true },
+                    { step: "جاهز للشحن", time: "", completed: false, current: true },
+                    { step: "تم التوصيل", time: "", completed: false }
+                ],
+                notes: ""
+            },
+            {
+                id: 3,
+                orderNumber: "ORD-2024-00125",
+                customer: { name: "محمد علي", phone: "01234567890", email: "mohamed@example.com" },
+                date: "2024-01-24 16:45",
+                total: 2450,
+                payment: "تحويل بنكي",
+                status: "shipped",
+                priority: "low",
+                address: "الإسكندرية - سموحة",
+                products: [
+                    { id: 4, name: "لابتوب Dell Inspiron", quantity: 1, price: 1800, image: "D" },
+                    { id: 5, name: "ماوس لاسلكي", quantity: 1, price: 150, image: "M" },
+                    { id: 6, name: "حقيبة لابتوب", quantity: 1, price: 500, image: "H" }
+                ],
+                timeline: [
+                    { step: "تم استلام الطلب", time: "2024-01-24 16:45", completed: true },
+                    { step: "قيد المراجعة", time: "2024-01-24 17:00", completed: true },
+                    { step: "قيد التجهيز", time: "2024-01-24 18:00", completed: true },
+                    { step: "جاهز للشحن", time: "2024-01-25 09:00", completed: true },
+                    { step: "تم التوصيل", time: "", completed: false, current: true }
+                ],
+                notes: "تم الشحن عبر شركة Aramex"
+            }
+        ];
+
+        // وظائف النظام
+        const OrdersSystem = {
+            currentOrder: null,
+            
+            // عرض الطلبات
+            displayOrders: function(orders = ordersData) {
+                const container = document.getElementById('ordersContainer');
+                container.innerHTML = '';
+                
+                orders.forEach(order => {
+                    const orderElement = this.createOrderCard(order);
+                    container.appendChild(orderElement);
+                });
+            },
+            
+            // إنشاء بطاقة طلب
+            createOrderCard: function(order) {
+                const card = document.createElement('div');
+                card.className = `card order-card ${order.status} ${order.priority}-priority`;
+                card.dataset.id = order.id;
+                
+                // حساب إجمالي المنتجات
+                const totalProducts = order.products.reduce((sum, p) => sum + p.quantity, 0);
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div>
+                            <h3 class="order-number">${order.orderNumber}</h3>
+                            <p class="customer-info">
+                                <i class="fas fa-user"></i> ${order.customer.name}
+                                <span class="separator">•</span>
+                                <i class="fas fa-phone"></i> ${order.customer.phone}
+                            </p>
+                        </div>
+                        <div class="order-meta">
+                            <span class="order-status status-${order.status}">
+                                ${this.getStatusText(order.status)}
+                            </span>
+                            <span class="order-priority priority-${order.priority}">
+                                ${this.getPriorityText(order.priority)}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="summary-item">
+                            <div class="summary-label">التاريخ</div>
+                            <div class="summary-value">${order.date}</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">المبلغ</div>
+                            <div class="summary-value">${order.total} ج.م</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">الدفع</div>
+                            <div class="summary-value">${order.payment}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="products-list">
+                        <div class="products-header">
+                            <span>المنتجات (${totalProducts})</span>
+                        </div>
+                        ${order.products.map(p => `
+                            <div class="product-item">
+                                <div class="product-info">
+                                    <div class="product-image">${p.image}</div>
+                                    <div>
+                                        <div class="product-name">${p.name}</div>
+                                        <div class="product-meta">الكمية: ${p.quantity}</div>
+                                    </div>
+                                </div>
+                                <div class="product-price">${p.price * p.quantity} ج.م</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    ${order.notes ? `
+                        <div class="order-notes">
+                            <i class="fas fa-sticky-note"></i>
+                            <span>${order.notes}</span>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="timeline-container">
+                        <div class="timeline-header">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>تتبع حالة الطلب</span>
+                        </div>
+                        ${order.timeline.map((item, index) => `
+                            <div class="timeline-item ${item.completed ? 'completed' : ''} ${item.current ? 'current' : ''}">
+                                <div class="timeline-step">${item.step}</div>
+                                ${item.time ? `<div class="timeline-time">${item.time}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="order-actions-grid">
+                        <button class="order-action-btn btn-order-update" onclick="OrdersSystem.openUpdateModal(${order.id})">
+                            <i class="fas fa-edit"></i> تحديث
+                        </button>
+                        <button class="order-action-btn btn-order-print" onclick="OrdersSystem.printOrder(${order.id})">
+                            <i class="fas fa-print"></i> طباعة
+                        </button>
+                        <button class="order-action-btn btn-order-message" onclick="OrdersSystem.messageCustomer(${order.id})">
+                            <i class="fas fa-comment"></i> مراسلة
+                        </button>
+                        <button class="order-action-btn btn-order-cancel" onclick="OrdersSystem.confirmCancel(${order.id})">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                    </div>
+                `;
+                
+                return card;
+            },
+            
+            // نصوص الحالة
+            getStatusText: function(status) {
+                const statuses = {
+                    pending: 'قيد الانتظار',
+                    processing: 'قيد المعالجة',
+                    shipped: 'تم الشحن',
+                    delivered: 'تم التوصيل',
+                    cancelled: 'ملغي',
+                    returned: 'مرتجع'
+                };
+                return statuses[status] || status;
+            },
+            
+            // نصوص الأولوية
+            getPriorityText: function(priority) {
+                const priorities = {
+                    high: 'عالي',
+                    medium: 'متوسط',
+                    low: 'منخفض'
+                };
+                return priorities[priority] || priority;
+            },
+            
+            // فتح مودال التحديث
+            openUpdateModal: function(orderId) {
+                this.currentOrder = ordersData.find(o => o.id === orderId);
+                if (!this.currentOrder) return;
+                
+                const modal = document.getElementById('updateStatusModal');
+                const modalBody = modal.querySelector('.modal-body');
+                
+                modalBody.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">حالة الطلب</label>
+                        <select class="form-control" id="statusSelect">
+                            <option value="pending" ${this.currentOrder.status === 'pending' ? 'selected' : ''}>قيد الانتظار</option>
+                            <option value="processing" ${this.currentOrder.status === 'processing' ? 'selected' : ''}>قيد المعالجة</option>
+                            <option value="shipped" ${this.currentOrder.status === 'shipped' ? 'selected' : ''}>تم الشحن</option>
+                            <option value="delivered" ${this.currentOrder.status === 'delivered' ? 'selected' : ''}>تم التوصيل</option>
+                            <option value="cancelled" ${this.currentOrder.status === 'cancelled' ? 'selected' : ''}>ملغي</option>
+                            <option value="returned" ${this.currentOrder.status === 'returned' ? 'selected' : ''}>مرتجع</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">ملاحظات</label>
+                        <textarea class="form-control" id="statusNotes" rows="3" placeholder="أضف ملاحظات عن التحديث...">${this.currentOrder.notes || ''}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notifyCustomer" checked>
+                            <span>إرسال إشعار للعميل بالتحديث</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-primary" onclick="OrdersSystem.saveStatusUpdate()">
+                            <i class="fas fa-save"></i> حفظ التغييرات
+                        </button>
+                        <button class="btn btn-outline" onclick="closeModal('updateStatusModal')">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                    </div>
+                `;
+                
+                modal.style.display = 'flex';
+            },
+            
+            // حفظ تحديث الحالة
+            saveStatusUpdate: function() {
+                if (!this.currentOrder) return;
+                
+                const newStatus = document.getElementById('statusSelect').value;
+                const notes = document.getElementById('statusNotes').value;
+                const notify = document.getElementById('notifyCustomer').checked;
+                
+                // تحديث البيانات
+                this.currentOrder.status = newStatus;
+                this.currentOrder.notes = notes;
+                
+                // تحديث الـ timeline
+                this.updateTimeline(this.currentOrder, newStatus);
+                
+                // إعادة العرض
+                this.displayOrders();
+                closeModal('updateStatusModal');
+                
+                // إشعارات
+                const message = `تم تحديث حالة الطلب ${this.currentOrder.orderNumber} إلى "${this.getStatusText(newStatus)}"`;
+                showNotification(message, 'success');
+                
+                if (notify) {
+                    showNotification('تم إرسال إشعار للعميل', 'info');
+                }
+                
+                this.currentOrder = null;
+            },
+            
+            // تحديث الـ timeline
+            updateTimeline: function(order, newStatus) {
+                const statusSteps = {
+                    pending: 0,
+                    processing: 2,
+                    shipped: 3,
+                    delivered: 4,
+                    cancelled: 4,
+                    returned: 4
+                };
+                
+                const targetStep = statusSteps[newStatus] || 0;
+                const now = new Date().toLocaleString('ar-EG');
+                
+                order.timeline.forEach((step, index) => {
+                    step.completed = index <= targetStep;
+                    step.current = index === targetStep;
+                    
+                    if (index === targetStep && !step.time) {
+                        step.time = now;
+                    }
+                });
+            },
+            
+            // تأكيد الإلغاء
+            confirmCancel: function(orderId) {
+                const order = ordersData.find(o => o.id === orderId);
+                if (!order) return;
+                
+                showConfirmModal(
+                    'إلغاء الطلب',
+                    `هل تريد إلغاء الطلب ${order.orderNumber}؟`,
+                    () => this.cancelOrder(orderId)
+                );
+            },
+            
+            // إلغاء الطلب
+            cancelOrder: function(orderId) {
+                const order = ordersData.find(o => o.id === orderId);
+                if (!order) return;
+                
+                order.status = 'cancelled';
+                order.notes = order.notes ? `${order.notes} (ملغي من قبل الإدارة)` : 'ملغي من قبل الإدارة';
+                
+                this.updateTimeline(order, 'cancelled');
+                this.displayOrders();
+                
+                showNotification(`تم إلغاء الطلب ${order.orderNumber}`, 'success');
+            },
+            
+            // طباعة الطلب
+            printOrder: function(orderId) {
+                const order = ordersData.find(o => o.id === orderId);
+                if (!order) return;
+                
+                showNotification(`جاري تحضير فاتورة ${order.orderNumber} للطباعة...`, 'info');
+                // هنا يمكن إضافة منطق الطباعة الفعلي
+            },
+            
+            // مراسلة العميل
+            messageCustomer: function(orderId) {
+                const order = ordersData.find(o => o.id === orderId);
+                if (!order) return;
+                
+                showNotification(`فتح محادثة مع ${order.customer.name}`, 'info');
+                // هنا يمكن إضافة منطق المراسلة
+            },
+            
+            // البحث والفلترة
+            initFilters: function() {
+                const searchInput = document.getElementById('searchInput');
+                const filterButtons = document.querySelectorAll('.filter-btn');
+                
+                // البحث
+                searchInput.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    const filtered = ordersData.filter(order => 
+                        order.orderNumber.toLowerCase().includes(term) ||
+                        order.customer.name.toLowerCase().includes(term) ||
+                        order.customer.phone.includes(term)
+                    );
+                    this.displayOrders(filtered);
+                });
+                
+                // الفلتر
+                filterButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        filterButtons.forEach(b => {
+                            b.classList.remove('active', 'btn-primary');
+                            b.classList.add('btn-outline');
+                        });
+                        
+                        btn.classList.add('active', 'btn-primary');
+                        btn.classList.remove('btn-outline');
+                        
+                        const filter = btn.dataset.filter;
+                        let filtered = ordersData;
+                        
+                        if (filter === 'pending') {
+                            filtered = ordersData.filter(o => o.status === 'pending');
+                        } else if (filter === 'processing') {
+                            filtered = ordersData.filter(o => o.status === 'processing');
+                        } else if (filter === 'delivered') {
+                            filtered = ordersData.filter(o => o.status === 'delivered');
+                        } else if (filter === 'today') {
+                            const today = new Date().toISOString().split('T')[0];
+                            filtered = ordersData.filter(o => o.date.includes(today));
+                        }
+                        
+                        this.displayOrders(filtered);
+                    });
+                });
+            }
+        };
+
+        // ============================================
+        // وظائف عامة
+        // ============================================
+        
+        // إغلاق المودال
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            OrdersSystem.currentOrder = null;
+        }
+        
+        // تأكيد مخصص (بدون alert)
+        function showConfirmModal(title, message, onConfirm) {
+            const modal = document.getElementById('confirmModal');
+            document.getElementById('confirmTitle').textContent = title;
+            document.getElementById('confirmMessage').textContent = message;
+            
+            const yesBtn = document.getElementById('confirmYes');
+            const noBtn = document.getElementById('confirmNo');
+            
+            // إزالة الأحداث السابقة
+            yesBtn.replaceWith(yesBtn.cloneNode(true));
+            noBtn.replaceWith(noBtn.cloneNode(true));
+            
+            // إضافة أحداث جديدة
+            document.getElementById('confirmYes').onclick = function() {
+                modal.style.display = 'none';
+                if (typeof onConfirm === 'function') onConfirm();
+            };
+            
+            document.getElementById('confirmNo').onclick = function() {
+                modal.style.display = 'none';
+                showNotification('تم الإلغاء', 'info');
+            };
+            
+            modal.style.display = 'flex';
+        }
+        
+        // تهيئة النظام
+        document.addEventListener('DOMContentLoaded', function() {
+            OrdersSystem.displayOrders();
+            OrdersSystem.initFilters();
+            
+            // إغلاق المودالات بالضغط خارجها
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+            });
+            
+            // إغلاق بالزر Esc
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal-overlay').forEach(modal => {
+                        modal.style.display = 'none';
+                    });
+                }
+            });
+        });
+
+        // نظام الإشعارات (مدمج في responsive-system.css)
+        function showNotification(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('notificationContainer');
+            if (!container) return;
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.style.animation = 'slideIn 0.3s ease';
+            
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 
+                                  type === 'error' ? 'fa-exclamation-circle' : 
+                                  type === 'warning' ? 'fa-exclamation-triangle' : 
+                                  'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            container.appendChild(notification);
+            
+            // إزالة تلقائية
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, duration);
+        }
+    </script>
+</body>
+</html>

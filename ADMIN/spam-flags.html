@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - إشعارات النظام</title>
+   <link rel="stylesheet" href="responsive-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI'; }
+        body { background: #f5f7fa; padding: 20px; direction: rtl; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        .header {
+            background: linear-gradient(135deg, #607D8B 0%, #455A64 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 25px;
+            top: 25px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.15);
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .stat-value { font-size: 32px; font-weight: bold; display: block; }
+        .stat-label { font-size: 14px; opacity: 0.9; }
+        
+        .filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        .filter-btn {
+            background: #f5f5f5;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .filter-btn.active {
+            background: #607D8B;
+            color: white;
+        }
+        
+        .flags-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+            gap: 25px;
+        }
+        
+        .flag-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid;
+        }
+        
+        .flag-spam { border-left-color: #F44336; }
+        .flag-warning { border-left-color: #FF9800; }
+        .flag-info { border-left-color: #2196F3; }
+        .flag-success { border-left-color: #4CAF50; }
+        
+        .flag-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .flag-type {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .flag-spam .flag-type { background: #FFEBEE; color: #C62828; }
+        .flag-warning .flag-type { background: #FFF3E0; color: #EF6C00; }
+        .flag-info .flag-type { background: #E3F2FD; color: #1565C0; }
+        .flag-success .flag-type { background: #E8F5E9; color: #2E7D32; }
+        
+        .flag-content {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .flag-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-approve { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
+        .btn-override { background: #E3F2FD; color: #1565C0; border: 1px solid #90CAF9; }
+        .btn-ignore { background: #f5f5f5; color: #757575; border: 1px solid #e0e0e0; }
+        
+        @media (max-width: 768px) {
+            .flags-container { grid-template-columns: 1fr; }
+            .stat-item { min-width: 120px; padding: 10px 15px; }
+            .stat-value { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="notificationContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
+    <div class="container">
+        <div class="header">
+            <button class="back-btn" onclick="window.location.href='dashboard.html'">
+                <i class="fas fa-arrow-right"></i> العودة
+            </button>
+            <h1 style="text-align: center; margin-bottom: 10px;"><i class="fas fa-flag"></i> إشعارات النظام</h1>
+            <p style="text-align: center;">إشعارات وقرارات النظام التلقائية</p>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-value">156</span>
+                    <span class="stat-label">إشعارات النظام</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">23</span>
+                    <span class="stat-label">Spam محتمل</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">8</span>
+                    <span class="stat-label">تحذيرات</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">125</span>
+                    <span class="stat-label">معالجة تلقائية</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="filter-section">
+            <div class="search-box">
+                <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #999;"></i>
+                <input type="text" id="searchInput" placeholder="ابحث في إشعارات النظام...">
+            </div>
+            
+            <button class="filter-btn active" data-filter="all">الكل</button>
+            <button class="filter-btn" data-filter="spam">Spam</button>
+            <button class="filter-btn" data-filter="warning">تحذيرات</button>
+            <button class="filter-btn" data-filter="auto">تلقائية</button>
+        </div>
+        
+        <div class="flags-container" id="flagsContainer">
+            <!-- إشعارات النظام تظهر هنا -->
+        </div>
+    </div>
+
+    <script>
+        // بيانات وهمية لإشعارات النظام
+        const systemFlags = [
+            {
+                id: 1,
+                type: "spam",
+                title: "كشف حساب مريب",
+                description: "تم الكشف عن حساب جديد برقم هاتف غير مصرح به. الحساب أنشئ منذ 5 دقائق ومن IP غير مألوف.",
+                action: "تم تعليق الحساب تلقائياً",
+                time: "2024-01-25 14:30",
+                confidence: "95%",
+                rule: "RULE_001 - Anti-Fraud"
+            },
+            {
+                id: 2,
+                type: "warning",
+                title: "محاولة تسجيل دخول فاشلة",
+                description: "10 محاولات تسجيل دخول فاشلة من IP 192.168.1.100 إلى حساب أحمد محمد.",
+                action: "تم حظر IP مؤقتاً",
+                time: "2024-01-25 13:15",
+                confidence: "88%",
+                rule: "RULE_007 - Brute Force Protection"
+            },
+            {
+                id: 3,
+                type: "info",
+                title: "تجاوز حد الاستخدام",
+                description: "حساب متجر Nike تجاوز حد طلبات Firebase اليومي بنسبة 85%.",
+                action: "تم إرسال تنبيه للمالك",
+                time: "2024-01-25 12:45",
+                confidence: "100%",
+                rule: "RULE_012 - Usage Limit"
+            },
+            {
+                id: 4,
+                type: "success",
+                title: "منع هجوم DDoS",
+                description: "تم منع 1250 طلب غير طبيعي من IP 203.0.113.0 في الدقيقة الماضية.",
+                action: "تم حظر IP المصدر",
+                time: "2024-01-25 11:20",
+                confidence: "99%",
+                rule: "RULE_009 - DDoS Protection"
+            },
+            {
+                id: 5,
+                type: "spam",
+                title: "محاولة اختراق API",
+                description: "تم اكتشاف محاولات للوصول إلى واجهات API غير مصرح بها.",
+                action: "تم رفض الطلبات وحفظ السجلات",
+                time: "2024-01-25 10:05",
+                confidence: "92%",
+                rule: "RULE_015 - API Security"
+            },
+            {
+                id: 6,
+                type: "warning",
+                title: "تسريب بيانات محتمل",
+                description: "تم اكتشاف نمط غير عادي في تنزيلات قاعدة البيانات.",
+                action: "تم تشغيل الوضع الآمن",
+                time: "2024-01-25 09:30",
+                confidence: "75%",
+                rule: "RULE_020 - Data Leak Prevention"
+            }
+        ];
+
+        function displayFlags(flags) {
+            const container = document.getElementById('flagsContainer');
+            container.innerHTML = '';
+            
+            flags.forEach(flag => {
+                const flagType = flag.type;
+                const typeText = flag.type === 'spam' ? 'Spam' : flag.type === 'warning' ? 'تحذير' : flag.type === 'info' ? 'معلومات' : 'نجاح';
+                
+                container.innerHTML += `
+                    <div class="flag-card flag-${flagType}">
+                        <div class="flag-header">
+                            <div>
+                                <h3 style="margin-bottom: 5px;">${flag.title}</h3>
+                                <p style="color: #666; font-size: 14px;">${flag.time}</p>
+                            </div>
+                            <span class="flag-type">${typeText}</span>
+                        </div>
+                        
+                        <div class="flag-content">
+                            <p>${flag.description}</p>
+                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ddd;">
+                                <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                                    <span><strong>القاعدة:</strong> ${flag.rule}</span>
+                                    <span><strong>الثقة:</strong> ${flag.confidence}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 15px;">
+                            <strong>الإجراء المتخذ:</strong> ${flag.action}
+                        </div>
+                        
+                        <div class="flag-actions">
+                            <button class="action-btn btn-approve" onclick="approveAction(${flag.id})">
+                                <i class="fas fa-check"></i> الموافقة
+                            </button>
+                            <button class="action-btn btn-override" onclick="overrideAction(${flag.id})">
+                                <i class="fas fa-redo"></i> تغيير القرار
+                            </button>
+                            <button class="action-btn btn-ignore" onclick="ignoreFlag(${flag.id})">
+                                <i class="fas fa-times"></i> تجاهل
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // البحث والفلترة
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = systemFlags.filter(flag => 
+                flag.title.toLowerCase().includes(searchTerm) ||
+                flag.description.toLowerCase().includes(searchTerm) ||
+                flag.rule.toLowerCase().includes(searchTerm)
+            );
+            displayFlags(filtered);
+        });
+
+        // أزرار الفلتر
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                let filtered = systemFlags;
+                
+                if(filter === 'spam') {
+                    filtered = systemFlags.filter(flag => flag.type === 'spam');
+                } else if(filter === 'warning') {
+                    filtered = systemFlags.filter(flag => flag.type === 'warning');
+                } else if(filter === 'auto') {
+                    filtered = systemFlags.filter(flag => flag.type !== 'warning');
+                }
+                
+                displayFlags(filtered);
+            });
+        });
+
+        // وظائف الإجراءات
+        function approveAction(flagId) {
+            const flag = systemFlags.find(f => f.id === flagId);
+            showNotification(`تمت الموافقة على إجراء النظام: ${flag.title}`, 'success');
+            // يمكن إزالة الإشعار من القائمة بعد الموافقة
+        }
+
+        function overrideAction(flagId) {
+            const flag = systemFlags.find(f => f.id === flagId);
+            showNotification(`فتح نافذة لتغيير قرار النظام: ${flag.title}`, 'info');
+            // هنا يمكن فتح نافذة لتعديل القرار
+        }
+
+        function ignoreFlag(flagId) {
+            const flag = systemFlags.find(f => f.id === flagId);
+            const index = systemFlags.findIndex(f => f.id === flagId);
+            if(index !== -1) {
+                systemFlags.splice(index, 1);
+                displayFlags(systemFlags);
+                showNotification(`تم تجاهل إشعار النظام: ${flag.title}`, 'warning');
+            }
+        }
+
+        // نظام الإشعارات
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            const colors = { success: '#4CAF50', error: '#F44336', warning: '#FF9800', info: '#2196F3' };
+            
+            notification.style.cssText = `
+                background: ${colors[type]};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                margin-bottom: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                        <span>${message}</span>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }`;
+        document.head.appendChild(style);
+
+        displayFlags(systemFlags);
+    </script>
+</body>
+</html>

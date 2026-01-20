@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - إدارة طلبات البائعين</title>
+    <style>
+        /* أضف CSS هنا */
+    </style>
+</head>
+
+<body>
+    <h1>طلبات البائعين الجدد</h1>
+
+    <div id="pendingRequests">
+        <!-- سيتم ملؤها بالطلبات من localStorage -->
+    </div>
+
+    <script>
+        // عرض جميع طلبات التسجيل
+        function loadPendingRequests() {
+            const requests = [];
+
+            // في الواقع، هنا ستجلب البيانات من قاعدة البيانات
+            // للتدريب، سنستخدم localStorage
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('biyala_seller_application_')) {
+                    const request = JSON.parse(localStorage.getItem(key));
+                    requests.push(request);
+                }
+            }
+
+            // عرض الطلبات
+            const container = document.getElementById('pendingRequests');
+            container.innerHTML = '';
+
+            requests.forEach((request, index) => {
+                const requestCard = `
+                    <div style="border: 1px solid #ccc; padding: 15px; margin: 10px; border-radius: 8px;">
+                        <h3>${request.brand} - ${request.requestId}</h3>
+                        <p>المالك: ${request.owner}</p>
+                        <p>البريد: ${request.email}</p>
+                        <p>التاريخ: ${new Date(request.joinedAt).toLocaleString('ar-EG')}</p>
+                        <p>الحالة: <span style="color: ${request.status === 'pending' ? 'orange' : 'green'}">
+                            ${request.status === 'pending' ? '⏳ قيد المراجعة' : '✅ معتمدة'}
+                        </span></p>
+                        
+                        ${request.status === 'pending' ? `
+                            <div style="margin-top: 10px;">
+                                <button onclick="approveRequest('${request.requestId}')" style="background: green; color: white; padding: 8px 15px; border: none; border-radius: 5px; margin-right: 10px;">
+                                    ✅ الموافقة
+                                </button>
+                                <button onclick="rejectRequest('${request.requestId}')" style="background: red; color: white; padding: 8px 15px; border: none; border-radius: 5px;">
+                                    ❌ الرفض
+                                </button>
+                                <button onclick="requestMoreInfo('${request.requestId}')" style="background: orange; color: white; padding: 8px 15px; border: none; border-radius: 5px; margin-right: 10px;">
+                                    ℹ️ طلب معلومات إضافية
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                container.innerHTML += requestCard;
+            });
+        }
+
+        // دالة الموافقة
+        function approveRequest(requestId) {
+            if (confirm(`هل تريد الموافقة على الطلب ${requestId}؟`)) {
+                // تحديث الحالة
+                const requestKey = `biyala_seller_application_${requestId}`;
+                const request = JSON.parse(localStorage.getItem(requestKey));
+                request.status = 'approved';
+                request.approvedAt = new Date().toISOString();
+                localStorage.setItem(requestKey, JSON.stringify(request));
+
+                // تحديث صفحة الانتظار للبائع
+                localStorage.setItem('biyala_seller_application', JSON.stringify(request));
+
+                alert('✅ تمت الموافقة على الطلب!');
+                loadPendingRequests();
+            }
+        }
+
+        // دالة الرفض
+        function rejectRequest(requestId) {
+            const reason = prompt('أدخل سبب الرفض:');
+            if (reason) {
+                const requestKey = `biyala_seller_application_${requestId}`;
+                const request = JSON.parse(localStorage.getItem(requestKey));
+                request.status = 'rejected';
+                request.rejectedAt = new Date().toISOString();
+                request.rejectionReason = reason;
+                localStorage.setItem(requestKey, JSON.stringify(request));
+
+                alert('❌ تم رفض الطلب!');
+                loadPendingRequests();
+            }
+        }
+
+        // طلب معلومات إضافية
+        function requestMoreInfo(requestId) {
+            const infoNeeded = prompt('ما المعلومات الإضافية المطلوبة؟');
+            if (infoNeeded) {
+                const requestKey = `biyala_seller_application_${requestId}`;
+                const request = JSON.parse(localStorage.getItem(requestKey));
+                request.status = 'needs_info';
+                request.infoRequested = infoNeeded;
+                request.infoRequestedAt = new Date().toISOString();
+                localStorage.setItem(requestKey, JSON.stringify(request));
+
+                alert('📝 تم طلب معلومات إضافية!');
+                loadPendingRequests();
+            }
+        }
+
+        // تحميل الطلبات عند فتح الصفحة
+        document.addEventListener('DOMContentLoaded', loadPendingRequests);
+    </script>
+</body>
+
+</html>

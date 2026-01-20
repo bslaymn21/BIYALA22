@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - تفاصيل المستخدمين</title>
+   <link rel="stylesheet" href="responsive-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* الهيدر */
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 25px;
+            top: 25px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.15);
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* فلتر البحث */
+        .filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .filter-btn {
+            background: #f5f5f5;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .filter-btn.active {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        /* جدول المستخدمين */
+        .users-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .table-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 2px solid #eaeaea;
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1fr;
+            gap: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .user-row {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1fr;
+            gap: 15px;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .user-row:hover {
+            background: #f9f9f9;
+        }
+        
+        .user-row:last-child {
+            border-bottom: none;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .user-phone {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .status-active {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-banned {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-inactive {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-view {
+            color: #2196F3;
+            border: 1px solid #2196F3;
+        }
+        
+        .btn-view:hover {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-ban {
+            color: #F44336;
+            border: 1px solid #F44336;
+        }
+        
+        .btn-ban:hover {
+            background: #F44336;
+            color: white;
+        }
+        
+        .btn-delete {
+            color: #757575;
+            border: 1px solid #757575;
+        }
+        
+        .btn-delete:hover {
+            background: #757575;
+            color: white;
+        }
+        
+        /* التصفح */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .page-btn {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .page-btn:hover {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        
+        .page-btn.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        
+        @media (max-width: 1200px) {
+            .table-header, .user-row {
+                grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+            }
+            
+            .user-phone {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .table-header, .user-row {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .user-avatar {
+                display: none;
+            }
+            
+            .stats-bar {
+                gap: 15px;
+            }
+            
+            .stat-item {
+                min-width: 120px;
+                padding: 10px 15px;
+            }
+            
+            .stat-value {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- الهيدر -->
+        <div class="header">
+            <button class="back-btn" onclick="window.location.href='dashboard.html'">
+                <i class="fas fa-arrow-right"></i> العودة
+            </button>
+            <h1><i class="fas fa-users"></i> تفاصيل المستخدمين</h1>
+            <p>إدارة كاملة لمستخدمي منصة BIYALA</p>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-value">1,245</span>
+                    <span class="stat-label">إجمالي المستخدمين</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">1,180</span>
+                    <span class="stat-label">نشط</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">45</span>
+                    <span class="stat-label">محظور</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">20</span>
+                    <span class="stat-label">جديد اليوم</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- فلتر البحث -->
+        <div class="filter-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 ابحث باسم المستخدم أو رقم الهاتف...">
+            </div>
+            
+            <button class="filter-btn active" data-filter="all">
+                <i class="fas fa-layer-group"></i> الكل
+            </button>
+            <button class="filter-btn" data-filter="active">
+                <i class="fas fa-check-circle"></i> النشطين
+            </button>
+            <button class="filter-btn" data-filter="banned">
+                <i class="fas fa-ban"></i> المحظورين
+            </button>
+            <button class="filter-btn" data-filter="today">
+                <i class="fas fa-calendar-day"></i> اليوم
+            </button>
+        </div>
+        
+        <!-- جدول المستخدمين -->
+        <div class="users-table">
+            <!-- هيدر الجدول -->
+            <div class="table-header">
+                <div>المستخدم</div>
+                <div>رقم الهاتف</div>
+                <div>تاريخ التسجيل</div>
+                <div>عدد الطلبات</div>
+                <div>الحالة</div>
+                <div>الإجراءات</div>
+            </div>
+            
+            <!-- بيانات المستخدمين -->
+            <div id="usersContainer">
+                <!-- البيانات تظهر هنا عن طريق JavaScript -->
+            </div>
+        </div>
+        
+        <!-- التصفح -->
+        <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <span style="padding: 10px;">...</span>
+            <button class="page-btn">12</button>
+        </div>
+    </div>
+
+    <script>
+        // بيانات وهمية للمستخدمين
+        const usersData = [
+            {
+                id: 1,
+                name: "أحمد محمد",
+                phone: "01123456789",
+                joinDate: "2024-01-15",
+                orders: 24,
+                status: "active",
+                email: "ahmed@example.com"
+            },
+            {
+                id: 2,
+                name: "محمد علي",
+                phone: "01234567890",
+                joinDate: "2024-01-10",
+                orders: 5,
+                status: "banned",
+                email: "mohamed@example.com"
+            },
+            {
+                id: 3,
+                name: "سارة خالد",
+                phone: "01098765432",
+                joinDate: "2024-01-18",
+                orders: 42,
+                status: "active",
+                email: "sara@example.com"
+            },
+            {
+                id: 4,
+                name: "عمر محمود",
+                phone: "01512345678",
+                joinDate: "2024-01-05",
+                orders: 12,
+                status: "active",
+                email: "omar@example.com"
+            },
+            {
+                id: 5,
+                name: "فاطمة حسن",
+                phone: "01187654321",
+                joinDate: "2024-01-20",
+                orders: 0,
+                status: "inactive",
+                email: "fatma@example.com"
+            },
+            {
+                id: 6,
+                name: "خالد سعيد",
+                phone: "01234512345",
+                joinDate: "2024-01-12",
+                orders: 31,
+                status: "active",
+                email: "khaled@example.com"
+            },
+            {
+                id: 7,
+                name: "نورا أحمد",
+                phone: "01011223344",
+                joinDate: "2024-01-22",
+                orders: 8,
+                status: "active",
+                email: "nora@example.com"
+            },
+            {
+                id: 8,
+                name: "ياسر كمال",
+                phone: "01155667788",
+                joinDate: "2023-12-28",
+                orders: 56,
+                status: "active",
+                email: "yasser@example.com"
+            },
+            {
+                id: 9,
+                name: "مي حسين",
+                phone: "01299887766",
+                joinDate: "2024-01-19",
+                orders: 3,
+                status: "inactive",
+                email: "mai@example.com"
+            },
+            {
+                id: 10,
+                name: "طارق فؤاد",
+                phone: "01044556677",
+                joinDate: "2024-01-14",
+                orders: 19,
+                status: "active",
+                email: "tarek@example.com"
+            }
+        ];
+        
+        // عرض المستخدمين
+        function displayUsers(users) {
+            const container = document.getElementById('usersContainer');
+            container.innerHTML = '';
+            
+            users.forEach(user => {
+                const userRow = document.createElement('div');
+                userRow.className = 'user-row';
+                
+                // الحالة
+                let statusClass = 'status-active';
+                let statusText = 'نشط';
+                if(user.status === 'banned') {
+                    statusClass = 'status-banned';
+                    statusText = 'محظور';
+                } else if(user.status === 'inactive') {
+                    statusClass = 'status-inactive';
+                    statusText = 'غير نشط';
+                }
+                
+                // الحرف الأول من الاسم للأفتار
+                const firstLetter = user.name.charAt(0);
+                
+                userRow.innerHTML = `
+                    <div class="user-info">
+                        <div class="user-avatar">${firstLetter}</div>
+                        <div>
+                            <div class="user-name">${user.name}</div>
+                            <div class="user-phone">${user.phone}</div>
+                        </div>
+                    </div>
+                    <div>${user.phone}</div>
+                    <div>${user.joinDate}</div>
+                    <div>${user.orders}</div>
+                    <div>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="action-btn btn-view" onclick="viewUser(${user.id})">
+                            <i class="fas fa-eye"></i> عرض
+                        </button>
+                        <button class="action-btn btn-ban" onclick="toggleBan(${user.id})">
+                            <i class="fas fa-ban"></i> ${user.status === 'banned' ? 'فك الحظر' : 'حظر'}
+                        </button>
+                        <button class="action-btn btn-delete" onclick="deleteUser(${user.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(userRow);
+            });
+        }
+        
+        // البحث والفلترة
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = usersData.filter(user => 
+                user.name.toLowerCase().includes(searchTerm) ||
+                user.phone.includes(searchTerm) ||
+                user.email.toLowerCase().includes(searchTerm)
+            );
+            displayUsers(filtered);
+        });
+        
+        // أزرار الفلتر
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // إزالة النشط من جميع الأزرار
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                
+                // إضافة النشط للزر المضغوط
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                let filtered = usersData;
+                
+                if(filter === 'active') {
+                    filtered = usersData.filter(user => user.status === 'active');
+                } else if(filter === 'banned') {
+                    filtered = usersData.filter(user => user.status === 'banned');
+                } else if(filter === 'today') {
+                    const today = new Date().toISOString().split('T')[0];
+                    filtered = usersData.filter(user => user.joinDate === today);
+                }
+                
+                displayUsers(filtered);
+            });
+        });
+        
+        // وظائف الإجراءات
+        function viewUser(userId) {
+            const user = usersData.find(u => u.id === userId);
+            alert(`تفاصيل المستخدم:\n\nالاسم: ${user.name}\nرقم الهاتف: ${user.phone}\nالبريد: ${user.email}\nتاريخ التسجيل: ${user.joinDate}\nعدد الطلبات: ${user.orders}\nالحالة: ${user.status}`);
+        }
+        
+        function toggleBan(userId) {
+            const user = usersData.find(u => u.id === userId);
+            if(user.status === 'banned') {
+                user.status = 'active';
+                alert(`تم فك الحظر عن ${user.name}`);
+            } else {
+                user.status = 'banned';
+                alert(`تم حظر ${user.name}`);
+            }
+            displayUsers(usersData);
+        }
+        
+        function deleteUser(userId) {
+            if(confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
+                const index = usersData.findIndex(u => u.id === userId);
+                if(index !== -1) {
+                    usersData.splice(index, 1);
+                    displayUsers(usersData);
+                    alert('تم حذف المستخدم بنجاح');
+                }
+            }
+        }
+        
+        // التهيئة الأولى
+        displayUsers(usersData);
+    </script>
+</body>
+</html>

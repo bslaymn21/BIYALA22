@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - تسجيل الدخول</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .logo {
+            margin-bottom: 30px;
+        }
+        
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 32px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .logo h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            text-align: right;
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 5px;
+        }
+        
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .error-message {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 5px;
+            text-align: right;
+            display: none;
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+            cursor: pointer;
+        }
+        
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+            cursor: pointer;
+        }
+        
+        .forgot-password {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .demo-credentials {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #666;
+            border: 1px dashed #ddd;
+        }
+        
+        .demo-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .demo-info {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        
+        .demo-item {
+            flex: 1;
+        }
+        
+        .security-notice {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            color: #2e7d32;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s ease;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+            
+            .logo-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+            
+            .demo-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-height: 600px) {
+            body {
+                padding: 10px;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .login-card {
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <!-- الشعار -->
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h1>BIYALA Dashboard</h1>
+                <p>لوحة تحكم الإدارة - النسخة التجريبية</p>
+            </div>
+            
+            <!-- نموذج الدخول -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">البريد الإلكتروني</label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" 
+                               class="form-control" 
+                               id="email" 
+                               placeholder="admin@biyala.com"
+                               required>
+                    </div>
+                    <div class="error-message" id="emailError">البريد الإلكتروني غير صحيح</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">كلمة المرور</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" 
+                               class="form-control" 
+                               id="password" 
+                               placeholder="••••••••"
+                               required>
+                    </div>
+                    <div class="error-message" id="passwordError">كلمة المرور غير صحيحة</div>
+                </div>
+                
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox" class="checkbox" id="rememberMe">
+                        تذكرني
+                    </label>
+                    <a href="#" class="forgot-password" onclick="forgotPassword()">
+                        نسيت كلمة المرور؟
+                    </a>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    تسجيل الدخول
+                </button>
+            </form>
+            
+            <!-- بيانات تجريبية -->
+            <div class="demo-credentials">
+                <div class="demo-title">بيانات الدخول التجريبية:</div>
+                <div class="demo-info">
+                    <div class="demo-item">
+                        <strong>البريد:</strong><br>
+                        admin@biyala.com
+                    </div>
+                    <div class="demo-item">
+                        <strong>كلمة المرور:</strong><br>
+                        123456
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ملاحظة أمنية -->
+            <div class="security-notice">
+                <i class="fas fa-shield-alt"></i>
+                <span>هذه نسخة تجريبية - البيانات غير حقيقية</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات المستخدمين المسموح لهم
+        const allowedUsers = [
+            { email: "admin@biyala.com", password: "123456", name: "المسؤول الرئيسي" },
+            { email: "moderator@biyala.com", password: "123456", name: "المشرف" },
+            { email: "viewer@biyala.com", password: "123456", name: "المشاهد" }
+        ];
+
+        // التحقق من بيانات الدخول المحفوظة
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedEmail = localStorage.getItem('biyala_email');
+            const savedPassword = localStorage.getItem('biyala_password');
+            const rememberMe = localStorage.getItem('biyala_remember') === 'true';
+            
+            if(savedEmail && savedPassword && rememberMe) {
+                document.getElementById('email').value = savedEmail;
+                document.getElementById('password').value = savedPassword;
+                document.getElementById('rememberMe').checked = true;
+            }
+        });
+
+        // معالجة تسجيل الدخول
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            
+            // إخفاء أخطاء سابقة
+            hideErrors();
+            
+            // التحقق من البيانات
+            const user = allowedUsers.find(u => 
+                u.email === email && u.password === password
+            );
+            
+            if(user) {
+                // حفظ بيانات الدخول إذا طلب تذكرني
+                if(rememberMe) {
+                    localStorage.setItem('biyala_email', email);
+                    localStorage.setItem('biyala_password', password);
+                    localStorage.setItem('biyala_remember', 'true');
+                } else {
+                    localStorage.removeItem('biyala_email');
+                    localStorage.removeItem('biyala_password');
+                    localStorage.removeItem('biyala_remember');
+                }
+                
+                // رسالة نجاح
+                showSuccessMessage(user.name);
+                
+                // الانتقال إلى Dashboard بعد ثانيتين
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+                
+            } else {
+                // عرض رسائل الخطأ
+                if(!email || !email.includes('@')) {
+                    showError('emailError', 'البريد الإلكتروني غير صحيح');
+                }
+                
+                if(!password || password.length < 6) {
+                    showError('passwordError', 'كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                } else if(!user) {
+                    showError('passwordError', 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+                }
+                
+                // تأثير الاهتزاز
+                document.querySelector('.login-card').classList.add('shake');
+                setTimeout(() => {
+                    document.querySelector('.login-card').classList.remove('shake');
+                }, 500);
+            }
+        });
+
+        // وظائف مساعدة
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            // تلوين الحقل
+            const inputField = errorElement.previousElementSibling?.querySelector('.form-control');
+            if(inputField) {
+                inputField.style.borderColor = '#f44336';
+                inputField.style.background = '#ffebee';
+            }
+        }
+
+        function hideErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            document.querySelectorAll('.form-control').forEach(el => {
+                el.style.borderColor = '#e0e0e0';
+                el.style.background = '#f8f9fa';
+            });
+        }
+
+        function showSuccessMessage(userName) {
+            // تغيير لون الزر
+            const loginBtn = document.querySelector('.login-btn');
+            loginBtn.innerHTML = '<i class="fas fa-check"></i> جارٍ التوجيه...';
+            loginBtn.style.background = 'linear-gradient(135deg, #4CAF50, #2E7D32)';
+            loginBtn.disabled = true;
+            
+            // رسالة نجاح مؤقتة
+            const successMsg = document.createElement('div');
+            successMsg.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                animation: slideIn 0.3s ease;
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                max-width: 400px;
+            `;
+            
+            successMsg.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>مرحباً ${userName}!
+                <br><small>جاري التوجيه إلى لوحة التحكم...</small></span>
+            `;
+            
+            document.body.appendChild(successMsg);
+            
+            setTimeout(() => successMsg.remove(), 1900);
+        }
+
+        function forgotPassword() {
+            alert('لإعادة تعيين كلمة المرور:\n\n1. تواصل مع المسؤول الرئيسي\n2. أو أرسل بريداً إلى: support@biyala.com\n\nسيتم إرسال رابط إعادة التعيين خلال 24 ساعة.');
+        }
+
+        // إضافة CSS للأنيميشن
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // إضافة تأثيرات للحقول عند التركيز
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // زر للاختبار السريع
+        const testBtn = document.createElement('button');
+        testBtn.innerHTML = '<i class="fas fa-bolt"></i> دخول سريع';
+        testBtn.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #FF9800;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        `;
+        
+        testBtn.onclick = function() {
+            document.getElementById('email').value = 'admin@biyala.com';
+            document.getElementById('password').value = '123456';
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+        };
+        
+        document.body.appendChild(testBtn);
+    </script>
+</body>
+</html>

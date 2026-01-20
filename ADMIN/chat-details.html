@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - إدارة المحادثات</title>
+    <link rel="stylesheet" href="responsive-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI'; }
+        body { background: #f5f7fa; padding: 20px; direction: rtl; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        .header {
+            background: linear-gradient(135deg, #3F51B5 0%, #283593 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 25px;
+            top: 25px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.15);
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .stat-value { font-size: 32px; font-weight: bold; display: block; }
+        .stat-label { font-size: 14px; opacity: 0.9; }
+        
+        .filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        
+        .chats-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+            height: 70vh;
+        }
+        
+        .chats-list {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .chat-header {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .chat-item {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .chat-item:hover, .chat-item.active {
+            background: #f5f5f5;
+        }
+        
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3F51B5, #283593);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .chat-info h4 {
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .chat-info p {
+            color: #666;
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 200px;
+        }
+        
+        .chat-time {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .chat-messages {
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .messages-header {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 12px 15px;
+            border-radius: 15px;
+            position: relative;
+        }
+        
+        .message.received {
+            background: #E3F2FD;
+            align-self: flex-start;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message.sent {
+            background: #C8E6C9;
+            align-self: flex-end;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .message-input {
+            padding: 20px;
+            border-top: 1px solid #eaeaea;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .message-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+        
+        .send-btn {
+            background: #3F51B5;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+        
+        .btn-warn { color: #FF9800; border: 1px solid #FFCC80; }
+        .btn-block { color: #F44336; border: 1px solid #EF9A9A; }
+        
+        @media (max-width: 768px) {
+            .chats-container { grid-template-columns: 1fr; }
+            .stat-item { min-width: 120px; padding: 10px 15px; }
+            .stat-value { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="notificationContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
+    <div class="container">
+        <div class="header">
+            <button class="back-btn" onclick="window.location.href='dashboard.html'">
+                <i class="fas fa-arrow-right"></i> العودة
+            </button>
+            <h1 style="text-align: center; margin-bottom: 10px;"><i class="fas fa-comment-dots"></i> إدارة المحادثات</h1>
+            <p style="text-align: center;">مراقبة محادثات العملاء والبائعين</p>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-value">189</span>
+                    <span class="stat-label">محادثات نشطة</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">45</span>
+                    <span class="stat-label">جديدة اليوم</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">23</span>
+                    <span class="stat-label">محتاجة مراجعة</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">8</span>
+                    <span class="stat-label">محظورة</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="filter-section">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="ابحث في المحادثات...">
+            </div>
+            
+            <button class="filter-btn active" data-filter="all">الكل</button>
+            <button class="filter-btn" data-filter="active">نشطة</button>
+            <button class="filter-btn" data-filter="unread">غير مقروءة</button>
+            <button class="filter-btn" data-filter="reported">مبلغ عنها</button>
+        </div>
+        
+        <div class="chats-container">
+            <!-- قائمة المحادثات -->
+            <div class="chats-list">
+                <div class="chat-header">
+                    <h3>المحادثات النشطة</h3>
+                </div>
+                <div id="chatsList">
+                    <!-- قائمة المحادثات تظهر هنا -->
+                </div>
+            </div>
+            
+            <!-- نافذة المحادثة -->
+            <div class="chat-messages">
+                <div class="messages-header">
+                    <div>
+                        <h3 id="currentChatName">اختر محادثة</h3>
+                        <p id="currentChatInfo">لعرض المحادثات</p>
+                    </div>
+                    <div id="chatActions" style="display: none;">
+                        <button class="action-btn btn-warn" onclick="warnUser()">
+                            <i class="fas fa-exclamation-triangle"></i> تحذير
+                        </button>
+                        <button class="action-btn btn-block" onclick="blockChat()">
+                            <i class="fas fa-ban"></i> حظر
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <!-- الرسائل تظهر هنا -->
+                    <div style="text-align: center; color: #999; margin-top: 50px;">
+                        <i class="fas fa-comments fa-3x" style="margin-bottom: 15px;"></i>
+                        <p>اختر محادثة لعرض الرسائل</p>
+                    </div>
+                </div>
+                
+                <div class="message-input" id="messageInput" style="display: none;">
+                    <input type="text" id="messageText" placeholder="اكتب رسالة كمسؤول...">
+                    <button class="send-btn" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chats = [
+            { id: 1, userName: "أحمد محمد", userType: "مشترى", lastMessage: "متى يصل المنتج؟", time: "10:30", unread: 3, status: "active" },
+            { id: 2, userName: "متجر Nike", userType: "بائع", lastMessage: "تم شحن الطلب", time: "09:45", unread: 0, status: "active" },
+            { id: 3, userName: "سارة خالد", userType: "مشترى", lastMessage: "المنتج تالف", time: "أمس", unread: 1, status: "reported" },
+            { id: 4, userName: "محمد علي", userType: "مشترى", lastMessage: "شكراً على المساعدة", time: "أمس", unread: 0, status: "blocked" }
+        ];
+
+        const messages = {
+            1: [
+                { text: "مرحباً، متى يصل المنتج؟", time: "10:30", type: "received" },
+                { text: "المنتج سيصل خلال 2-3 أيام عمل", time: "10:32", type: "sent" },
+                { text: "شكراً لك", time: "10:33", type: "received" }
+            ],
+            2: [
+                { text: "تم شحن طلبك رقم #12345", time: "09:45", type: "sent" },
+                { text: "شكراً للمعلومات", time: "09:50", type: "received" }
+            ],
+            3: [
+                { text: "استلمت المنتج وكان تالفاً", time: "14:20", type: "received" },
+                { text: "نعتذر عن ذلك، سنقوم بالتعويض", time: "14:25", type: "sent" }
+            ]
+        };
+
+        let currentChatId = null;
+
+        function displayChats() {
+            const container = document.getElementById('chatsList');
+            container.innerHTML = '';
+            
+            chats.forEach(chat => {
+                const firstLetter = chat.userName.charAt(0);
+                
+                container.innerHTML += `
+                    <div class="chat-item ${currentChatId === chat.id ? 'active' : ''}" onclick="selectChat(${chat.id})">
+                        <div class="chat-avatar">${firstLetter}</div>
+                        <div class="chat-info">
+                            <h4>${chat.userName}</h4>
+                            <p>${chat.lastMessage}</p>
+                            <div class="chat-time">${chat.time}</div>
+                        </div>
+                        ${chat.unread > 0 ? `
+                            <span style="background: #F44336; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                                ${chat.unread}
+                            </span>
+                        ` : ''}
+                    </div>
+                `;
+            });
+        }
+
+        function selectChat(chatId) {
+            currentChatId = chatId;
+            const chat = chats.find(c => c.id === chatId);
+            
+            document.getElementById('currentChatName').textContent = chat.userName;
+            document.getElementById('currentChatInfo').textContent = `${chat.userType} • ${chat.status === 'active' ? 'نشط' : chat.status === 'reported' ? 'مبلغ عنه' : 'محظور'}`;
+            document.getElementById('chatActions').style.display = 'flex';
+            document.getElementById('messageInput').style.display = 'flex';
+            
+            displayMessages(chatId);
+            displayChats();
+            
+            // تحديث عدد الرسائل غير المقروءة
+            const chatIndex = chats.findIndex(c => c.id === chatId);
+            if(chatIndex !== -1) {
+                chats[chatIndex].unread = 0;
+            }
+        }
+
+        function displayMessages(chatId) {
+            const container = document.getElementById('messagesContainer');
+            const chatMessages = messages[chatId] || [];
+            
+            if(chatMessages.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: #999; margin-top: 50px;">
+                        <i class="fas fa-comments fa-3x" style="margin-bottom: 15px;"></i>
+                        <p>لا توجد رسائل في هذه المحادثة</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            chatMessages.forEach(msg => {
+                container.innerHTML += `
+                    <div class="message ${msg.type}">
+                        <div>${msg.text}</div>
+                        <div class="message-time">${msg.time}</div>
+                    </div>
+                `;
+            });
+            
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageText');
+            const text = input.value.trim();
+            
+            if(!text || !currentChatId) return;
+            
+            if(!messages[currentChatId]) messages[currentChatId] = [];
+            
+            const newMessage = {
+                text: text,
+                time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
+                type: 'sent'
+            };
+            
+            messages[currentChatId].push(newMessage);
+            displayMessages(currentChatId);
+            input.value = '';
+            
+            showNotification('تم إرسال الرسالة', 'success');
+        }
+
+        function warnUser() {
+            const chat = chats.find(c => c.id === currentChatId);
+            showNotification(`تم إرسال تحذير إلى ${chat.userName}`, 'warning');
+        }
+
+        function blockChat() {
+            const chatIndex = chats.findIndex(c => c.id === currentChatId);
+            if(chatIndex !== -1) {
+                chats[chatIndex].status = 'blocked';
+                selectChat(currentChatId);
+                showNotification(`تم حظر محادثة ${chats[chatIndex].userName}`, 'error');
+            }
+        }
+
+        // البحث والفلترة
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // هنا يمكن إضافة فلترة المحادثات
+        });
+
+        // نظام الإشعارات
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            const colors = { success: '#4CAF50', error: '#F44336', warning: '#FF9800', info: '#2196F3' };
+            
+            notification.style.cssText = `
+                background: ${colors[type]};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                margin-bottom: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                        <span>${message}</span>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }`;
+        document.head.appendChild(style);
+
+        displayChats();
+    </script>
+</body>
+</html>

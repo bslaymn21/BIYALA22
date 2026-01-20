@@ -1,0 +1,2202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - إدارة الرسائل</title>
+    <style>
+        /* متغيرات النظام الأساسية */
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary-color: #7209b7;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --danger-color: #ff0054;
+            --dark-color: #212529;
+            --light-color: #f8f9fa;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+            
+            /* ألوان الرسائل */
+            --message-buyer: #2196F3;
+            --message-seller: #4CAF50;
+            --message-admin: #9C27B0;
+            --message-system: #FF9800;
+            --message-unread: #F44336;
+            --message-archived: #607D8B;
+        }
+        
+        /* CSS Reset وتحسينات عامة */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        
+        /* تحسينات التصميم العام */
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .header-content h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header-content p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all var(--transition-speed);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* الأزرار */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+        
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 13px;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        
+        /* نظام الإشعارات */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 350px;
+        }
+        
+        .notification {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: var(--box-shadow);
+            border-right: 4px solid var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .notification-success {
+            border-right-color: var(--success-color);
+        }
+        
+        .notification-warning {
+            border-right-color: var(--warning-color);
+        }
+        
+        .notification-error {
+            border-right-color: var(--danger-color);
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            padding: 5px;
+            margin-left: -5px;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* مودال التأكيد */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--box-shadow);
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+            padding: 5px;
+        }
+        
+        /* تبويبات الرسائل */
+        .messages-tabs {
+            display: flex;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            margin: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .message-tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all var(--transition-speed);
+            min-width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .message-tab:hover {
+            background: #f9f9f9;
+        }
+        
+        .message-tab.active {
+            background: #f9f9f9;
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        /* فلاتر الرسائل */
+        .message-filters {
+            display: flex;
+            gap: 10px;
+            margin: 0 25px 20px;
+            flex-wrap: wrap;
+        }
+        
+        .message-filter-btn {
+            padding: 8px 15px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all var(--transition-speed);
+        }
+        
+        .message-filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* حاوية المحادثات */
+        .messages-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+            height: 70vh;
+            min-height: 600px;
+            margin: 0 25px 25px;
+        }
+        
+        @media (max-width: 992px) {
+            .messages-container {
+                grid-template-columns: 1fr;
+                height: auto;
+                min-height: auto;
+            }
+        }
+        
+        /* قائمة المحادثات */
+        .conversations-list {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .conversations-header {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .conversations-search {
+            position: relative;
+            flex: 1;
+            margin-left: 15px;
+        }
+        
+        .conversations-search input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color var(--transition-speed);
+        }
+        
+        .conversations-search input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .conversations-search i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        
+        /* عنصر المحادثة */
+        .conversation-item {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .conversation-item:hover, .conversation-item.active {
+            background: #f9f9f9;
+        }
+        
+        .conversation-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .avatar-buyer {
+            background: linear-gradient(135deg, var(--message-buyer), #1565c0);
+        }
+        
+        .avatar-seller {
+            background: linear-gradient(135deg, var(--message-seller), #2e7d32);
+        }
+        
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .conversation-name {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .conversation-preview {
+            color: #666;
+            font-size: 13px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .conversation-time {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .unread-badge {
+            background: var(--message-unread);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        /* علامة القراءة */
+        .read-status {
+            color: #4CAF50;
+            font-size: 12px;
+        }
+        
+        /* نافذة المحادثة */
+        .chat-window {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-action-btn {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            transition: all var(--transition-speed);
+        }
+        
+        .chat-action-btn:hover {
+            background: #f5f5f5;
+        }
+        
+        /* عرض الرسائل */
+        .messages-display {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #f8f9fa;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 15px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+        }
+        
+        .message-received {
+            align-self: flex-end;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-sent {
+            align-self: flex-start;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message-buyer-bg {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid rgba(33, 150, 243, 0.2);
+            color: var(--message-buyer);
+        }
+        
+        .message-seller-bg {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            color: var(--message-seller);
+        }
+        
+        .message-admin-bg {
+            background: rgba(156, 39, 176, 0.1);
+            border: 1px solid rgba(156, 39, 176, 0.2);
+            color: var(--message-admin);
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .message-status {
+            margin-right: 5px;
+        }
+        
+        .message-sender {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* إدخال الرسالة */
+        .message-input-area {
+            padding: 20px;
+            border-top: 1px solid #eaeaea;
+            background: white;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+        
+        .message-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            min-height: 50px;
+            max-height: 120px;
+            transition: border-color var(--transition-speed);
+        }
+        
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .send-message-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all var(--transition-speed);
+            flex-shrink: 0;
+        }
+        
+        .send-message-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        .send-message-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* زر الرد كإدارة */
+        .admin-reply-btn {
+            background: var(--message-admin);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            transition: all var(--transition-speed);
+        }
+        
+        .admin-reply-btn:hover {
+            background: #7b1fa2;
+        }
+        
+        /* حالة عدم وجود محادثة */
+        .no-conversation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .no-conversation i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        /* مودال اختيار مستخدم جديد */
+        .users-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .users-modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            animation: modalIn 0.3s ease;
+        }
+        
+        .users-modal-header {
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .users-modal-body {
+            padding: 0;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .user-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: background var(--transition-speed);
+        }
+        
+        .user-item:hover {
+            background: #f9f9f9;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .user-avatar.buyer {
+            background: linear-gradient(135deg, var(--message-buyer), #1565c0);
+        }
+        
+        .user-avatar.seller {
+            background: linear-gradient(135deg, var(--message-seller), #2e7d32);
+        }
+        
+        .user-info h4 {
+            margin-bottom: 2px;
+        }
+        
+        .user-info p {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        /* تحسينات للشاشات الصغيرة - تصميم WhatsApp Mobile */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                background: #f0f2f5;
+            }
+            
+            .container {
+                max-width: 100%;
+                border-radius: 0;
+                box-shadow: none;
+                background: #f0f2f5;
+                min-height: 100vh;
+            }
+            
+            .dashboard-header {
+                padding: 20px 15px;
+                border-radius: 0;
+                margin-bottom: 0;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-content h1 {
+                font-size: 24px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                width: 100%;
+            }
+            
+            .stat-card {
+                padding: 15px;
+                min-width: 0;
+            }
+            
+            .stat-value {
+                font-size: 22px;
+            }
+            
+            .stat-label {
+                font-size: 12px;
+            }
+            
+            .messages-tabs {
+                margin: 15px 10px;
+                border-radius: 10px;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .message-tab {
+                min-width: 90px;
+                padding: 15px 10px;
+                font-size: 13px;
+            }
+            
+            .message-filters {
+                margin: 10px;
+                overflow-x: auto;
+                padding-bottom: 5px;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .message-filter-btn {
+                flex-shrink: 0;
+                min-width: 80px;
+            }
+            
+            .messages-container {
+                grid-template-columns: 1fr;
+                height: calc(100vh - 300px);
+                min-height: 400px;
+                margin: 0;
+                gap: 0;
+            }
+            
+            .conversations-list {
+                border-radius: 0;
+                box-shadow: none;
+                border-bottom: 1px solid #ddd;
+                height: 100%;
+            }
+            
+            .chat-window {
+                border-radius: 0;
+                box-shadow: none;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: white;
+                z-index: 100;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .chat-window.active {
+                transform: translateX(0);
+            }
+            
+            .conversation-item {
+                padding: 15px;
+            }
+            
+            .conversation-avatar {
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
+            }
+            
+            .chat-header {
+                padding: 15px;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                background: #075E54;
+                color: white;
+            }
+            
+            .chat-user-info {
+                color: white;
+            }
+            
+            .chat-actions {
+                align-self: center;
+            }
+            
+            .chat-action-btn {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                border: none;
+            }
+            
+            .messages-display {
+                padding: 15px 10px;
+                background: #ECE5DD;
+                background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23000000' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            }
+            
+            .message-bubble {
+                max-width: 85%;
+                padding: 10px 12px;
+                border-radius: 15px;
+            }
+            
+            .message-received {
+                background: white;
+                border: 1px solid #e0e0e0;
+            }
+            
+            .message-sent {
+                background: #DCF8C6;
+                border: 1px solid #d1f0b8;
+            }
+            
+            .message-buyer-bg {
+                background: white;
+                border: 1px solid #e0e0e0;
+            }
+            
+            .message-seller-bg {
+                background: white;
+                border: 1px solid #e0e0e0;
+            }
+            
+            .message-admin-bg {
+                background: #DCF8C6;
+                border: 1px solid #d1f0b8;
+            }
+            
+            .message-input-area {
+                padding: 15px 10px;
+                background: #f0f0f0;
+            }
+            
+            .message-input {
+                padding: 10px 12px;
+                font-size: 16px; /* زيادة حجم الخط للجوال */
+            }
+            
+            .send-message-btn {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .back-chat-btn {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 16px;
+                cursor: pointer;
+                margin-right: 10px;
+            }
+            
+            .no-conversation {
+                padding: 30px 20px;
+            }
+            
+            .users-modal-content {
+                width: 95%;
+                max-height: 90vh;
+            }
+            
+            .user-item {
+                padding: 12px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .message-filters {
+                justify-content: flex-start;
+            }
+            
+            .message-filter-btn {
+                flex: none;
+                min-width: 70px;
+                font-size: 12px;
+            }
+            
+            .message-input-container {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .send-message-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            
+            .message-bubble {
+                max-width: 90%;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+            
+            .back-btn {
+                top: 15px;
+                left: 15px;
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }
+        
+        /* زر العودة في المحادثة للجوال */
+        .back-chat-btn {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .back-chat-btn {
+                display: flex;
+            }
+            
+            .back-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- نظام الإشعارات -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- مودال تأكيد -->
+    <div id="confirmModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="confirmTitle">تأكيد الإجراء</h3>
+                <button class="close-modal" onclick="MessageSystem.closeConfirmModal()">
+                    ×
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">هل أنت متأكد من تنفيذ هذا الإجراء؟</p>
+                <div class="modal-actions">
+                    <button id="confirmYes" class="btn btn-primary">
+                        ✓ نعم
+                    </button>
+                    <button id="confirmNo" class="btn btn-outline" style="border-color: #ddd; color: #333;">
+                        ✗ لا
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال اختيار مستخدم جديد -->
+    <div id="usersModal" class="users-modal" style="display: none;">
+        <div class="users-modal-content">
+            <div class="users-modal-header">
+                <h3>✏️ بدء محادثة جديدة</h3>
+                <button class="close-modal" onclick="MessageSystem.closeUsersModal()">
+                    ×
+                </button>
+            </div>
+            <div class="users-modal-body" id="usersList">
+                <!-- قائمة المستخدمين تظهر هنا -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- الهيدر -->
+        <div class="dashboard-header">
+            <button class="btn btn-outline back-btn" onclick="window.location.href='dashboard.html'">
+                ← العودة للرئيسية
+            </button>
+            <div class="header-content">
+                <div>
+                    <h1>💬 إدارة الرسائل</h1>
+                    <p>مراقبة ورد على رسائل العملاء والبائعين</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="totalMessages">0</span>
+                        <span class="stat-label">رسائل اليوم</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="unreadMessages">0</span>
+                        <span class="stat-label">غير مقروءة</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="needsReply">0</span>
+                        <span class="stat-label">تحتاج رد</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="responseRate">0%</span>
+                        <span class="stat-label">سرعة الرد</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- تبويبات الرسائل -->
+        <div class="messages-tabs">
+            <div class="message-tab active" data-tab="all">
+                📊 الكل
+            </div>
+            <div class="message-tab" data-tab="unread">
+                📩 غير مقروء
+            </div>
+            <div class="message-tab" data-tab="buyers">
+                👤 المشترين
+            </div>
+            <div class="message-tab" data-tab="sellers">
+                🏪 البائعين
+            </div>
+            <div class="message-tab" data-tab="needs-reply">
+                ⏰ تحتاج رد
+            </div>
+        </div>
+        
+        <!-- فلاتر إضافية -->
+        <div class="message-filters">
+            <button class="message-filter-btn active" data-filter="all">
+                🕐 اليوم
+            </button>
+            <button class="message-filter-btn" data-filter="week">
+                📅 الأسبوع
+            </button>
+            <button class="message-filter-btn" data-filter="month">
+                📆 الشهر
+            </button>
+            <button class="message-filter-btn" data-filter="archived">
+                📁 الأرشيف
+            </button>
+        </div>
+        
+        <!-- حاوية المحادثات والرسائل -->
+        <div class="messages-container">
+            <!-- قائمة المحادثات -->
+            <div class="conversations-list">
+                <div class="conversations-header">
+                    <div class="conversations-search">
+                        🔍
+                        <input type="text" id="searchConversations" placeholder="ابحث في المحادثات...">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-primary btn-sm" onclick="MessageSystem.markAllAsRead()">
+                            ✓ الكل
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="MessageSystem.showUsersModal()" 
+                                style="background: #4CAF50;">
+                            ✏️ جديد
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="conversationsList">
+                    <!-- قائمة المحادثات تظهر هنا -->
+                </div>
+            </div>
+            
+            <!-- نافذة المحادثة -->
+            <div class="chat-window" id="chatWindow">
+                <div class="chat-header" id="chatHeader" style="display: none;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button class="back-chat-btn" onclick="MessageSystem.hideChatWindow()">
+                            ←
+                        </button>
+                        <div class="chat-user-info">
+                            <div class="conversation-avatar" id="chatAvatar">?</div>
+                            <div>
+                                <h3 id="chatUserName">اختر محادثة</h3>
+                                <p id="chatUserType" style="color: #fff; font-size: 14px; margin: 0; opacity: 0.9;">للعرض والرد</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn" onclick="MessageSystem.archiveConversation()">
+                            📁 أرشيف
+                        </button>
+                        <button class="chat-action-btn" onclick="MessageSystem.blockUser()">
+                            🚫 حظر
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="messages-display" id="messagesDisplay">
+                    <!-- حالة عدم وجود محادثة -->
+                    <div class="no-conversation" id="noConversation">
+                        💬
+                        <h3>اختر محادثة لعرض الرسائل</h3>
+                        <p>يمكنك الرد على الرسائل أو متابعة المحادثات بين المشترين والبائعين</p>
+                    </div>
+                    
+                    <!-- الرسائل تظهر هنا -->
+                </div>
+                
+                <!-- إدخال الرسالة -->
+                <div class="message-input-area" id="messageInputArea" style="display: none;">
+                    <div class="message-input-container">
+                        <textarea class="message-input" id="messageText" 
+                                  placeholder="اكتب رسالة..."></textarea>
+                        <button class="send-message-btn" id="sendMessageBtn" onclick="MessageSystem.sendAdminMessage()">
+                            📤
+                        </button>
+                    </div>
+                    <button class="admin-reply-btn" onclick="MessageSystem.quickReply()">
+                        ⚡ رد سريع
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // نظام إدارة الرسائل - محدث ك WhatsApp Web + Mobile
+        // ============================================
+        
+        const MessageSystem = {
+            // متغيرات النظام
+            currentConversation: null,
+            currentTab: 'all',
+            currentFilter: 'all',
+            confirmCallback: null,
+            simulationInterval: null,
+            
+            // جميع المستخدمين المتاحين للدردشة
+            allUsers: [
+                { id: 101, name: "أحمد محمد", type: "buyer", phone: "01123456789", avatar: "أ" },
+                { id: 102, name: "سارة خالد", type: "buyer", phone: "01098765432", avatar: "س" },
+                { id: 103, name: "محمد علي", type: "buyer", phone: "01234512345", avatar: "م" },
+                { id: 104, name: "نورا أحمد", type: "buyer", phone: "01111122222", avatar: "ن" },
+                { id: 105, name: "خالد سعيد", type: "buyer", phone: "01033344444", avatar: "خ" },
+                { id: 201, name: "متجر الرياض", type: "seller", phone: "01234567890", avatar: "ر" },
+                { id: 202, name: "متجر الأزياء", type: "seller", phone: "01111223344", avatar: "أ" },
+                { id: 203, name: "متجر الرياضة", type: "seller", phone: "01055566666", avatar: "ر" },
+                { id: 204, name: "متجر الإلكترونيات", type: "seller", phone: "01177788888", avatar: "إ" },
+                { id: 205, name: "متجر الكتب", type: "seller", phone: "01099900000", avatar: "ك" }
+            ],
+            
+            // بيانات المحادثات الافتراضية
+            conversations: [
+                {
+                    id: 1,
+                    user: { id: 101, name: "أحمد محمد", type: "buyer", phone: "01123456789", avatar: "أ" },
+                    lastMessage: "متى يصل المنتج؟ لقد تأخر أكثر من المتوقع",
+                    time: "10:30",
+                    unread: 3,
+                    active: true,
+                    archived: false,
+                    blocked: false,
+                    lastOpenedAt: null,
+                    messages: [
+                        { id: 1, sender: "buyer", type: "buyer", text: "مرحباً، متى يصل المنتج؟", time: "10:30", status: "delivered" },
+                        { id: 2, sender: "seller", type: "seller", text: "المنتج سيصل خلال 2-3 أيام عمل", time: "10:32", status: "read" },
+                        { id: 3, sender: "buyer", type: "buyer", text: "لقد تأخر أكثر من المتوقع، أريد تحديثاً", time: "10:35", status: "sent" }
+                    ]
+                },
+                {
+                    id: 2,
+                    user: { id: 201, name: "متجر الرياض", type: "seller", phone: "01234567890", avatar: "ر" },
+                    lastMessage: "طلب جديد من العميل سارة، رقم #12345",
+                    time: "09:45",
+                    unread: 1,
+                    active: true,
+                    archived: false,
+                    blocked: false,
+                    lastOpenedAt: null,
+                    messages: [
+                        { id: 1, sender: "seller", type: "seller", text: "طلب جديد من العميل سارة، رقم #12345", time: "09:45", status: "read" },
+                        { id: 2, sender: "admin", type: "admin", text: "تمت الموافقة على الطلب، يمكنك الشحن", time: "09:50", status: "read" }
+                    ]
+                },
+                {
+                    id: 3,
+                    user: { id: 102, name: "سارة خالد", type: "buyer", phone: "01098765432", avatar: "س" },
+                    lastMessage: "المنتج وصل تالفاً، أريد استبدالاً",
+                    time: "14:20",
+                    unread: 0,
+                    active: true,
+                    archived: false,
+                    blocked: false,
+                    lastOpenedAt: null,
+                    messages: [
+                        { id: 1, sender: "buyer", type: "buyer", text: "المنتج وصل تالفاً، أريد استبدالاً", time: "14:20", status: "read" },
+                        { id: 2, sender: "seller", type: "seller", text: "نعتذر عن ذلك، سنرسل منتجاً جديداً", time: "14:25", status: "read" },
+                        { id: 3, sender: "buyer", type: "buyer", text: "متى سيصل البديل؟", time: "14:30", status: "read" }
+                    ]
+                },
+                {
+                    id: 4,
+                    user: { id: 202, name: "متجر الأزياء", type: "seller", phone: "01111223344", avatar: "أ" },
+                    lastMessage: "مشكلة في تحديث المخزون، الرجاء المساعدة",
+                    time: "11:15",
+                    unread: 2,
+                    active: true,
+                    archived: false,
+                    blocked: false,
+                    lastOpenedAt: null,
+                    messages: [
+                        { id: 1, sender: "seller", type: "seller", text: "مشكلة في تحديث المخزون، الرجاء المساعدة", time: "11:15", status: "read" },
+                        { id: 2, sender: "admin", type: "admin", text: "تم فتح تذكرة دعم فني، سنتواصل معك", time: "11:20", status: "read" }
+                    ]
+                }
+            ],
+            
+            // ============================================
+            // وظائف التهيئة
+            // ============================================
+            
+            init: function() {
+                this.displayConversations();
+                this.setupEventListeners();
+                this.updateStatistics();
+                this.startSmartSimulation();
+                
+                // إضافة زر محادثة جديدة
+                this.addNewChatButton();
+            },
+            
+            setupEventListeners: function() {
+                // تبويبات الرسائل
+                document.querySelectorAll('.message-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        document.querySelectorAll('.message-tab').forEach(t => t.classList.remove('active'));
+                        e.currentTarget.classList.add('active');
+                        this.currentTab = e.currentTarget.dataset.tab;
+                        this.displayConversations();
+                    });
+                });
+                
+                // فلاتر الرسائل
+                document.querySelectorAll('.message-filter-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.message-filter-btn').forEach(b => b.classList.remove('active'));
+                        e.currentTarget.classList.add('active');
+                        this.currentFilter = e.currentTarget.dataset.filter;
+                        this.displayConversations();
+                    });
+                });
+                
+                // البحث في المحادثات
+                const searchInput = document.getElementById('searchConversations');
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        this.searchConversations(e.target.value);
+                    });
+                }
+                
+                // إدخال الرسائل
+                const messageInput = document.getElementById('messageText');
+                if (messageInput) {
+                    messageInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            this.sendAdminMessage();
+                        }
+                    });
+                    
+                    messageInput.addEventListener('input', function() {
+                        this.style.height = 'auto';
+                        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+                    });
+                }
+                
+                // تفعيل تصميم الجوال
+                this.setupMobileDesign();
+            },
+            
+            setupMobileDesign: function() {
+                // إضافة زر العودة في الشات للجوال
+                const chatHeader = document.getElementById('chatHeader');
+                if (window.innerWidth <= 768 && chatHeader) {
+                    const existingBtn = chatHeader.querySelector('.back-chat-btn');
+                    if (!existingBtn) {
+                        const backBtn = document.createElement('button');
+                        backBtn.className = 'back-chat-btn';
+                        backBtn.innerHTML = '←';
+                        backBtn.onclick = () => this.hideChatWindow();
+                        chatHeader.insertBefore(backBtn, chatHeader.firstChild);
+                    }
+                }
+            },
+            
+            addNewChatButton: function() {
+                // زر محادثة جديدة موجود بالفعل في HTML
+                return true;
+            },
+            
+            // ============================================
+            // وظائف عرض المحادثات
+            // ============================================
+            
+            displayConversations: function(filteredConversations = null) {
+                const container = document.getElementById('conversationsList');
+                if (!container) return;
+                
+                const conversations = filteredConversations || this.getFilteredConversations();
+                
+                if (conversations.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-conversation" style="padding: 40px 20px;">
+                            📭
+                            <p>لا توجد محادثات</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = conversations.map(conv => this.createConversationHTML(conv)).join('');
+                
+                // إضافة event listeners للمحادثات
+                conversations.forEach(conv => {
+                    const convElement = container.querySelector(`.conversation-item[data-id="${conv.id}"]`);
+                    if (convElement) {
+                        convElement.addEventListener('click', () => {
+                            this.selectConversation(conv.id);
+                        });
+                    }
+                });
+            },
+            
+            getFilteredConversations: function() {
+                let filtered = [...this.conversations];
+                
+                // فلترة حسب التبويب
+                switch(this.currentTab) {
+                    case 'unread':
+                        filtered = filtered.filter(c => c.unread > 0);
+                        break;
+                    case 'buyers':
+                        filtered = filtered.filter(c => c.user.type === 'buyer');
+                        break;
+                    case 'sellers':
+                        filtered = filtered.filter(c => c.user.type === 'seller');
+                        break;
+                    case 'needs-reply':
+                        filtered = filtered.filter(c => {
+                            const lastMsg = c.messages[c.messages.length - 1];
+                            return lastMsg && lastMsg.sender !== 'admin' && c.unread > 0;
+                        });
+                        break;
+                }
+                
+                // فلترة حسب الفلتر الإضافي
+                switch(this.currentFilter) {
+                    case 'archived':
+                        filtered = filtered.filter(c => c.archived);
+                        break;
+                    case 'week':
+                    case 'month':
+                        filtered = filtered.filter(c => c.active && !c.archived);
+                        break;
+                }
+                
+                // ترتيب حسب آخر رسالة
+                filtered.sort((a, b) => {
+                    const aTime = this.getTimeValue(a.time);
+                    const bTime = this.getTimeValue(b.time);
+                    return bTime - aTime;
+                });
+                
+                return filtered;
+            },
+            
+            getTimeValue: function(timeStr) {
+                if (timeStr === 'الآن') return Date.now();
+                if (timeStr === 'أمس') return Date.now() - 86400000;
+                
+                try {
+                    const now = new Date();
+                    const [hour, minute] = timeStr.split(':').map(Number);
+                    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute);
+                    return date.getTime();
+                } catch {
+                    return Date.now();
+                }
+            },
+            
+            createConversationHTML: function(conversation) {
+                const isActive = this.currentConversation && this.currentConversation.id === conversation.id;
+                const avatarClass = conversation.user.type === 'buyer' ? 'avatar-buyer' : 'avatar-seller';
+                const typeIcon = conversation.user.type === 'buyer' ? '👤' : '🏪';
+                
+                // آخر رسالة مع علامة القراءة
+                const lastMessage = conversation.messages[conversation.messages.length - 1];
+                let readStatus = '';
+                if (lastMessage && lastMessage.sender === 'admin') {
+                    readStatus = lastMessage.status === 'read' ? '✓✓' : '✓';
+                }
+                
+                return `
+                    <div class="conversation-item ${isActive ? 'active' : ''}" data-id="${conversation.id}">
+                        <div class="conversation-avatar ${avatarClass}">
+                            ${conversation.user.avatar}
+                        </div>
+                        <div class="conversation-info">
+                            <div class="conversation-name">
+                                <span>${conversation.user.name}</span>
+                                ${conversation.unread > 0 ? `<span class="unread-badge">${conversation.unread}</span>` : ''}
+                            </div>
+                            <div class="conversation-preview">
+                                ${typeIcon} ${conversation.lastMessage}
+                            </div>
+                            <div class="conversation-time">
+                                ${conversation.time}
+                                ${readStatus ? `<span class="read-status">${readStatus}</span>` : ''}
+                                ${conversation.archived ? ' • 📁' : ''}
+                                ${conversation.blocked ? ' • 🚫' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            searchConversations: function(searchTerm) {
+                if (!searchTerm.trim()) {
+                    this.displayConversations();
+                    return;
+                }
+                
+                const term = searchTerm.toLowerCase();
+                const filtered = this.conversations.filter(conv => 
+                    conv.user.name.toLowerCase().includes(term) ||
+                    conv.lastMessage.toLowerCase().includes(term) ||
+                    conv.user.phone.includes(term)
+                );
+                
+                this.displayConversations(filtered);
+            },
+            
+            // ============================================
+            // وظائف إدارة المحادثات
+            // ============================================
+            
+            selectConversation: function(conversationId) {
+                // تحديث lastOpenedAt للمحادثة السابقة إن وجدت
+                if (this.currentConversation) {
+                    this.currentConversation.lastOpenedAt = Date.now();
+                }
+                
+                // تعيين المحادثة الجديدة
+                this.currentConversation = this.conversations.find(c => c.id === conversationId);
+                if (!this.currentConversation) return;
+                
+                // تحديث وقت الفتح الحالي
+                this.currentConversation.lastOpenedAt = Date.now();
+                
+                // تحديث العرض
+                this.displayConversations();
+                this.showChatWindow();
+                this.displayMessages();
+                this.markAsRead(conversationId);
+                
+                // تحديث الإحصائيات بعد القراءة
+                this.updateStatistics();
+                
+                // إظهار الشات في الجوال
+                if (window.innerWidth <= 768) {
+                    document.getElementById('chatWindow').classList.add('active');
+                }
+            },
+            
+            showChatWindow: function() {
+                const chatHeader = document.getElementById('chatHeader');
+                const messageInputArea = document.getElementById('messageInputArea');
+                const noConversation = document.getElementById('noConversation');
+                
+                if (chatHeader) chatHeader.style.display = 'flex';
+                if (messageInputArea) messageInputArea.style.display = 'block';
+                if (noConversation) noConversation.style.display = 'none';
+                
+                if (this.currentConversation && this.currentConversation.user) {
+                    const user = this.currentConversation.user;
+                    const chatUserName = document.getElementById('chatUserName');
+                    const chatUserType = document.getElementById('chatUserType');
+                    const avatar = document.getElementById('chatAvatar');
+                    
+                    if (chatUserName) chatUserName.textContent = user.name;
+                    if (chatUserType) chatUserType.textContent = user.type === 'buyer' ? 'مشتري' : 'بائع';
+                    if (avatar) {
+                        avatar.textContent = user.avatar;
+                        avatar.className = `conversation-avatar ${user.type === 'buyer' ? 'avatar-buyer' : 'avatar-seller'}`;
+                    }
+                }
+                
+                // تركيز على حقل الكتابة
+                setTimeout(() => {
+                    const messageText = document.getElementById('messageText');
+                    if (messageText) messageText.focus();
+                }, 100);
+            },
+            
+            hideChatWindow: function() {
+                const chatHeader = document.getElementById('chatHeader');
+                const messageInputArea = document.getElementById('messageInputArea');
+                const noConversation = document.getElementById('noConversation');
+                const chatWindow = document.getElementById('chatWindow');
+                
+                if (chatWindow) chatWindow.classList.remove('active');
+                if (chatHeader) chatHeader.style.display = 'none';
+                if (messageInputArea) messageInputArea.style.display = 'none';
+                if (noConversation) noConversation.style.display = 'flex';
+                
+                this.currentConversation = null;
+                const messageText = document.getElementById('messageText');
+                if (messageText) {
+                    messageText.value = '';
+                    messageText.style.height = 'auto';
+                }
+            },
+            
+            displayMessages: function() {
+                if (!this.currentConversation) return;
+                
+                const container = document.getElementById('messagesDisplay');
+                if (!container) return;
+                
+                const messages = this.currentConversation.messages;
+                
+                container.innerHTML = messages.map(msg => this.createMessageHTML(msg)).join('');
+                container.scrollTop = container.scrollHeight;
+            },
+            
+            createMessageHTML: function(message) {
+                const isAdmin = message.type === 'admin';
+                const bubbleClass = isAdmin ? 'message-sent message-admin-bg' : 
+                    `message-received ${message.type === 'buyer' ? 'message-buyer-bg' : 'message-seller-bg'}`;
+                
+                const senderName = message.type === 'buyer' ? 'مشتري' : 
+                                  message.type === 'seller' ? 'بائع' : 'الإدارة';
+                
+                const senderIcon = message.type === 'buyer' ? '👤' : 
+                                  message.type === 'seller' ? '🏪' : '👨‍💼';
+                
+                // علامة القراءة
+                let statusIcon = '';
+                if (message.sender === 'admin') {
+                    if (message.status === 'read') {
+                        statusIcon = '✓✓';
+                    } else if (message.status === 'delivered') {
+                        statusIcon = '✓✓';
+                    } else if (message.status === 'sent') {
+                        statusIcon = '✓';
+                    }
+                }
+                
+                return `
+                    <div class="message-bubble ${bubbleClass}">
+                        <div class="message-sender">
+                            ${senderIcon} ${senderName}
+                        </div>
+                        <div class="message-text">${message.text}</div>
+                        <div class="message-time">
+                            <span>${message.time}</span>
+                            ${statusIcon ? `<span class="message-status">${statusIcon}</span>` : ''}
+                        </div>
+                        ${!isAdmin ? `
+                            <button class="admin-reply-btn" style="margin-top: 10px; font-size: 11px; padding: 5px 10px;" 
+                                    onclick="MessageSystem.replyToMessage(${message.id})">
+                                ↩ رد
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            },
+            
+            replyToMessage: function(messageId) {
+                if (!this.currentConversation) return;
+                
+                const message = this.currentConversation.messages.find(m => m.id === messageId);
+                if (!message) return;
+                
+                const input = document.getElementById('messageText');
+                if (input) {
+                    input.value = `رداً على: "${message.text.substring(0, 50)}..."\n`;
+                    input.focus();
+                    input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+                    
+                    this.showNotification('يمكنك الآن الرد على الرسالة المحددة', 'info');
+                }
+            },
+            
+            // ============================================
+            // مودال بدء محادثة جديدة
+            // ============================================
+            
+            showUsersModal: function() {
+                const modal = document.getElementById('usersModal');
+                const usersList = document.getElementById('usersList');
+                
+                if (!modal || !usersList) return;
+                
+                // فلترة المستخدمين الذين ليس لديهم محادثات حالية
+                const existingUserIds = this.conversations.map(c => c.user.id);
+                const availableUsers = this.allUsers.filter(user => !existingUserIds.includes(user.id));
+                
+                if (availableUsers.length === 0) {
+                    usersList.innerHTML = `
+                        <div style="padding: 40px 20px; text-align: center; color: #666;">
+                            📭
+                            <p>لا يوجد مستخدمون جدد</p>
+                        </div>
+                    `;
+                } else {
+                    usersList.innerHTML = availableUsers.map(user => `
+                        <div class="user-item" onclick="MessageSystem.startNewChat(${user.id})">
+                            <div class="user-avatar ${user.type}">
+                                ${user.avatar}
+                            </div>
+                            <div class="user-info">
+                                <h4>${user.name}</h4>
+                                <p>${user.type === 'buyer' ? 'مشتري' : 'بائع'} • ${user.phone}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                modal.style.display = 'flex';
+            },
+            
+            closeUsersModal: function() {
+                const modal = document.getElementById('usersModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            },
+            
+            startNewChat: function(userId) {
+                const user = this.allUsers.find(u => u.id === userId);
+                if (!user) return;
+                
+                // البحث إذا كان هناك محادثة موجودة مع هذا المستخدم
+                const existingConversation = this.conversations.find(c => c.user.id === userId);
+                
+                if (existingConversation) {
+                    // إذا كان هناك محادثة موجودة، افتحها
+                    this.selectConversation(existingConversation.id);
+                } else {
+                    // إنشاء محادثة جديدة
+                    const newId = this.conversations.length > 0 ? 
+                        Math.max(...this.conversations.map(c => c.id)) + 1 : 1;
+                    
+                    const newConversation = {
+                        id: newId,
+                        user: user,
+                        lastMessage: "ابدأ المحادثة الآن...",
+                        time: "الآن",
+                        unread: 0,
+                        active: true,
+                        archived: false,
+                        blocked: false,
+                        lastOpenedAt: null,
+                        messages: []
+                    };
+                    
+                    this.conversations.unshift(newConversation);
+                    this.closeUsersModal();
+                    
+                    setTimeout(() => {
+                        this.selectConversation(newId);
+                    }, 100);
+                    
+                    this.showNotification(`بدأت محادثة جديدة مع ${user.name}`, 'success');
+                }
+            },
+            
+            // ============================================
+            // وظائف إرسال الرسائل
+            // ============================================
+            
+            sendAdminMessage: function() {
+                if (!this.currentConversation) {
+                    this.showNotification('الرجاء اختيار محادثة أولاً', 'warning');
+                    return;
+                }
+                
+                const input = document.getElementById('messageText');
+                if (!input) return;
+                
+                const text = input.value.trim();
+                
+                if (!text) {
+                    this.showNotification('الرجاء كتابة رسالة', 'warning');
+                    return;
+                }
+                
+                // إضافة الرسالة الجديدة مع علامة "مرسلة"
+                const newMessage = {
+                    id: Date.now(),
+                    sender: 'admin',
+                    type: 'admin',
+                    text: text,
+                    time: this.getCurrentTime(),
+                    status: 'sent'
+                };
+                
+                this.currentConversation.messages.push(newMessage);
+                this.currentConversation.lastMessage = `أنت: ${text.substring(0, 30)}...`;
+                this.currentConversation.time = 'الآن';
+                this.currentConversation.unread = 0;
+                
+                // تحديث العرض
+                this.displayMessages();
+                this.displayConversations();
+                this.updateStatistics();
+                
+                // إفراغ الحقل
+                input.value = '';
+                input.style.height = 'auto';
+                
+                // محاكاة قراءة الرسالة بعد ثانيتين
+                setTimeout(() => {
+                    newMessage.status = 'read';
+                    this.displayMessages();
+                    this.displayConversations();
+                }, 2000);
+                
+                this.showNotification('تم إرسال الرد بنجاح', 'success');
+            },
+            
+            quickReply: function() {
+                const input = document.getElementById('messageText');
+                if (input) {
+                    input.value = "شكراً لتواصلكم، سنقوم بمتابعة الأمر وسنعود إليكم قريباً.";
+                    input.focus();
+                    input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+                    
+                    this.showNotification('تم إضافة رد سريع، يمكنك تعديله أو إرساله', 'info');
+                }
+            },
+            
+            // ============================================
+            // وظائف الإدارة
+            // ============================================
+            
+            markAsRead: function(conversationId) {
+                const conversation = this.conversations.find(c => c.id === conversationId);
+                if (conversation && conversation.unread > 0) {
+                    conversation.unread = 0;
+                    conversation.lastOpenedAt = Date.now();
+                    this.displayConversations();
+                }
+            },
+            
+            markAllAsRead: function() {
+                this.showConfirmModal(
+                    'تعيين الكل كمقروءة',
+                    'هل تريد تعيين جميع الرسائل كمقروءة؟',
+                    () => {
+                        this.conversations.forEach(c => {
+                            c.unread = 0;
+                            c.lastOpenedAt = Date.now();
+                        });
+                        this.displayConversations();
+                        this.updateStatistics();
+                        this.showNotification('تم تعيين جميع الرسائل كمقروءة', 'success');
+                    }
+                );
+            },
+            
+            archiveConversation: function() {
+                if (!this.currentConversation) {
+                    this.showNotification('الرجاء اختيار محادثة أولاً', 'warning');
+                    return;
+                }
+                
+                this.showConfirmModal(
+                    'أرشيف المحادثة',
+                    `هل تريد نقل محادثة ${this.currentConversation.user.name} للأرشيف؟`,
+                    () => {
+                        this.currentConversation.archived = true;
+                        this.currentConversation.active = false;
+                        this.displayConversations();
+                        this.hideChatWindow();
+                        this.updateStatistics();
+                        this.showNotification('تم نقل المحادثة إلى الأرشيف', 'success');
+                    }
+                );
+            },
+            
+            blockUser: function() {
+                if (!this.currentConversation) {
+                    this.showNotification('الرجاء اختيار محادثة أولاً', 'warning');
+                    return;
+                }
+                
+                this.showConfirmModal(
+                    'حظر المستخدم',
+                    `هل تريد حظر ${this.currentConversation.user.name}؟ لن يتمكن من إرسال رسائل جديدة.`,
+                    () => {
+                        this.currentConversation.user.blocked = true;
+                        this.currentConversation.active = false;
+                        this.currentConversation.lastMessage = 'تم حظر هذا المستخدم';
+                        this.displayConversations();
+                        this.hideChatWindow();
+                        this.updateStatistics();
+                        this.showNotification(`تم حظر ${this.currentConversation.user.name}`, 'warning');
+                    }
+                );
+            },
+            
+            // ============================================
+            // وظائف الإحصائيات
+            // ============================================
+            
+            updateStatistics: function() {
+                const totalMessages = this.conversations.reduce((sum, conv) => sum + conv.messages.length, 0);
+                const unreadMessages = this.conversations.reduce((sum, conv) => sum + conv.unread, 0);
+                const needsReply = this.conversations.filter(conv => {
+                    const lastMsg = conv.messages[conv.messages.length - 1];
+                    return lastMsg && lastMsg.sender !== 'admin' && conv.unread > 0 && conv.active && !conv.blocked;
+                }).length;
+                
+                const responded = this.conversations.filter(conv => {
+                    const lastMsg = conv.messages[conv.messages.length - 1];
+                    return lastMsg && lastMsg.sender === 'admin' && conv.active;
+                }).length;
+                
+                const totalActive = this.conversations.filter(conv => conv.active && !conv.blocked).length;
+                const responseRate = totalActive > 0 ? Math.round((responded / totalActive) * 100) : 0;
+                
+                const totalMessagesEl = document.getElementById('totalMessages');
+                const unreadMessagesEl = document.getElementById('unreadMessages');
+                const needsReplyEl = document.getElementById('needsReply');
+                const responseRateEl = document.getElementById('responseRate');
+                
+                if (totalMessagesEl) totalMessagesEl.textContent = totalMessages;
+                if (unreadMessagesEl) unreadMessagesEl.textContent = unreadMessages;
+                if (needsReplyEl) needsReplyEl.textContent = needsReply;
+                if (responseRateEl) responseRateEl.textContent = responseRate + '%';
+            },
+            
+            // ============================================
+            // نظام الإشعارات
+            // ============================================
+            
+            showNotification: function(message, type = 'info') {
+                const container = document.getElementById('notificationContainer');
+                if (!container) return;
+                
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                
+                let icon = 'ℹ️';
+                if (type === 'success') icon = '✅';
+                if (type === 'warning') icon = '⚠️';
+                if (type === 'error') icon = '❌';
+                
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        ${icon}
+                        <span>${message}</span>
+                    </div>
+                    <button class="notification-close" onclick="this.parentElement.remove()">
+                        ×
+                    </button>
+                `;
+                
+                container.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 5000);
+            },
+            
+            // ============================================
+            // نظام مودال التأكيد
+            // ============================================
+            
+            showConfirmModal: function(title, message, callback) {
+                const confirmTitle = document.getElementById('confirmTitle');
+                const confirmMessage = document.getElementById('confirmMessage');
+                const modal = document.getElementById('confirmModal');
+                
+                if (!confirmTitle || !confirmMessage || !modal) return;
+                
+                confirmTitle.textContent = title;
+                confirmMessage.textContent = message;
+                this.confirmCallback = callback;
+                
+                modal.style.display = 'flex';
+                
+                // إعداد أزرار المودال
+                const confirmYes = document.getElementById('confirmYes');
+                const confirmNo = document.getElementById('confirmNo');
+                
+                if (confirmYes) {
+                    confirmYes.onclick = () => {
+                        this.closeConfirmModal();
+                        if (this.confirmCallback) this.confirmCallback();
+                    };
+                }
+                
+                if (confirmNo) {
+                    confirmNo.onclick = () => this.closeConfirmModal();
+                }
+            },
+            
+            closeConfirmModal: function() {
+                const modal = document.getElementById('confirmModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    this.confirmCallback = null;
+                }
+            },
+            
+            // ============================================
+            // نظام المحاكاة الذكي
+            // ============================================
+            
+            startSmartSimulation: function() {
+                // بدء محاكاة ذكية
+                this.simulationInterval = setInterval(() => {
+                    this.smartSimulateNewMessage();
+                }, 45000);
+            },
+            
+            smartSimulateNewMessage: function() {
+                // تقليل نسبة حدوث الرسائل
+                if (Math.random() > 0.75) return;
+                
+                // فلترة المحادثات النشطة غير المحظورة وغير المفترحة
+                const activeConvs = this.conversations.filter(c => 
+                    c.active && 
+                    !c.archived && 
+                    !c.blocked
+                );
+                
+                if (activeConvs.length === 0) return;
+                
+                // استبعاد المحادثة المفتوحة حالياً
+                const availableConvs = activeConvs.filter(c => 
+                    !this.currentConversation || 
+                    c.id !== this.currentConversation.id
+                );
+                
+                if (availableConvs.length === 0) return;
+                
+                // اختيار محادثة عشوائية
+                const randomConv = availableConvs[Math.floor(Math.random() * availableConvs.length)];
+                const userType = randomConv.user.type;
+                
+                // رسائل أكثر واقعية
+                const messages = userType === 'buyer' ? [
+                    "هل يمكنني تغيير العنوان؟",
+                    "المنتج ممتاز، شكراً لكم",
+                    "متى وقت التوصيل المتوقع؟",
+                    "أحتاج مساعدة في طلبي",
+                    "هل هناك خصم على الكمية؟",
+                    "تم استلام المنتج، شكراً",
+                    "ممكن استفسار عن الضمان؟"
+                ] : [
+                    "طلب جديد رقم #" + (Math.floor(Math.random() * 10000) + 1000),
+                    "تقرير المبيعات جاهز للمراجعة",
+                    "استفسار عن سياسة العمولة الجديدة",
+                    "طلب إرجاع من عميل يحتاج موافقة",
+                    "مشكلة فنية في تحديث المنتجات",
+                    "تم شحن الطلب #" + (Math.floor(Math.random() * 5000) + 1000),
+                    "تأكيد استلام دفعة"
+                ];
+                
+                const newMessage = {
+                    id: Date.now(),
+                    sender: userType,
+                    type: userType,
+                    text: messages[Math.floor(Math.random() * messages.length)],
+                    time: this.getCurrentTime(),
+                    status: 'sent'
+                };
+                
+                randomConv.messages.push(newMessage);
+                randomConv.lastMessage = newMessage.text.substring(0, 40) + (newMessage.text.length > 40 ? '...' : '');
+                randomConv.time = 'الآن';
+                randomConv.unread++;
+                
+                // تحديث العرض والإشعارات
+                this.updateStatistics();
+                
+                // إشعار فقط إذا لم تكن المحادثة مفتوحة
+                if (!this.currentConversation || this.currentConversation.id !== randomConv.id) {
+                    this.showNotification(`رسالة جديدة من ${randomConv.user.name}`, 'info');
+                    this.displayConversations();
+                }
+            },
+            
+            // ============================================
+            // وظائف مساعدة
+            // ============================================
+            
+            getCurrentTime: function() {
+                const now = new Date();
+                return now.toLocaleTimeString('ar-EG', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: true 
+                });
+            },
+            
+            // ============================================
+            // تنظيف النظام
+            // ============================================
+            
+            cleanup: function() {
+                if (this.simulationInterval) {
+                    clearInterval(this.simulationInterval);
+                }
+            }
+        };
+        
+        // تهيئة النظام عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            MessageSystem.init();
+        });
+        
+        // تنظيف النظام عند مغادرة الصفحة
+        window.addEventListener('beforeunload', function() {
+            MessageSystem.cleanup();
+        });
+        
+        // إغلاق المودال عند النقر خارجها
+        document.getElementById('confirmModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                MessageSystem.closeConfirmModal();
+            }
+        });
+        
+        document.getElementById('usersModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                MessageSystem.closeUsersModal();
+            }
+        });
+        
+        // إعادة تهيئة التصميم عند تغيير حجم النافذة
+        window.addEventListener('resize', function() {
+            MessageSystem.setupMobileDesign();
+        });
+    </script>
+</body>
+</html>

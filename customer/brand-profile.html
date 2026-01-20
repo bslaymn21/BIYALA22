@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CLAZZY - بيالة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== نظام الألوان العالمي ===== */
+        :root {
+            --space-black: #0C0F17;
+            --light-text: #E6E6E6;
+            --accent-orange: #FF6D1F;
+            --danger-red: #ED3F27;
+            --success-green: #2ECC71;
+            --warning-yellow: #F39C12;
+            --card-bg: #161B26;
+            --overlay-bg: rgba(12, 15, 23, 0.95);
+            --border-radius: 24px;
+            --border-radius-sm: 16px;
+            --border-radius-xs: 12px;
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.25);
+            --shadow-medium: 0 6px 30px rgba(0, 0, 0, 0.35);
+            --shadow-hard: 0 10px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        /* ===== الخطوط ===== */
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--space-black);
+            color: var(--light-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ===== هيدر البراند ===== */
+        .brand-header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            background: rgba(12, 15, 23, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 1000;
+            padding: 15px 16px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--light-text);
+            font-size: 17px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 109, 31, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--light-text);
+            flex: 1;
+            background: linear-gradient(135deg, var(--accent-orange), #FF9E6D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .settings-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--light-text);
+            font-size: 17px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255, 109, 31, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ===== محتوى البراند ===== */
+        .brand-content {
+            padding-top: 80px;
+            padding-bottom: 70px;
+        }
+
+        /* ===== قسم معلومات البراند ===== */
+        .brand-info-section {
+            padding: 20px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .brand-info-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-orange), #FF9E6D);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: var(--space-black);
+            font-weight: 900;
+            box-shadow: 0 0 30px rgba(255, 109, 31, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        .brand-name-section {
+            flex: 1;
+        }
+
+        .brand-name {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--light-text);
+            margin-bottom: 8px;
+        }
+
+        .brand-category {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--light-text);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .brand-description {
+            color: #8A8F9C;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* ===== إحصائيات البراند ===== */
+        .brand-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--light-text);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #8A8F9C;
+        }
+
+        /* ===== أزرار التفاعل مع البراند ===== */
+        .brand-actions {
+            display: flex;
+            gap: 10px;
+            padding: 20px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: var(--border-radius-sm);
+            color: rgb(132, 8, 255);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .follow-btn {
+            background: linear-gradient(135deg, var(--accent-orange), #FF9E6D);
+            color: var(--space-black);
+            width: 48px;
+            height: 48px;
+            border-radius: var(--border-radius-sm);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--light-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .follow-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 109, 31, 0.4);
+        }
+
+        .share-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--border-radius-sm);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--light-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        /* ===== تبويبات البراند ===== */
+        .brand-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--space-black);
+            position: sticky;
+            top: 60px;
+            z-index: 900;
+            backdrop-filter: blur(15px);
+        }
+
+        .brand-tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #8A8F9C;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+            position: relative;
+        }
+
+        .brand-tab.active {
+            color: var(--light-text);
+            border-bottom-color: var(--accent-orange);
+        }
+
+        /* ===== Pinterest Style Grid للبراند ===== */
+        .pinterest-grid {
+            columns: 2;
+            column-gap: 12px;
+            padding: 0 16px;
+            margin-top: 15px;
+        }
+
+        @media (min-width: 640px) {
+            .pinterest-grid {
+                columns: 3;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .pinterest-grid {
+                columns: 4;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .pinterest-grid {
+                columns: 5;
+            }
+        }
+
+        .grid-item {
+            break-inside: avoid;
+            margin-bottom: 12px;
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .product-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: linear-gradient(45deg, #2A2F3C, #3A2F4C);
+        }
+
+        .product-discount {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, var(--danger-red), #FF4757);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 5px 8px;
+            border-radius: 15px;
+            z-index: 2;
+            box-shadow: 0 3px 10px rgba(237, 63, 39, 0.4);
+            direction: rtl !important;
+            text-align: center !important;
+            unicode-bidi: plaintext !important;
+        }
+
+        /* ===== قسم حول البراند ===== */
+        .page-section {
+            display: none;
+            padding: 20px 16px;
+        }
+
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .about-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .about-card h3 {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--light-text);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .about-card h3 i {
+            color: var(--accent-orange);
+        }
+
+        .about-card p {
+            color: #8A8F9C;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .about-details {
+            display: grid;
+            gap: 12px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #8A8F9C;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: var(--light-text);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* ===== قسم الكوليكشن ===== */
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .collection-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .collection-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .collection-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .collection-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-orange);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .collection-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background: linear-gradient(45deg, #2A2F3C, #3A2F4C);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+
+        .collection-info {
+            padding: 15px;
+        }
+
+        .collection-name {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--light-text);
+            margin-bottom: 8px;
+        }
+
+        .collection-count {
+            font-size: 12px;
+            color: #8A8F9C;
+        }
+
+        /* ===== التنقل السفلي ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background-color: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 5px 12px;
+            border-top-right-radius: 20px;
+            border-top-left-radius: 20px;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: 60px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #8A8F9C;
+            cursor: pointer;
+            position: relative;
+            flex: 1;
+            padding: 0;
+            min-height: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: var(--accent-orange);
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            margin-bottom: 3px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .nav-glow {
+            position: absolute;
+            top: -3px;
+            width: 3px;
+            height: 3px;
+            background-color: var(--accent-orange);
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 10px var(--accent-orange);
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-item.active .nav-glow {
+            opacity: 1;
+        }
+
+        /* ===== بطاقة المنتج المقلوبة - نفس تصميم الثاني بالضبط ===== */
+        .card-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: var(--overlay-bg);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .card-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .flip-card {
+            width: 100%;
+            max-width: 400px;
+            height: 90vh;
+            max-height: 700px;
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow-hard);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* الوجه الأمامي - الصورة فقط */
+        .card-front {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-image-large {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #2A2F3C, #3A2F4C);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex: 1;
+        }
+
+        .product-image-large i {
+            font-size: 100px;
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        .front-discount {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, var(--danger-red), #FF4757);
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            padding: 8px 12px;
+            border-radius: 20px;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(237, 63, 39, 0.4);
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            gap: 4px;
+            direction: rtl;
+        }
+
+        .discount-text {
+            order: 2;
+        }
+
+        .discount-label {
+            order: 1;
+        }
+
+        /* الوجه الخلفي - جميع التفاصيل */
+        .card-back {
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .card-back-header {
+            margin-bottom: 15px;
+        }
+
+        .brand-name-large {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--light-text);
+            margin-bottom: 5px;
+        }
+
+        .likes-large {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #9CA3AF;
+            margin-bottom: 15px;
+        }
+
+        .likes-large i {
+            color: var(--danger-red);
+            font-size: 16px;
+        }
+
+        .product-price-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .product-price {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--light-text);
+        }
+
+        .original-price {
+            font-size: 16px;
+            color: #9CA3AF;
+            text-decoration: line-through;
+            margin-right: 10px;
+        }
+
+        .product-description {
+            margin-bottom: 20px;
+        }
+
+        .product-description h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--light-text);
+            margin-bottom: 10px;
+        }
+
+        .product-description p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #B0B5C2;
+        }
+
+        .product-details {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--border-radius-sm);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #8A8F9C;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            color: var(--light-text);
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .action-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-btn.brand {
+            background: linear-gradient(135deg, var(--accent-orange), #FF9E6D);
+            color: var(--space-black);
+            box-shadow: 0 0 15px rgba(255, 109, 31, 0.4);
+        }
+
+        .card-back-footer {
+            margin-top: auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 15px !important;
+            padding-top: 20px !important;
+        }
+
+        .flip-button {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: var(--light-text);
+            font-size: 20px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: absolute !important;
+            bottom: 15px;
+            right: 15px;
+        }
+
+        .buy-button-front {
+            width: auto !important;
+            min-width: 200px !important;
+            background: linear-gradient(135deg, var(--accent-orange), #FF9E6D) !important;
+            border: none !important;
+            border-radius: 50px !important;
+            color: var(--space-black) !important;
+            font-size: 15px !important;
+            font-weight: 800 !important;
+            padding: 12px 24px !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            margin: 20px auto 10px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            box-shadow: 0 4px 15px rgba(255, 109, 31, 0.3) !important;
+            align-self: center !important;
+        }
+
+        .buy-button-front:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 5px 15px rgba(255, 109, 31, 0.4) !important;
+        }
+
+        .close-card {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--light-text);
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .close-card:hover {
+            background: rgba(255, 109, 31, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* ===== إشعارات ===== */
+        .notification-toast {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            left: 20px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--border-radius);
+            padding: 15px 20px;
+            color: var(--light-text);
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-medium);
+            text-align: center;
+            justify-content: center;
+        }
+
+        .notification-toast.show {
+            opacity: 1;
+            animation: slideUp 0.3s ease;
+        }
+
+        .notification-toast.success {
+            border-right: 4px solid var(--success-green);
+        }
+
+        .notification-toast.error {
+            border-right: 4px solid var(--danger-red);
+        }
+
+        .notification-toast.info {
+            border-right: 4px solid var(--accent-orange);
+        }
+
+        .notification-toast i {
+            font-size: 18px;
+        }
+
+        .notification-toast.success i {
+            color: var(--success-green);
+        }
+
+        .notification-toast.error i {
+            color: var(--danger-red);
+        }
+
+        .notification-toast.info i {
+            color: var(--accent-orange);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== رسائل السلة الفارغة ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8A8F9C;
+        }
+
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            color: var(--light-text);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ===== تحسينات للشاشات الصغيرة ===== */
+        @media (max-width: 480px) {
+            .brand-logo {
+                width: 70px;
+                height: 70px;
+                font-size: 30px;
+            }
+
+            .brand-name {
+                font-size: 20px;
+            }
+
+            .pinterest-grid {
+                columns: 2;
+                padding: 0 12px;
+            }
+
+            .flip-card {
+                max-width: 95%;
+                height: 85vh;
+            }
+
+            .nav-item i {
+                font-size: 16px;
+            }
+
+            .nav-item span {
+                font-size: 9px;
+            }
+        }
+
+        /* ===== تحسينات للمس ===== */
+        @media (hover: none) and (pointer: coarse) {
+
+            .flip-button,
+            .close-card,
+            .action-btn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* ===== تحسينات عامة ===== */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(22, 27, 38, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-orange);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF8A4D;
+        }
+
+        /* تأمين أن الصور تستجيب */
+        img,
+        video,
+        canvas {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* تأمين أن النماذج تستجيب */
+        input,
+        select,
+        textarea,
+        button {
+            font-size: 16px;
+            max-width: 100%;
+        }
+
+        /* تحسين إمكانية الوصول للتركيز */
+        :focus {
+            outline: 2px solid var(--accent-orange);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== الهيدر ===== -->
+    <header class="brand-header">
+        <button class="back-btn" id="back-btn">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+        <div class="brand-title" id="brand-title">CLAZZY</div>
+
+    </header>
+
+    <!-- ===== محتوى البراند ===== -->
+    <main class="brand-content">
+        <!-- قسم معلومات البراند -->
+        <section class="brand-info-section">
+            <div class="brand-info-row">
+                <div class="brand-logo" id="brand-logo">C</div>
+                <div class="brand-name-section">
+                    <div class="brand-name" id="brand-name">CLAZZY</div>
+                    <span class="brand-category" id="brand-category">علامة مصرية</span>
+                </div>
+            </div>
+
+            <p class="brand-description" id="brand-description">
+                نؤمن بأن الموضة يجب أن تكون تعبيراً عن الشخصية. علامة مصرية تقدم تصاميم عصرية وجريئة تجمع بين الأصالة
+                والحداثة.
+            </p>
+
+            <div class="brand-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="products-count">42</span>
+                    <span class="stat-label">منتج</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="followers-count">12.5K</span>
+                    <span class="stat-label">متابع</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="likes-count">124K</span>
+                    <span class="stat-label">إعجاب</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- أزرار التفاعل -->
+        <div class="brand-actions">
+            <button class="action-btn follow-btn" id="follow-btn">
+                <i class="far fa-heart"></i>
+                <span>متابعة</span>
+            </button>
+            <button class="share-btn" id="share-btn">
+                <i class="fas fa-share-alt"></i>
+            </button>
+        </div>
+
+        <!-- تبويبات المحتوى -->
+        <div class="brand-tabs" id="brand-tabs">
+            <div class="brand-tab active" data-tab="products">
+                <i class="fas fa-box"></i>
+                <span>المنتجات</span>
+            </div>
+            <div class="brand-tab" data-tab="about">
+                <i class="fas fa-info-circle"></i>
+                <span>حول البراند</span>
+            </div>
+            <div class="brand-tab" data-tab="collections">
+                <i class="fas fa-layer-group"></i>
+                <span>الكوليكشن</span>
+            </div>
+        </div>
+
+        <!-- قسم المنتجات -->
+        <section class="page-section active" id="products-section">
+            <div class="pinterest-grid" id="products-grid">
+                <!-- المنتجات تُولد ديناميكياً -->
+            </div>
+
+            <div class="empty-state" id="empty-products" style="display: none;">
+                <i class="fas fa-box-open"></i>
+                <h3>لا توجد منتجات حالياً</h3>
+                <p>سيتم إضافة منتجات جديدة قريباً</p>
+            </div>
+        </section>
+
+        <!-- قسم حول البراند -->
+        <section class="page-section" id="about-section">
+            <div class="about-card">
+                <h3><i class="fas fa-history"></i> تاريخ البراند</h3>
+                <p>تأسست علامة CLAZZY عام 2018 في قلب القاهرة، وبدأت برؤية لتقديم موضة مصرية عصرية تواكب أحدث صيحات
+                    الموضة العالمية مع الحفاظ على الهوية المصرية الأصيلة.</p>
+            </div>
+
+            <div class="about-card">
+                <h3><i class="fas fa-eye"></i> رؤيتنا</h3>
+                <p>نؤمن بأن الموضة ليست مجرد ملابس، بل هي لغة تعبر عن شخصية الفرد وتطلعاته. نسعى لأن نكون الصوت المصري
+                    في عالم الموضة العالمي.</p>
+            </div>
+
+            <div class="about-card">
+                <h3><i class="fas fa-award"></i> الجودة</h3>
+                <div class="about-details">
+                    <div class="detail-row">
+                        <span class="detail-label">المواد المستخدمة</span>
+                        <span class="detail-value">قطن مصري 100%</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">التصنيع</span>
+                        <span class="detail-value">صنع في مصر</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">الضمان</span>
+                        <span class="detail-value">شهر واحد</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">وقت التوصيل</span>
+                        <span class="detail-value">3-5 أيام عمل</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم الكوليكشن -->
+        <section class="page-section" id="collections-section">
+            <div class="collection-grid" id="collections-grid">
+                <!-- الكوليكشن يُولد ديناميكياً -->
+            </div>
+
+            <div class="empty-state" id="empty-collections" style="display: none;">
+                <i class="fas fa-layer-group"></i>
+                <h3>لا توجد كوليكشن حالياً</h3>
+                <p>سيتم إضافة كوليكشن جديد قريباً</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== بطاقة المنتج المقلوبة ===== -->
+    <div class="card-overlay" id="product-card-overlay">
+        <button class="close-card" id="close-card">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <div class="flip-card" id="flip-card">
+            <div class="flip-card-inner">
+                <!-- الوجه الأمامي - الصورة فقط -->
+                <div class="card-front">
+                    <div class="product-image-large">
+                        <i class="fas fa-tshirt"></i>
+                        <div class="front-discount"><span class="discount-text">%30</span> <span
+                                class="discount-label">خصم</span></div>
+                    </div>
+
+                    <button class="flip-button" id="flip-to-back">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </div>
+
+                <!-- الوجه الخلفي - جميع التفاصيل -->
+                <div class="card-back">
+                    <div class="card-back-header">
+                        <div class="brand-name-large" id="product-brand">CLAZZY</div>
+                        <div class="likes-large">
+                            <i class="fas fa-heart"></i>
+                            <span id="product-likes">1,245 إعجاب</span>
+                        </div>
+                    </div>
+
+                    <div class="product-price-section">
+                        <div class="product-price">
+                            <span class="original-price" id="original-price">$715</span>
+                            <span id="product-price">$500</span>
+                        </div>
+                    </div>
+
+                    <div class="product-description">
+                        <h3>تفاصيل المنتج</h3>
+                        <p id="product-desc">تيشيرت بوليستر عالي الجودة بتصميم عصري</p>
+                    </div>
+
+                    <div class="product-details" id="product-specs">
+                        <!-- التفاصيل تُولد ديناميكياً -->
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="action-btn" id="favorite-btn" title="إضافة إلى المفضلة">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="#" class="action-btn brand" title="زيارة صفحة البراند" id="brand-page-btn">
+                            <i class="fas fa-store"></i>
+                        </a>
+                        <button class="action-btn" id="share-product-btn" title="مشاركة">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+
+                    <div class="card-back-footer">
+                        <button class="flip-button" id="flip-to-front">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                        <button class="buy-button-front" id="buy-button">
+                            <i class="fas fa-shopping-cart"></i> أضف إلى السلة
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== إشعارات ===== -->
+    <div class="notification-toast" id="notification-toast"></div>
+
+    <!-- ===== التنقل السفلي ===== -->
+
+
+    <script>
+        // ===== بيانات التطبيق =====
+        const products = [
+            {
+                id: 1, brand: "CLAZZY", name: "تيشيرت كلاسيك", price: "$500", originalPrice: "$715", discount: 30, likes: 1245,
+                desc: "تيشيرت بوليستر عالي الجودة بتصميم عصري", colors: ["أسود", "أزرق", "رمادي"], sizes: "S, M, L, XL",
+                fabric: "قطن 100%", delivery: "3-5 أيام", category: "تيشيرتات", imageHeight: 320
+            },
+            {
+                id: 2, brand: "CLAZZY", name: "هودي شتوي", price: "$350", originalPrice: "$350", discount: 0, likes: 850,
+                desc: "هودي قطني دافئ مع جيب كانغر", colors: ["رمادي", "أسود", "أبيض"], sizes: "M, L, XL",
+                fabric: "قطن فرنسي", delivery: "4-6 أيام", category: "هوديز", imageHeight: 280
+            },
+            {
+                id: 3, brand: "CLAZZY", name: "بنطال جينز", price: "$280", originalPrice: "$330", discount: 15, likes: 920,
+                desc: "بنطال جينز كلاسيكي يناسب جميع المناسبات", colors: ["أزرق", "أسود"], sizes: "28-38",
+                fabric: "دينيم", delivery: "2-4 أيام", category: "بناطيل", imageHeight: 350
+            },
+            {
+                id: 4, brand: "CLAZZY", name: "جاكيت جلد", price: "$600", originalPrice: "$750", discount: 20, likes: 1100,
+                desc: "جاكت جلد طبيعي بتصميم متميز", colors: ["بني", "أسود"], sizes: "M, L, XL",
+                fabric: "جلد طبيعي", delivery: "5-7 أيام", category: "جواكت", imageHeight: 300
+            },
+            {
+                id: 5, brand: "CLAZZY", name: "قميص رسمي", price: "$420", originalPrice: "$420", discount: 0, likes: 750,
+                desc: "قميص رسمي أنيق للمناسبات الخاصة", colors: ["أبيض", "أزرق فاتح"], sizes: "S, M, L",
+                fabric: "كتان", delivery: "3-5 أيام", category: "قمصان", imageHeight: 260
+            },
+            {
+                id: 6, brand: "CLAZZY", name: "شورت صيفي", price: "$310", originalPrice: "$310", discount: 0, likes: 720,
+                desc: "شورت صيفي مريح بتصميم رياضي", colors: ["أزرق", "رمادي", "أخضر"], sizes: "S, M, L",
+                fabric: "بوليستر", delivery: "1-3 أيام", category: "شورتات", imageHeight: 290
+            }
+        ];
+
+        const collections = [
+            { id: 1, name: "كوليكشن شتاء 2024", count: 15, icon: "❄️" },
+            { id: 2, name: "اللباس الرسمي", count: 8, icon: "👔" },
+            { id: 3, name: "ملابس رياضية", count: 12, icon: "🏃‍♂️" },
+            { id: 4, name: "أزياء سهرة", count: 6, icon: "🎩" },
+            { id: 5, name: "ملابس يومية", count: 20, icon: "👕" },
+            { id: 6, name: "عروض خاصة", count: 10, icon: "🏷️" }
+        ];
+
+        let currentBrand = {
+            name: "CLAZZY",
+            category: "علامة مصرية",
+            description: "نؤمن بأن الموضة يجب أن تكون تعبيراً عن الشخصية. علامة مصرية تقدم تصاميم عصرية وجريئة تجمع بين الأصالة والحداثة.",
+            logo: "C",
+            productsCount: products.length,
+            followers: "12.5K",
+            likes: "124K",
+            following: false
+        };
+
+        let currentProduct = null;
+        let favorites = JSON.parse(localStorage.getItem('biyala_favorites') || '[]');
+
+        // ===== تهيئة التطبيق =====
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            // تحديث معلومات البراند
+            updateBrandInfo();
+
+            // توليد المنتجات بنمط Pinterest
+            generateProductsGrid();
+
+            // توليد الكوليكشن
+            generateCollectionsGrid();
+
+            // إعداد الأحداث
+            setupEventListeners();
+
+            // تحديث عداد السلة
+            updateCartCounter();
+
+            // تحديث المفضلة
+            updateFavorites();
+
+            console.log('✅ صفحة البراند جاهزة!');
+        }
+
+        // ===== تحديث معلومات البراند =====
+        function updateBrandInfo() {
+            document.getElementById('brand-logo').textContent = currentBrand.logo;
+            document.getElementById('brand-name').textContent = currentBrand.name;
+            document.getElementById('brand-title').textContent = currentBrand.name;
+            document.getElementById('brand-category').textContent = currentBrand.category;
+            document.getElementById('brand-description').textContent = currentBrand.description;
+            document.getElementById('products-count').textContent = currentBrand.productsCount;
+            document.getElementById('followers-count').textContent = currentBrand.followers;
+            document.getElementById('likes-count').textContent = currentBrand.likes;
+
+            // تحديث زر المتابعة
+            updateFollowButton();
+        }
+
+        // ===== توليد شبكة المنتجات بنمط Pinterest =====
+        function generateProductsGrid() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+
+            if (products.length === 0) {
+                document.getElementById('empty-products').style.display = 'block';
+                return;
+            }
+
+            products.forEach((product) => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.dataset.id = product.id;
+
+                const bgColors = [
+                    'linear-gradient(135deg, #2A2F3C, #3A2F4C)',
+                    'linear-gradient(135deg, #3A2F4C, #4A2F5C)',
+                    'linear-gradient(135deg, #2A3F4C, #3A4F5C)',
+                    'linear-gradient(135deg, #3A3F3C, #4A4F4C)'
+                ];
+                const randomColor = bgColors[Math.floor(Math.random() * bgColors.length)];
+
+                const icons = {
+                    'تيشيرتات': 'fa-tshirt',
+                    'هوديز': 'fa-vest',
+                    'بناطيل': 'fa-person',
+                    'جواكت': 'fa-jacket',
+                    'قمصان': 'fa-shirt',
+                    'شورتات': 'fa-person-running'
+                };
+
+                const iconClass = icons[product.category] || 'fa-tshirt';
+
+                item.innerHTML = `
+                    <div class="product-img" style="background: ${randomColor}; height: ${product.imageHeight}px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas ${iconClass}" style="font-size: 48px; color: rgba(255, 255, 255, 0.15);"></i>
+                        ${product.discount > 0 ? `<div class="product-discount">خصم ${product.discount}%</div>` : ''}
+                    </div>
+                `;
+
+                item.addEventListener('click', () => openProductCard(product));
+                grid.appendChild(item);
+            });
+        }
+
+        // ===== توليد شبكة الكوليكشن =====
+        function generateCollectionsGrid() {
+            const grid = document.getElementById('collections-grid');
+            grid.innerHTML = '';
+
+            if (collections.length === 0) {
+                document.getElementById('empty-collections').style.display = 'block';
+                return;
+            }
+
+            collections.forEach(collection => {
+                const card = document.createElement('div');
+                card.className = 'collection-card';
+
+                card.innerHTML = `
+                    <div class="collection-image">
+                        ${collection.icon}
+                    </div>
+                    <div class="collection-info">
+                        <div class="collection-name">${collection.name}</div>
+                        <div class="collection-count">${collection.count} منتج</div>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => {
+                    showNotification(`كوليكشن ${collection.name}`, 'success');
+                });
+
+                grid.appendChild(card);
+            });
+        }
+
+        // ===== إعداد الأحداث =====
+        function setupEventListeners() {
+            // زر العودة
+            document.getElementById('back-btn').addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+
+            // زر الإعدادات
+
+            // زر المتابعة
+            document.getElementById('follow-btn').addEventListener('click', toggleFollow);
+
+            // زر المشاركة
+            document.getElementById('share-btn').addEventListener('click', shareBrand);
+
+            // زر مشاركة المنتج
+            document.getElementById('share-product-btn')?.addEventListener('click', shareCurrentProduct);
+
+            // زر صفحة البراند
+            document.getElementById('brand-page-btn')?.addEventListener('click', function (e) {
+                e.preventDefault();
+                showNotification('أنت بالفعل في صفحة البراند', 'info');
+            });
+
+            // التبويبات
+            setupTabs();
+
+            // التنقل السفلي
+            setupBottomNavigation();
+
+            // بطاقة المنتج
+            setupProductCardEvents();
+        }
+
+        // ===== نظام التبويبات =====
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.brand-tab');
+            const sections = document.querySelectorAll('.page-section');
+
+            // تحديث المحتوى
+            function updateContent(activeTab) {
+                const tabId = activeTab.dataset.tab;
+
+                // إخفاء كل الأقسام
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // إزالة النشط من كل التبويبات
+                tabs.forEach(tab => tab.classList.remove('active'));
+
+                // إضافة النشط للتبويب الحالي
+                activeTab.classList.add('active');
+
+                // إظهار القسم المناسب
+                const targetSection = document.getElementById(`${tabId}-section`);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+            }
+
+            // إضافة الأحداث
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => updateContent(tab));
+            });
+
+            // تهيئة المحتوى الأول
+            updateContent(document.querySelector('.brand-tab.active'));
+        }
+
+        // ===== نظام المتابعة =====
+        function toggleFollow() {
+            const followBtn = document.getElementById('follow-btn');
+            const isFollowing = followBtn.querySelector('i').classList.contains('fas');
+
+            if (isFollowing) {
+                // إلغاء المتابعة
+                followBtn.innerHTML = '<i class="far fa-heart"></i><span>متابعة</span>';
+                currentBrand.following = false;
+                showNotification('تم إلغاء المتابعة', 'info');
+            } else {
+                // متابعة
+                followBtn.innerHTML = '<i class="fas fa-heart"></i><span>توقف عن المتابعة</span>';
+                currentBrand.following = true;
+                showNotification('أنت الآن تتابع ' + currentBrand.name, 'success');
+            }
+        }
+
+        function updateFollowButton() {
+            const followBtn = document.getElementById('follow-btn');
+            if (currentBrand.following) {
+                followBtn.innerHTML = '<i class="fas fa-heart"></i><span>توقف عن المتابعة</span>';
+            } else {
+                followBtn.innerHTML = '<i class="far fa-heart"></i><span>متابعة</span>';
+            }
+        }
+
+        // ===== مشاركة البراند =====
+        function shareBrand() {
+            const shareData = {
+                title: currentBrand.name,
+                text: currentBrand.description,
+                url: window.location.href,
+            };
+
+            if (navigator.share && navigator.canShare(shareData)) {
+                navigator.share(shareData)
+                    .then(() => {
+                        showNotification('تمت المشاركة بنجاح', 'success');
+                    })
+                    .catch(error => {
+                        console.error('خطأ في المشاركة:', error);
+                        copyToClipboard();
+                    });
+            } else {
+                copyToClipboard();
+            }
+        }
+
+        function copyToClipboard() {
+            const textToCopy = `${currentBrand.name}\n${currentBrand.description}\n${window.location.href}`;
+
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    showNotification('تم نسخ رابط البراند إلى الحافظة', 'success');
+                })
+                .catch(err => {
+                    console.error('فشل النسخ:', err);
+                    showNotification('فشل النسخ، حاول مرة أخرى', 'error');
+                });
+        }
+
+        // ===== مشاركة المنتج =====
+        function shareCurrentProduct() {
+            if (!currentProduct) return;
+
+            const shareData = {
+                title: `${currentProduct.brand} - ${currentProduct.name}`,
+                text: `${currentProduct.desc}\nالسعر: ${currentProduct.price}`,
+                url: window.location.href + `?product=${currentProduct.id}`,
+            };
+
+            if (navigator.share && navigator.canShare(shareData)) {
+                navigator.share(shareData)
+                    .then(() => {
+                        showNotification('تمت مشاركة المنتج بنجاح', 'success');
+                    })
+                    .catch(error => {
+                        console.error('خطأ في مشاركة المنتج:', error);
+                        copyProductToClipboard();
+                    });
+            } else {
+                copyProductToClipboard();
+            }
+        }
+
+        function copyProductToClipboard() {
+            if (!currentProduct) return;
+
+            const textToCopy = `${currentProduct.brand} - ${currentProduct.name}\n${currentProduct.desc}\nالسعر: ${currentProduct.price}\n${window.location.href}?product=${currentProduct.id}`;
+
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    showNotification('تم نسخ معلومات المنتج', 'success');
+                })
+                .catch(err => {
+                    console.error('فشل نسخ المنتج:', err);
+                    showNotification('فشل النسخ، حاول مرة أخرى', 'error');
+                });
+        }
+
+        // ===== بطاقة المنتج =====
+        function openProductCard(product) {
+            currentProduct = product;
+            const overlay = document.getElementById('product-card-overlay');
+            const card = document.getElementById('flip-card');
+
+            // تحديث البيانات
+            updateProductCardData(product);
+
+            // إظهار البطاقة
+            card.classList.remove('flipped');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // إضافة إلى السجل
+            addToRecentlyViewed(product);
+        }
+
+        function updateProductCardData(product) {
+            document.getElementById('product-brand').textContent = product.brand;
+            document.getElementById('product-likes').textContent = `${product.likes.toLocaleString()} إعجاب`;
+            document.getElementById('product-price').textContent = product.price;
+            document.getElementById('original-price').textContent = product.originalPrice;
+            document.getElementById('product-desc').textContent = product.desc;
+
+            // تحديث الخصم
+            const discountElement = document.querySelector('.front-discount');
+            if (discountElement) {
+                if (product.discount > 0) {
+                    discountElement.innerHTML = `
+                        <span class="discount-text">%${product.discount}</span>
+                        <span class="discount-label">خصم</span>
+                    `;
+                    discountElement.style.display = 'flex';
+                } else {
+                    discountElement.style.display = 'none';
+                }
+            }
+
+            // تحديث التفاصيل
+            const specsDiv = document.getElementById('product-specs');
+            specsDiv.innerHTML = `
+                <div class="detail-item">
+                    <span class="detail-label">المقاسات المتاحة</span>
+                    <span class="detail-value">${product.sizes}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">الألوان</span>
+                    <span class="detail-value">${product.colors.join(', ')}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">نوع القماش</span>
+                    <span class="detail-value">${product.fabric}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">وقت التوصيل</span>
+                    <span class="detail-value">${product.delivery}</span>
+                </div>
+            `;
+
+            // تحديث زر المفضلة
+            updateFavoriteButton(product);
+        }
+
+        function setupProductCardEvents() {
+            // إغلاق البطاقة
+            document.getElementById('close-card').addEventListener('click', closeProductCard);
+
+            document.getElementById('product-card-overlay').addEventListener('click', function (e) {
+                if (e.target === this) closeProductCard();
+            });
+
+            // تقليب البطاقة
+            document.getElementById('flip-to-back').addEventListener('click', function () {
+                document.getElementById('flip-card').classList.add('flipped');
+            });
+
+            document.getElementById('flip-to-front').addEventListener('click', function () {
+                document.getElementById('flip-card').classList.remove('flipped');
+            });
+
+            // زر المفضلة
+            document.getElementById('favorite-btn').addEventListener('click', toggleFavoriteCard);
+
+            // زر الشراء
+            document.getElementById('buy-button').addEventListener('click', addToCartFromCard);
+        }
+
+        function closeProductCard() {
+            document.getElementById('product-card-overlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // ===== نظام المفضلة =====
+        function toggleFavoriteCard() {
+            if (!currentProduct) return;
+
+            const favoriteBtn = document.getElementById('favorite-btn');
+            const isFavorite = favoriteBtn.classList.contains('active');
+
+            if (isFavorite) {
+                // إزالة من المفضلة
+                favoriteBtn.classList.remove('active');
+                favoriteBtn.innerHTML = '<i class="far fa-heart"></i>';
+                removeFromFavorites(currentProduct.id);
+                showNotification('تمت الإزالة من المفضلة', 'info');
+            } else {
+                // إضافة إلى المفضلة
+                favoriteBtn.classList.add('active');
+                favoriteBtn.innerHTML = '<i class="fas fa-heart"></i>';
+                addToFavorites(currentProduct.id);
+                showNotification('تمت الإضافة إلى المفضلة', 'success');
+            }
+        }
+
+        function updateFavoriteButton(product) {
+            const favoriteBtn = document.getElementById('favorite-btn');
+            const isFavorited = favorites.includes(product.id);
+
+            if (isFavorited) {
+                favoriteBtn.classList.add('active');
+                favoriteBtn.innerHTML = '<i class="fas fa-heart"></i>';
+            } else {
+                favoriteBtn.classList.remove('active');
+                favoriteBtn.innerHTML = '<i class="far fa-heart"></i>';
+            }
+        }
+
+        function addToFavorites(productId) {
+            if (!favorites.includes(productId)) {
+                favorites.push(productId);
+                localStorage.setItem('biyala_favorites', JSON.stringify(favorites));
+                updateFavorites();
+            }
+        }
+
+        function removeFromFavorites(productId) {
+            favorites = favorites.filter(id => id !== productId);
+            localStorage.setItem('biyala_favorites', JSON.stringify(favorites));
+            updateFavorites();
+        }
+
+        function updateFavorites() {
+            // يمكن تحديث عرض المفضلة هنا إذا كان هناك قسم للمفضلة
+            console.log('المفضلة المحدثة:', favorites);
+        }
+
+        // ===== نظام السلة =====
+        function addToCartFromCard() {
+            if (currentProduct) {
+                addToCart(currentProduct);
+            }
+        }
+
+        function addToCart(product) {
+            let cart = JSON.parse(localStorage.getItem('biyalaCart') || '[]');
+            let found = false;
+
+            for (let i = 0; i < cart.length; i++) {
+                if (cart[i].id === product.id) {
+                    cart[i].quantity += 1;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                cart.push({
+                    id: product.id,
+                    name: product.desc,
+                    brand: product.brand,
+                    price: parseInt(product.price.replace('$', '')),
+                    quantity: 1,
+                    image: 'fas fa-tshirt'
+                });
+            }
+
+            localStorage.setItem('biyalaCart', JSON.stringify(cart));
+            updateCartCounter();
+
+            // تأثير
+            const buyBtn = document.getElementById('buy-button');
+            const originalContent = buyBtn.innerHTML;
+            buyBtn.innerHTML = '<i class="fas fa-check"></i> تمت الإضافة';
+            buyBtn.style.background = '#2ecc71';
+
+            setTimeout(() => {
+                buyBtn.innerHTML = originalContent;
+                buyBtn.style.background = '';
+            }, 1500);
+
+            showNotification('تمت إضافة ' + product.name + ' إلى السلة', 'success');
+        }
+
+        function updateCartCounter() {
+            const cart = JSON.parse(localStorage.getItem('biyalaCart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            const cartNavItem = document.querySelector('.nav-item[data-page="cart"]');
+            if (cartNavItem && totalItems > 0) {
+                const oldBadge = cartNavItem.querySelector('.cart-badge');
+                if (oldBadge) oldBadge.remove();
+
+                const badge = document.createElement('div');
+                badge.className = 'cart-badge';
+                badge.textContent = totalItems > 9 ? '9+' : totalItems;
+                badge.style.cssText = `
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    background: var(--accent-orange);
+                    color: white;
+                    font-size: 10px;
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                `;
+                cartNavItem.style.position = 'relative';
+                cartNavItem.appendChild(badge);
+            }
+        }
+
+        // ===== التنقل السفلي =====
+        function setupBottomNavigation() {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    const page = this.dataset.page;
+                    navigateToPage(page);
+                });
+            });
+        }
+
+        function navigateToPage(page) {
+            switch (page) {
+                case 'home':
+                    window.location.href = 'index.html';
+                    break;
+                case 'explore':
+                    showNotification('صفحة الاستكشاف', 'info');
+                    break;
+                case 'cart':
+                    window.location.href = 'cart.html';
+                    break;
+                case 'favorites':
+                    window.location.href = 'favorites.html';
+                    break;
+                case 'profile':
+                    window.location.href = 'profile.html';
+                    break;
+            }
+        }
+
+        // ===== إشعارات =====
+        function showNotification(message, type = 'info') {
+            const toast = document.getElementById('notification-toast');
+            toast.textContent = message;
+            toast.className = `notification-toast ${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== إضافة إلى السجل =====
+        function addToRecentlyViewed(product) {
+            let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+
+            // إزالة المنتج إذا كان موجوداً
+            recentlyViewed = recentlyViewed.filter(item => item.id !== product.id);
+
+            // إضافة المنتج في البداية
+            recentlyViewed.unshift({
+                id: product.id,
+                brand: product.brand,
+                name: product.name,
+                price: product.price,
+                time: new Date().toISOString()
+            });
+
+            // الحفاظ على آخر 10 منتجات فقط
+            if (recentlyViewed.length > 10) {
+                recentlyViewed = recentlyViewed.slice(0, 10);
+            }
+
+            localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
+        }
+    </script>
+</body>
+
+</html>

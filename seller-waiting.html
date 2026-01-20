@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIYALA - صفحة الانتظار للبائعين</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* نظام الألوان - نفس النسخة */
+            --bg-primary: #0C0F17;
+            --bg-secondary: #121522;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #E6E6E6;
+            --text-secondary: rgba(230, 230, 230, 0.6);
+            --text-muted: rgba(230, 230, 230, 0.4);
+            --accent-primary: #FF6D1F;
+            --accent-hover: #FF8B4A;
+            --status-success: #76DE68;
+            --status-warning: #FFB347;
+            --status-danger: #ED3F27;
+            --status-info: #4A90E2;
+            --status-pending: #4A90E2;
+
+            /* Borders */
+            --border-light: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --border-accent: rgba(255, 109, 31, 0.3);
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.16);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.24);
+
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 999px;
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 350ms ease;
+        }
+
+        /* ===== BASE TYPOGRAPHY ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+            font-weight: 400;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .waiting-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            opacity: 0.08;
+            animation: float 25s infinite linear;
+        }
+
+        .particle-1 {
+            width: 400px;
+            height: 400px;
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .particle-2 {
+            width: 300px;
+            height: 300px;
+            bottom: -150px;
+            right: 15%;
+            animation-delay: 7s;
+        }
+
+        .particle-3 {
+            width: 250px;
+            height: 250px;
+            top: 40%;
+            left: 5%;
+            animation-delay: 14s;
+        }
+
+        .particle-4 {
+            width: 350px;
+            height: 350px;
+            bottom: -175px;
+            left: 25%;
+            animation-delay: 21s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+
+            25% {
+                transform: translate(150px, -80px) rotate(90deg) scale(1.1);
+            }
+
+            50% {
+                transform: translate(-100px, 150px) rotate(180deg) scale(0.9);
+            }
+
+            75% {
+                transform: translate(-150px, -80px) rotate(270deg) scale(1.05);
+            }
+
+            100% {
+                transform: translate(0, 0) rotate(360deg) scale(1);
+            }
+        }
+
+        /* ===== NAVIGATION ===== */
+        .waiting-navbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            background: rgba(12, 15, 23, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            padding: var(--space-md) var(--space-xl);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .waiting-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px var(--space-xl) var(--space-2xl);
+            position: relative;
+        }
+
+        /* ===== WAITING CARD ===== */
+        .waiting-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CARD HEADER ===== */
+        .card-header {
+            padding: var(--space-xl);
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+            background: rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--status-pending));
+        }
+
+        .status-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--status-pending), var(--accent-hover));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-lg);
+            color: var(--bg-primary);
+            font-size: 40px;
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.3);
+            animation: pulse 2s infinite;
+            position: relative;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 8px 32px rgba(74, 144, 226, 0.3);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 12px 40px rgba(74, 144, 226, 0.4);
+            }
+        }
+
+        .status-icon::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid var(--status-pending);
+            border-radius: 50%;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .card-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), var(--status-pending));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-sm);
+        }
+
+        .card-header p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 400;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+
+        /* ===== CARD BODY ===== */
+        .card-body {
+            padding: var(--space-2xl) var(--space-xl);
+        }
+
+        /* ===== TIMER SECTION ===== */
+        .timer-section {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .timer-title {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .timer-display {
+            font-family: 'Courier New', monospace;
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--status-pending));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            margin-bottom: var(--space-md);
+        }
+
+        .timer-label {
+            color: var(--text-muted);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-section {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .progress-title {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border-light);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--status-pending));
+            border-radius: var(--radius-full);
+            width: 0%;
+            transition: width 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* ===== APPLICATION INFO ===== */
+        .application-info {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .info-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background: rgba(74, 144, 226, 0.1);
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            color: var(--status-pending);
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: var(--space-xs);
+        }
+
+        /* ===== STATUS MESSAGES ===== */
+        .status-messages {
+            background: rgba(255, 179, 71, 0.05);
+            border: 1px solid rgba(255, 179, 71, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .status-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--status-warning);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .message-list {
+            list-style: none;
+        }
+
+        .message-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-lg);
+            border-bottom: 1px solid rgba(255, 179, 71, 0.1);
+        }
+
+        .message-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .message-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 179, 71, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--status-warning);
+            flex-shrink: 0;
+        }
+
+        .message-content h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .message-content p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== ACTIONS SECTION ===== */
+        .actions-section {
+            text-align: center;
+        }
+
+        .action-title {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            transition: all var(--transition-normal);
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+            color: var(--bg-primary);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 109, 31, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255, 109, 31, 0.05);
+        }
+
+        /* ===== FOOTER ===== */
+        .waiting-footer {
+            text-align: center;
+            margin-top: var(--space-2xl);
+            padding-top: var(--space-xl);
+            border-top: 1px solid var(--border-light);
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-top: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* ===== NOTIFICATION BELL ===== */
+        .notification-bell {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255, 109, 31, 0.3);
+            z-index: 100;
+            transition: all var(--transition-normal);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .notification-bell:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 32px rgba(255, 109, 31, 0.4);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .waiting-container {
+                padding: 100px var(--space-md) var(--space-xl);
+            }
+
+            .waiting-card {
+                border-radius: var(--radius-lg);
+            }
+
+            .card-header {
+                padding: var(--space-lg);
+            }
+
+            .status-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 32px;
+            }
+
+            .card-header h1 {
+                font-size: 24px;
+            }
+
+            .card-header p {
+                font-size: 14px;
+                max-width: 100%;
+            }
+
+            .card-body {
+                padding: var(--space-xl) var(--space-lg);
+            }
+
+            .timer-display {
+                font-size: 36px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-button {
+                width: 100%;
+            }
+
+            .notification-bell {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                bottom: 20px;
+                left: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-header h1 {
+                font-size: 20px;
+            }
+
+            .timer-display {
+                font-size: 28px;
+            }
+
+            .info-title,
+            .status-title,
+            .action-title {
+                font-size: 16px;
+            }
+
+            .message-item {
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
+
+            .notification-bell {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+                bottom: 15px;
+                left: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="waiting-bg">
+        <div class="bg-particle particle-1"></div>
+        <div class="bg-particle particle-2"></div>
+        <div class="bg-particle particle-3"></div>
+        <div class="bg-particle particle-4"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="waiting-navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-store"></i>
+                </div>
+                <span class="logo-text">BIYALA للبائعين</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Notification Bell -->
+    <div class="notification-bell" id="notificationBell" title="تفعيل الإشعارات">
+        <i class="fas fa-bell"></i>
+    </div>
+
+    <!-- Main Container -->
+    <div class="waiting-container">
+        <div class="waiting-card">
+            <!-- Card Header -->
+            <div class="card-header">
+                <div class="status-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h1>طلبك قيد المراجعة</h1>
+                <p>تم استلام طلب تسجيل براندك بنجاح! نحن الآن نراجع بياناتك للتأكد من استيفاء جميع الشروط.</p>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+                <!-- Timer Section -->
+                <div class="timer-section">
+                    <div class="timer-title">
+                        <i class="fas fa-hourglass-half"></i>
+                        المدة المتوقعة للرد على طلبك:
+                    </div>
+                    <div class="timer-display" id="countdownTimer">
+                        24:00:00
+                    </div>
+                    <div class="timer-label">
+                        ساعة : دقيقة : ثانية
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-section">
+                    <div class="progress-title">
+                        <span>تقدم المراجعة</span>
+                        <span id="progressPercentage">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <!-- Application Info -->
+                <div class="application-info">
+                    <div class="info-title">
+                        <i class="fas fa-info-circle"></i>
+                        معلومات طلب التسجيل
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">رقم الطلب</span>
+                            <span class="info-value" id="requestId">#BRS-2024-0487</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">اسم البراند</span>
+                            <span class="info-value" id="brandName">دار الأزياء المصرية</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">حالة الطلب</span>
+                            <span class="info-value">قيد المراجعة</span>
+                            <span class="info-badge">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                تحت الدراسة
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">تاريخ التسجيل</span>
+                            <span class="info-value" id="registrationDate">٢٠٢٤/٠٣/١٥ - ٠٢:٣٠ م</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Messages -->
+                <div class="status-messages">
+                    <div class="status-title">
+                        <i class="fas fa-comments"></i>
+                        تحديثات الحالة
+                    </div>
+                    <ul class="message-list">
+                        <li class="message-item">
+                            <div class="message-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="message-content">
+                                <h4>تم استلام الطلب</h4>
+                                <p>تم استلام طلب تسجيل براندك بنجاح وجاري الآن مراجعته من قبل فريق Biyala.</p>
+                            </div>
+                        </li>
+                        <li class="message-item">
+                            <div class="message-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="message-content">
+                                <h4>التحقق من البيانات</h4>
+                                <p>فريق المراجعة يقوم بالتحقق من صحة البيانات والمعلومات المقدمة.</p>
+                            </div>
+                        </li>
+                        <li class="message-item">
+                            <div class="message-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="message-content">
+                                <h4>قيد المراجعة النهائية</h4>
+                                <p>الطلب الآن في المرحلة النهائية وسيتم إعلامك فور الانتهاء من المراجعة.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Actions Section -->
+                <div class="actions-section">
+                    <div class="action-title">
+                        <i class="fas fa-tasks"></i>
+                        يمكنك القيام بهذه الإجراءات أثناء الانتظار
+                    </div>
+                    <div class="action-buttons">
+                        <a href="seller-guide.html" class="action-button btn-primary">
+                            <i class="fas fa-book"></i>
+                            قراءة دليل البائع
+                        </a>
+                        <a href="seller-prepare.html" class="action-button btn-secondary">
+                            <i class="fas fa-box"></i>
+                            تحضير المنتجات
+                        </a>
+                        <button class="action-button btn-secondary" id="contactSupport">
+                            <i class="fas fa-headset"></i>
+                            تواصل مع الدعم
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="waiting-footer">
+                    <div>© 2024 BIYALA. جميع الحقوق محفوظة.</div>
+                    <div class="footer-links">
+                        <a href="help.html">مساعدة</a>
+                        <a href="contact.html">اتصل بنا</a>
+                        <a href="terms.html">الشروط والأحكام</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== CHECK IF USER CAME FROM REGISTRATION =====
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if there's pending application
+            const savedApp = localStorage.getItem('biyala_seller_application');
+            const brandName = localStorage.getItem('biyala_brand_name');
+            const regTime = localStorage.getItem('biyala_registration_time');
+
+            if (!savedApp || !brandName) {
+                // No pending application, redirect to registration
+                alert('❌ لا يوجد طلب تسجيل معلق. يرجى التسجيل أولاً.');
+                window.location.href = 'seller-login.html';
+                return;
+            }
+
+            // Parse application data
+            const appData = JSON.parse(savedApp);
+
+            // Check if already approved
+            if (appData.status === 'approved') {
+                // Already approved, redirect to dashboard
+                window.location.href = 'seller-dashboard.html';
+                return;
+            }
+
+            // Check if waiting time expired (more than 24 hours)
+            if (regTime) {
+                const registrationTime = new Date(regTime);
+                const now = new Date();
+                const hoursPassed = (now - registrationTime) / (1000 * 60 * 60);
+
+                if (hoursPassed > 24 && appData.status === 'pending') {
+                    // 24 hours passed, show message
+                    showNotification('⏰ انتهت مدة المراجعة',
+                        'لقد انتهت مدة الـ 24 ساعة للمراجعة. يرجى التواصل مع الدعم الفني.');
+                }
+            }
+
+            // Initialize the page with saved data
+            initializeApplication();
+        });
+        // ===== APPLICATION DATA =====
+        const APPLICATION = {
+            requestId: 'BRS-2024-0487',
+            brandName: localStorage.getItem('biyala_brand_name') || 'دار الأزياء المصرية',
+            registrationTime: new Date(), // وقت التسجيل الحالي
+            reviewDuration: 24 * 60 * 60 * 1000, // 24 ساعة بالميلي ثانية
+            adminResponseTime: null
+        };
+
+        // ===== DOM ELEMENTS =====
+        const countdownTimer = document.getElementById('countdownTimer');
+        const progressFill = document.getElementById('progressFill');
+        const progressPercentage = document.getElementById('progressPercentage');
+        const brandNameElement = document.getElementById('brandName');
+        const requestIdElement = document.getElementById('requestId');
+        const registrationDateElement = document.getElementById('registrationDate');
+        const notificationBell = document.getElementById('notificationBell');
+        const contactSupportBtn = document.getElementById('contactSupport');
+
+        // ===== INITIALIZE APPLICATION =====
+        function initializeApplication() {
+            // Set brand name from localStorage if exists
+            const savedBrand = localStorage.getItem('biyala_brand_name');
+            if (savedBrand) {
+                brandNameElement.textContent = savedBrand;
+            }
+
+            // Set request ID
+            const randomId = 'BRS-' + new Date().getFullYear() + '-' +
+                Math.floor(1000 + Math.random() * 9000);
+            requestIdElement.textContent = '#' + randomId;
+            APPLICATION.requestId = randomId;
+
+            // Set registration date
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('ar-EG', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            registrationDateElement.textContent = dateStr;
+            APPLICATION.registrationTime = now;
+
+            // Save to localStorage
+            const appData = {
+                requestId: randomId,
+                brandName: brandNameElement.textContent,
+                registrationTime: now.toISOString(),
+                status: 'pending'
+            };
+            localStorage.setItem('biyala_waiting_application', JSON.stringify(appData));
+
+            // Start countdown
+            startCountdown();
+        }
+
+        // ===== COUNTDOWN TIMER =====
+        function startCountdown() {
+            const endTime = APPLICATION.registrationTime.getTime() + APPLICATION.reviewDuration;
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const timeLeft = endTime - now;
+
+                if (timeLeft <= 0) {
+                    // Time's up - redirect to status page
+                    countdownTimer.textContent = '00:00:00';
+                    progressFill.style.width = '100%';
+                    progressPercentage.textContent = '100%';
+
+                    // Show time up message
+                    showNotification('انتهت مدة المراجعة!', 'يرجى الانتظار قليلاً أو التواصل مع الدعم.');
+                    return;
+                }
+
+                // Calculate hours, minutes, seconds
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                // Format timer display
+                countdownTimer.textContent =
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                // Update progress
+                const elapsed = APPLICATION.reviewDuration - timeLeft;
+                const progressPercent = Math.min((elapsed / APPLICATION.reviewDuration) * 100, 100);
+                progressFill.style.width = `${progressPercent}%`;
+                progressPercentage.textContent = `${Math.round(progressPercent)}%`;
+            }
+
+            // Update immediately
+            updateTimer();
+
+            // Update every second
+            setInterval(updateTimer, 1000);
+        }
+
+        // ===== SIMULATE ADMIN RESPONSE =====
+        function simulateAdminResponse() {
+            // Simulate random response time (1-12 hours for demo)
+            const randomResponseTime = Math.floor(Math.random() * 12 * 60 * 60 * 1000) + (1 * 60 * 60 * 1000);
+            APPLICATION.adminResponseTime = new Date(Date.now() + randomResponseTime);
+
+            setTimeout(() => {
+                // Check if still on waiting page
+                if (document.querySelector('.waiting-container')) {
+                    const responses = [
+                        {
+                            type: 'success',
+                            title: 'مبروك! تمت الموافقة',
+                            message: 'تمت الموافقة على طلب تسجيل براندك بنجاح. يمكنك الآن تسجيل الدخول والبدء في البيع.',
+                            redirect: 'seller-dashboard.html'
+                        },
+                        {
+                            type: 'info',
+                            title: 'تحتاج إلى تعديلات',
+                            message: 'طلبك يحتاج إلى بعض التعديلات البسيطة. تحقق من بريدك الإلكتروني للتفاصيل.',
+                            redirect: 'seller-register.html?edit=true'
+                        },
+                        {
+                            type: 'warning',
+                            title: 'قيد الانتظار',
+                            message: 'جاري مراجعة طلبك مع قسم الجودة. قد تستغرق المراجعة وقتاً إضافياً.',
+                            redirect: null
+                        }
+                    ];
+
+                    const response = responses[Math.floor(Math.random() * responses.length)];
+                    showNotification(response.title, response.message);
+
+                    if (response.redirect) {
+                        setTimeout(() => {
+                            window.location.href = response.redirect;
+                        }, 3000);
+                    }
+                }
+            }, randomResponseTime);
+        }
+
+        // ===== NOTIFICATION SYSTEM =====
+        function showNotification(title, message) {
+            // Check if browser supports notifications
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: message,
+                    icon: 'https://cdn-icons-png.flaticon.com/512/732/732228.png',
+                    dir: 'rtl'
+                });
+            }
+
+            // Also show browser alert
+            alert(`🔔 ${title}\n\n${message}`);
+        }
+
+        // ===== EVENT LISTENERS =====
+        // Notification bell
+        if (notificationBell) {
+            notificationBell.addEventListener('click', () => {
+                // Request notification permission
+                if ('Notification' in window) {
+                    if (Notification.permission === 'default') {
+                        Notification.requestPermission().then(permission => {
+                            if (permission === 'granted') {
+                                showNotification('تم تفعيل الإشعارات!', 'ستصلك إشعارات عند تحديث حالة طلبك.');
+                            }
+                        });
+                    } else if (Notification.permission === 'granted') {
+                        showNotification('الإشعارات مفعلة', 'ستصلك إشعارات تلقائية عند تحديث حالة طلبك.');
+                    }
+                }
+            });
+        }
+
+        // Contact support button
+        if (contactSupportBtn) {
+            contactSupportBtn.addEventListener('click', () => {
+                const supportOptions = `
+                🛠️ **دعم البائعين - Biyala**
+                
+                اختر طريقة التواصل:
+                1. 📧 البريد الإلكتروني: sellers@biyala.com
+                2. 📞 الهاتف: 01234567890
+                3. 💬 الدردشة الحية (متاحة 9ص-5م)
+                
+                رقم الطلب: ${APPLICATION.requestId}
+                `;
+
+                alert(supportOptions);
+            });
+        }
+
+        // ===== PAGE VISIBILITY =====
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                // Page became visible, check for updates
+                const savedApp = localStorage.getItem('biyala_waiting_application');
+                if (savedApp) {
+                    const appData = JSON.parse(savedApp);
+                    if (appData.status !== 'pending') {
+                        // Status changed, redirect
+                        window.location.href = appData.redirect || 'seller-dashboard.html';
+                    }
+                }
+            }
+        });
+
+        // ===== PERSISTENT DATA CHECK =====
+        function checkPersistentData() {
+            // Check localStorage for any updates
+            const interval = setInterval(() => {
+                // Simulate admin checking data (for demo)
+                const hasUpdate = Math.random() < 0.1; // 10% chance of update
+
+                if (hasUpdate) {
+                    const updates = [
+                        '📋 جاري مراجعة بيانات البراند...',
+                        '✅ تم التحقق من السجل التجاري',
+                        '🔄 جاري فحص شعار البراند...',
+                        '📊 جاري تقييم فئة المنتجات'
+                    ];
+
+                    const randomUpdate = updates[Math.floor(Math.random() * updates.length)];
+
+                    // Add to status messages (in real app, this would come from server)
+                    const statusSection = document.querySelector('.status-messages .message-list');
+                    if (statusSection) {
+                        const newMessage = document.createElement('li');
+                        newMessage.className = 'message-item';
+                        newMessage.innerHTML = `
+                            <div class="message-icon">
+                                <i class="fas fa-sync-alt fa-spin"></i>
+                            </div>
+                            <div class="message-content">
+                                <h4>تحديث النظام</h4>
+                                <p>${randomUpdate}</p>
+                            </div>
+                        `;
+                        statusSection.insertBefore(newMessage, statusSection.firstChild);
+                    }
+                }
+            }, 30000); // Check every 30 seconds
+
+            return interval;
+        }
+
+        // ===== INITIALIZE =====
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeApplication();
+            simulateAdminResponse();
+            const updateInterval = checkPersistentData();
+
+            // Clean up interval when leaving page
+            window.addEventListener('beforeunload', () => {
+                clearInterval(updateInterval);
+            });
+
+            console.log('⏳ Waiting page initialized for:', APPLICATION.brandName);
+        });
+
+        // ===== AUTO-REDIRECT CHECK =====
+        // Check every minute if admin has responded
+        setInterval(() => {
+            const savedApp = localStorage.getItem('biyala_waiting_application');
+            if (savedApp) {
+                const appData = JSON.parse(savedApp);
+
+                // In real app, this would check server for status update
+                // For demo, we'll simulate occasional status change
+                if (Math.random() < 0.01) { // 1% chance per minute
+                    appData.status = 'approved';
+                    appData.redirect = 'seller-dashboard.html';
+                    localStorage.setItem('biyala_waiting_application', JSON.stringify(appData));
+
+                    // Redirect
+                    window.location.href = appData.redirect;
+                }
+            }
+        }, 60000); // Check every minute
+    </script>
+</body>
+
+</html>
