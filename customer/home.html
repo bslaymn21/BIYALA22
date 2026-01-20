@@ -3115,10 +3115,10 @@
             <div class="flip-card-inner">
                 <!-- الوجه الأمامي - الصورة فقط -->
                 <div class="card-front">
-                    <div class="product-slider-container">
-                        <div class="slides-wrapper">
+                    <div class="product-slider-container" id="product-slider">
+                        <div class="slides-wrapper" id="slides-wrapper">
                             <!-- الصور موجودة هنا -->
-                            <div class="slide active">
+                            <div class="slide active" data-index="0">
                                 <div class="slide-content">
                                     <i class="fas fa-tshirt"></i>
                                     <div class="front-discount">
@@ -3127,7 +3127,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="slide">
+                            <div class="slide" data-index="1">
                                 <div class="slide-content">
                                     <i class="fas fa-tshirt"></i>
                                     <div class="front-discount">
@@ -3136,7 +3136,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="slide">
+                            <div class="slide" data-index="2">
                                 <div class="slide-content">
                                     <i class="fas fa-tshirt"></i>
                                     <div class="front-discount">
@@ -3145,7 +3145,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="slide">
+                            <div class="slide" data-index="3">
                                 <div class="slide-content">
                                     <i class="fas fa-tshirt"></i>
                                     <div class="front-discount">
@@ -3157,7 +3157,7 @@
                         </div>
 
                         <!-- النقاط -->
-                        <div class="slider-dots">
+                        <div class="slider-dots" id="vertical-dots">
                             <span class="dot active" data-index="0"></span>
                             <span class="dot" data-index="1"></span>
                             <span class="dot" data-index="2"></span>
@@ -4570,6 +4570,142 @@
                 new ProductImageSlider();
             }, 100);
         });
+        // ====== سكريبت Slider بسيط جدا ======
+        document.addEventListener('DOMContentLoaded', function () {
+            setupSlider();
+        });
+
+        function setupSlider() {
+            const slidesWrapper = document.getElementById('slides-wrapper');
+            const dots = document.querySelectorAll('.dot');
+
+            if (!slidesWrapper || !dots.length) {
+                console.log('❌ Slider مش موجود');
+                return;
+            }
+
+            const slides = slidesWrapper.querySelectorAll('.slide');
+            let currentIndex = 0;
+            const totalSlides = slides.length;
+
+            // 1. دالة تغيير الصورة
+            function goToSlide(index) {
+                if (index < 0 || index >= totalSlides) return;
+
+                currentIndex = index;
+
+                // تحريك الصور
+                slidesWrapper.style.transform = `translateX(-${index * 100}%)`;
+
+                // تحديث النقاط
+                dots.forEach((dot, i) => {
+                    if (i === index) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+
+            // 2. أحداث النقاط
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    goToSlide(index);
+                });
+            });
+
+            // 3. أحداث السحب (للجوال)
+            const sliderContainer = document.getElementById('product-slider');
+            if (sliderContainer) {
+                let startX = 0;
+                let isDragging = false;
+
+                // للمس
+                sliderContainer.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                    slidesWrapper.style.transition = 'none';
+                });
+
+                sliderContainer.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+
+                    const currentX = e.touches[0].clientX;
+                    const diffX = startX - currentX;
+                    slidesWrapper.style.transform = `translateX(-${currentIndex * 100 + diffX / 10}%)`;
+                });
+
+                sliderContainer.addEventListener('touchend', (e) => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    slidesWrapper.style.transition = 'transform 0.3s ease';
+
+                    const endX = e.changedTouches[0].clientX;
+                    const diffX = startX - endX;
+
+                    if (Math.abs(diffX) > 50) {
+                        if (diffX > 0 && currentIndex < totalSlides - 1) {
+                            goToSlide(currentIndex + 1);
+                        } else if (diffX < 0 && currentIndex > 0) {
+                            goToSlide(currentIndex - 1);
+                        } else {
+                            goToSlide(currentIndex);
+                        }
+                    } else {
+                        goToSlide(currentIndex);
+                    }
+                });
+
+                // للماوس
+                sliderContainer.addEventListener('mousedown', (e) => {
+                    startX = e.clientX;
+                    isDragging = true;
+                    slidesWrapper.style.transition = 'none';
+                });
+
+                sliderContainer.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+
+                    const currentX = e.clientX;
+                    const diffX = startX - currentX;
+                    slidesWrapper.style.transform = `translateX(-${currentIndex * 100 + diffX / 10}%)`;
+                });
+
+                sliderContainer.addEventListener('mouseup', (e) => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    slidesWrapper.style.transition = 'transform 0.3s ease';
+
+                    const endX = e.clientX;
+                    const diffX = startX - endX;
+
+                    if (Math.abs(diffX) > 50) {
+                        if (diffX > 0 && currentIndex < totalSlides - 1) {
+                            goToSlide(currentIndex + 1);
+                        } else if (diffX < 0 && currentIndex > 0) {
+                            goToSlide(currentIndex - 1);
+                        } else {
+                            goToSlide(currentIndex);
+                        }
+                    } else {
+                        goToSlide(currentIndex);
+                    }
+                });
+
+                sliderContainer.addEventListener('mouseleave', () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        slidesWrapper.style.transition = 'transform 0.3s ease';
+                        goToSlide(currentIndex);
+                    }
+                });
+            }
+
+            console.log('✅ Slider جاهز للعمل!');
+        }
 
     </script>
 </body>
