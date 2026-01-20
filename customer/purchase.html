@@ -2276,13 +2276,90 @@
                 canvas.height = rect.height * window.devicePixelRatio;
                 signatureCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
+                signatureCtx.strokeStyle = '#FF6D1F';
+                signatureCtx.lineWidth = 2;
+                signatureCtx.lineCap = 'round';
+                signatureCtx.lineJoin = 'round';
                 // إعادة رسم التوقيعات السابقة
                 redrawSignature();
             };
 
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
+function setupSignature() {
+    const canvas = document.getElementById('signature-canvas');
+    if (!canvas) return;
 
+    signatureCanvas = canvas;
+    signatureCtx = canvas.getContext('2d');
+
+    // ضبط حجم الكانفاس
+    const resizeCanvas = () => {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        
+        // إعدادات الرسم
+        signatureCtx.strokeStyle = '#FF6D1F';
+        signatureCtx.lineWidth = 2;
+        signatureCtx.lineCap = 'round';
+        signatureCtx.lineJoin = 'round';
+        
+        // إعادة رسم التوقيعات السابقة
+        redrawSignature();
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // أحداث الماوس للكمبيوتر
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+
+    // أحداث اللمس للجوال
+    canvas.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        startDrawing(e);
+    }, { passive: false });
+    
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        draw(e);
+    }, { passive: false });
+    
+    canvas.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        stopDrawing();
+    }, { passive: false });
+
+    // منع السلوك الافتراضي للتمرير
+    canvas.addEventListener('touchmove', function(e) {
+        if (isDrawing) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    const clearBtn = document.getElementById('clear-signature');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            signatureCtx.clearRect(0, 0, canvas.width, canvas.height);
+            signaturePaths = [];
+            currentSignaturePath = [];
+        });
+    }
+
+    const undoBtn = document.getElementById('undo-signature');
+    if (undoBtn) {
+        undoBtn.addEventListener('click', function() {
+            if (signaturePaths.length > 0) {
+                signaturePaths.pop();
+                redrawSignature();
+            }
+        });
+    }
+}
             const signatureColor = '#FF6D1F';
 
             function startDrawing(e) {
@@ -2597,7 +2674,66 @@
 
         // ==== بدء التطبيق ====
         document.addEventListener('DOMContentLoaded', initPurchasePage);
+        // ==== وظائف مساعدة للتوقيع ====
+        function getTouchPos(canvas, e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX, clientY;
+
+            if (e.type.includes('touch')) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        function startDrawing(e) {
+            e.preventDefault();
+            isDrawing = true;
+            const pos = getTouchPos(signatureCanvas, e);
+            currentSignaturePath = [{ x: pos.x, y: pos.y }];
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+
+            const pos = getTouchPos(signatureCanvas, e);
+            const x = pos.x;
+            const y = pos.y;
+
+            // إضافة نقطة إلى المسار الحالي
+            currentSignaturePath.push({ x, y });
+
+            // الرسم
+            signatureCtx.beginPath();
+            signatureCtx.moveTo(currentSignaturePath[currentSignaturePath.length - 2].x,
+                currentSignaturePath[currentSignaturePath.length - 2].y);
+            signatureCtx.lineTo(x, y);
+            signatureCtx.strokeStyle = '#FF6D1F';
+            signatureCtx.lineWidth = 2;
+            signatureCtx.lineCap = 'round';
+            signatureCtx.lineJoin = 'round';
+            signatureCtx.stroke();
+        }
+
+        function stopDrawing() {
+            if (isDrawing) {
+                isDrawing = false;
+                if (currentSignaturePath.length > 1) {
+                    signaturePaths.push([...currentSignaturePath]);
+                }
+                currentSignaturePath = [];
+            }
+        }
     </script>
+
 </body>
 
 </html>
