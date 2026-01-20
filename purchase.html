@@ -1,0 +1,2742 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>إتمام الشراء - بيالة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* نظام ألوان بيالة */
+        :root {
+            --space-black: #0C0F17;
+            --light-text: #E6E6E6;
+            --accent-orange: #FF6D1F;
+            --danger-red: #ED3F27;
+            --card-bg: #161B26;
+            --overlay-bg: rgba(12, 15, 23, 0.95);
+            --success-green: #2ecc71;
+            --border-radius: 20px;
+            --border-radius-sm: 12px;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 14px;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: var(--space-black);
+            color: var(--light-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* حاوية الشراء */
+        .purchase-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        /* تحسين الاستجابة */
+        @media (min-width: 768px) {
+            .purchase-container {
+                max-width: 600px;
+                padding: 20px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .purchase-container {
+                max-width: 650px;
+            }
+        }
+
+        /* الهيدر */
+        .purchase-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--light-text);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .purchase-title {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-orange), #FF9E6D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        /* شريط التقدم */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+            padding: 0 5px;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 16px;
+            right: 10%;
+            left: 10%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #8A8F9C;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: var(--accent-orange);
+            color: var(--space-black);
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 12px rgba(255, 109, 31, 0.4);
+        }
+
+        .step.completed .step-circle {
+            background: var(--success-green);
+            color: white;
+            border-color: var(--success-green);
+        }
+
+        .step-text {
+            font-size: 10px;
+            color: #8A8F9C;
+            text-align: center;
+            max-width: 65px;
+            line-height: 1.3;
+            word-wrap: break-word;
+        }
+
+        .step.active .step-text {
+            color: var(--light-text);
+            font-weight: 600;
+        }
+
+        @media (min-width: 400px) {
+            .step-text {
+                font-size: 11px;
+                max-width: 70px;
+            }
+        }
+
+        /* محتوى المراحل */
+        .step-content {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* المرحلة 0: تفاصيل المنتج */
+        .product-details-content {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-sm);
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 15px;
+        }
+
+        .product-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .product-image-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #2A2F3C, #3A2F4C);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.2);
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name-large {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .product-price-large {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-orange);
+        }
+
+        .product-brand-large {
+            font-size: 14px;
+            color: #8A8F9C;
+        }
+
+        /* خيارات المنتج */
+        .options-section {
+            margin-bottom: 25px;
+        }
+
+        .option-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .option-title i {
+            color: var(--accent-orange);
+        }
+
+        .sizes-container,
+        .colors-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .size-option,
+        .color-option {
+            padding: 10px 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .size-option:hover,
+        .color-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .size-option.selected,
+        .color-option.selected {
+            background: var(--accent-orange);
+            color: var(--space-black);
+            border-color: var(--accent-orange);
+            font-weight: 600;
+        }
+
+        .color-preview {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 10px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quantity-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            color: var(--light-text);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .quantity-display {
+            font-size: 18px;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* المرحلة 1: اختيار المنتجات */
+        .product-selection {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .product-checkbox {
+            margin-left: 15px;
+        }
+
+        .product-checkbox input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-orange);
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #2A2F3C, #3A2F4C);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.2);
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+
+        .product-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .product-price {
+            color: var(--accent-orange);
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .product-brand {
+            font-size: 12px;
+            color: #8A8F9C;
+            margin-top: 3px;
+        }
+
+        .remove-product {
+            background: rgba(237, 63, 39, 0.1);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            color: var(--danger-red);
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .order-summary {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-sm);
+            padding: 18px;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--accent-orange);
+        }
+
+        /* المرحلة 2: طريقة الدفع */
+        .payment-methods {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 15px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .payment-option:last-child {
+            border-bottom: none;
+        }
+
+        .payment-option.selected {
+            background: rgba(255, 109, 31, 0.1);
+            border-right: 3px solid var(--accent-orange);
+        }
+
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+
+        .payment-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .payment-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+
+        .payment-desc {
+            font-size: 12px;
+            color: #8A8F9C;
+        }
+
+        .payment-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .payment-option.selected .payment-radio {
+            border-color: var(--accent-orange);
+        }
+
+        .payment-option.selected .payment-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: var(--accent-orange);
+            border-radius: 50%;
+        }
+
+        /* رفع صورة التحويل */
+        .transfer-upload-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-sm);
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 15px;
+            display: none;
+        }
+
+        .transfer-upload-section.active {
+            display: block;
+        }
+
+        .upload-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .upload-header i {
+            color: var(--accent-orange);
+            font-size: 20px;
+            margin-left: 10px;
+        }
+
+        .upload-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .upload-box {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .upload-box:hover {
+            border-color: var(--accent-orange);
+            background: rgba(255, 109, 31, 0.05);
+        }
+
+        .upload-box i {
+            font-size: 40px;
+            color: var(--accent-orange);
+            margin-bottom: 15px;
+        }
+
+        .upload-box p {
+            color: #B0B5C2;
+            margin-bottom: 10px;
+        }
+
+        .upload-box span {
+            font-size: 12px;
+            color: #8A8F9C;
+        }
+
+        .file-preview {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-icon {
+            color: var(--accent-orange);
+            font-size: 20px;
+        }
+
+        .remove-file {
+            background: rgba(237, 63, 39, 0.1);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            color: var(--danger-red);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-notice {
+            background: rgba(255, 109, 31, 0.1);
+            border-right: 3px solid var(--accent-orange);
+            padding: 15px;
+            border-radius: var(--border-radius-sm);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* المرحلة 3: الموقع */
+        .location-container {
+            margin-bottom: 15px;
+        }
+
+        .address-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-sm);
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .address-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .address-header i {
+            color: var(--accent-orange);
+            font-size: 18px;
+        }
+
+        .address-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .current-address-display {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .edit-address-btn {
+            width: 100%;
+            background: rgba(255, 109, 31, 0.1);
+            border: 1px solid rgba(255, 109, 31, 0.3);
+            color: var(--accent-orange);
+            padding: 13px;
+            border-radius: 10px;
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-address-btn:hover {
+            background: rgba(255, 109, 31, 0.2);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            left: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            background: var(--space-black);
+            padding: 0 15px;
+            color: #8A8F9C;
+            font-size: 13px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .new-address-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-sm);
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .address-form {
+            margin-top: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #D0D5E2;
+        }
+
+        .form-select,
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 13px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--light-text);
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-select:focus,
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 3px rgba(255, 109, 31, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .save-address-btn {
+            width: 100%;
+            background: var(--accent-orange);
+            color: var(--space-black);
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .save-address-btn:hover {
+            background: #FF8A4D;
+        }
+
+        .shipping-notice {
+            background: rgba(0, 136, 204, 0.1);
+            border-right: 3px solid #0088cc;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .notice-icon {
+            color: #0088cc;
+            font-size: 18px;
+            margin-top: 2px;
+        }
+
+        .notice-content {
+            flex: 1;
+        }
+
+        .notice-content strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .notice-content p {
+            font-size: 12px;
+            color: #B0B5C2;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* المرحلة 4: الفاتورة */
+        .invoice-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-sm);
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .invoice-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-orange);
+        }
+
+        .invoice-subtitle {
+            color: #8A8F9C;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .invoice-details {
+            margin-bottom: 20px;
+        }
+
+        .invoice-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .invoice-row.total {
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--accent-orange);
+            border-bottom: 2px solid var(--accent-orange);
+            margin-top: 10px;
+        }
+
+        .invoice-notes {
+            background: rgba(255, 109, 31, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .invoice-notes ul {
+            padding-right: 18px;
+            margin-top: 8px;
+        }
+
+        .invoice-notes li {
+            margin-bottom: 8px;
+        }
+
+        /* المرحلة 5: التوقيع */
+        .signature-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-sm);
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        .signature-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--accent-orange);
+        }
+
+        .signature-canvas {
+            width: 100%;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .signature-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .signature-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: var(--light-text);
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .signature-btn:hover {
+            background: rgba(255, 109, 31, 0.2);
+        }
+
+        .terms-agreement {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .terms-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-orange);
+            flex-shrink: 0;
+        }
+
+        .terms-label {
+            font-size: 13px;
+            cursor: pointer;
+            text-align: right;
+        }
+
+        .terms-label a {
+            color: var(--accent-orange);
+            text-decoration: none;
+        }
+
+        /* أزرار التنقل */
+        .step-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        .step-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 50px;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-next {
+            background: var(--accent-orange);
+            color: var(--space-black);
+        }
+
+        .btn-next:hover {
+            background: #FF8A4D;
+        }
+
+        .btn-confirm {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background: #27ae60;
+        }
+
+        /* حالة النجاح */
+        .success-message {
+            text-align: center;
+            padding: 30px 15px;
+            display: none;
+            flex: 1;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .success-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--success-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            margin: 0 auto 20px;
+        }
+
+        .success-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--success-green);
+        }
+
+        .success-desc {
+            color: #B0B5C2;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .telegram-notice {
+            background: rgba(0, 136, 204, 0.1);
+            border-right: 3px solid #0088cc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* ستايلات عامة */
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--light-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title i {
+            color: var(--accent-orange);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* رسائل التأكيد */
+        .confirm-dialog {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(12, 15, 23, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .confirm-box {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .confirm-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--accent-orange);
+        }
+
+        .confirm-text {
+            color: #B0B5C2;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .confirm-btn {
+            flex: 1;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .confirm-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+        }
+
+        .confirm-ok {
+            background: var(--accent-orange);
+            color: var(--space-black);
+        }
+
+        /* رسائل النظام */
+        .biyala-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            left: 20px;
+            padding: 15px 18px;
+            border-radius: 12px;
+            z-index: 9999;
+            animation: slideDown 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .biyala-message i {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .biyala-message span {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .biyala-message.error {
+            background: rgba(237, 63, 39, 0.9);
+            color: white;
+            box-shadow: 0 5px 15px rgba(237, 63, 39, 0.3);
+        }
+
+        .biyala-message.success {
+            background: rgba(46, 204, 113, 0.9);
+            color: white;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* تحسين للأجهزة الصغيرة جداً */
+        @media (max-width: 360px) {
+            html {
+                font-size: 13px;
+            }
+
+            .purchase-container {
+                padding: 10px;
+            }
+
+            .product-item {
+                padding: 12px;
+            }
+
+            .step-btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+
+        /* تحسين لأجهزة سطح المكتب */
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            .purchase-container {
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+                border-radius: var(--border-radius);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                height: 90vh;
+                max-height: 800px;
+            }
+        }
+
+        /* إضافة مسافة للأجهزة ذات الشاشات الطويلة */
+        @media (min-height: 800px) {
+            .purchase-container {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="purchase-container">
+        <!-- الهيدر -->
+        <div class="purchase-header">
+            <button class="back-button" id="close-purchase">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="purchase-title">إتمام الشراء</div>
+            <div style="width: 40px;"></div> <!-- مساحة للتوازن -->
+        </div>
+
+        <!-- شريط التقدم -->
+        <div class="progress-steps" id="progress-steps">
+            <div class="step active" data-step="0">
+                <div class="step-circle">0</div>
+                <div class="step-text">تفاصيل المنتج</div>
+            </div>
+            <div class="step" data-step="1">
+                <div class="step-circle">1</div>
+                <div class="step-text">المنتجات</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-circle">2</div>
+                <div class="step-text">الدفع</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-circle">3</div>
+                <div class="step-text">الموقع</div>
+            </div>
+            <div class="step" data-step="4">
+                <div class="step-circle">4</div>
+                <div class="step-text">الفاتورة</div>
+            </div>
+            <div class="step" data-step="5">
+                <div class="step-circle">5</div>
+                <div class="step-text">التوقيع</div>
+            </div>
+        </div>
+
+        <!-- المرحلة 0: تفاصيل المنتج -->
+        <div class="step-content active" id="step0">
+            <div class="product-details-content">
+                <div class="product-header">
+                    <div class="product-image-large">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name-large">تيشيرت CLAZZY</div>
+                        <div class="product-price-large">$500</div>
+                        <div class="product-brand-large">CLAZZY</div>
+                    </div>
+                </div>
+
+                <div class="options-section">
+                    <div class="option-title">
+                        <i class="fas fa-ruler"></i> اختر المقاس
+                    </div>
+                    <div class="sizes-container" id="sizes-container">
+                        <div class="size-option" data-size="S">S</div>
+                        <div class="size-option selected" data-size="M">M</div>
+                        <div class="size-option" data-size="L">L</div>
+                        <div class="size-option" data-size="XL">XL</div>
+                        <div class="size-option" data-size="XXL">XXL</div>
+                    </div>
+                </div>
+
+                <div class="options-section">
+                    <div class="option-title">
+                        <i class="fas fa-palette"></i> اختر اللون
+                    </div>
+                    <div class="colors-container" id="colors-container">
+                        <div class="color-option selected" data-color="#000000">
+                            أسود <span class="color-preview" style="background-color: #000000;"></span>
+                        </div>
+                        <div class="color-option" data-color="#FFFFFF">
+                            أبيض <span class="color-preview" style="background-color: #FFFFFF;"></span>
+                        </div>
+                        <div class="color-option" data-color="#1E429F">
+                            أزرق <span class="color-preview" style="background-color: #1E429F;"></span>
+                        </div>
+                        <div class="color-option" data-color="#DC2626">
+                            أحمر <span class="color-preview" style="background-color: #DC2626;"></span>
+                        </div>
+                        <div class="color-option" data-color="#059669">
+                            أخضر <span class="color-preview" style="background-color: #059669;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="options-section">
+                    <div class="option-title">
+                        <i class="fas fa-sort-amount-up"></i> الكمية
+                    </div>
+                    <div class="quantity-selector">
+                        <button class="quantity-btn" id="decrease-qty">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <div class="quantity-display" id="quantity-display">1</div>
+                        <button class="quantity-btn" id="increase-qty">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span>سعر الوحدة</span>
+                    <span id="unit-price">$500</span>
+                </div>
+                <div class="summary-row">
+                    <span>الكمية</span>
+                    <span id="summary-quantity">1</span>
+                </div>
+                <div class="summary-row">
+                    <span>الإجمالي</span>
+                    <span id="product-total">$500</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- المرحلة 1: اختيار المنتجات -->
+        <div class="step-content" id="step1">
+            <h2 class="section-title"><i class="fas fa-shopping-cart"></i> المنتجات المختارة</h2>
+
+            <div class="product-selection" id="product-list">
+                <!-- المنتجات تضاف هنا بالجافاسكريبت -->
+            </div>
+
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span>سعر المنتجات</span>
+                    <span id="subtotal-price">$0</span>
+                </div>
+                <div class="summary-row">
+                    <span>تكلفة الشحن</span>
+                    <span id="shipping-price">$50</span>
+                </div>
+                <div class="summary-row">
+                    <span>الإجمالي</span>
+                    <span id="total-price">$50</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- المرحلة 2: طريقة الدفع -->
+        <div class="step-content" id="step2">
+            <h2 class="section-title"><i class="fas fa-credit-card"></i> طريقة الدفع</h2>
+            <p style="color: #8A8F9C; margin-bottom: 20px; font-size: 14px;">اختر طريقة الدفع المناسبة لك</p>
+
+            <div class="payment-methods">
+                <div class="payment-option selected" data-method="vodafone">
+                    <div class="payment-icon" style="background: #E60000; color: white;">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="payment-details">
+                        <div class="payment-name">فودافون كاش</div>
+                        <div class="payment-desc">تحويل فوري عبر رقم الهاتف</div>
+                    </div>
+                    <div class="payment-radio"></div>
+                </div>
+
+                <div class="payment-option" data-method="instapay">
+                    <div class="payment-icon" style="background: #1E429F; color: white;">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="payment-details">
+                        <div class="payment-name">إنستاباي</div>
+                        <div class="payment-desc">تحويل بنكي فوري</div>
+                    </div>
+                    <div class="payment-radio"></div>
+                </div>
+
+                <div class="payment-option" data-method="bank">
+                    <div class="payment-icon" style="background: #059669; color: white;">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <div class="payment-details">
+                        <div class="payment-name">تحويل بنكي</div>
+                        <div class="payment-desc">تحويل لحساب البنك</div>
+                    </div>
+                    <div class="payment-radio"></div>
+                </div>
+
+                <div class="payment-option" data-method="cod">
+                    <div class="payment-icon" style="background: #7C3AED; color: white;">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="payment-details">
+                        <div class="payment-name">الدفع عند الاستلام</div>
+                        <div class="payment-desc">ادفع عند استلام المنتج</div>
+                    </div>
+                    <div class="payment-radio"></div>
+                </div>
+            </div>
+
+            <!-- قسم رفع صورة التحويل -->
+            <div class="transfer-upload-section" id="transfer-upload-section">
+                <div class="upload-header">
+                    <i class="fas fa-upload"></i>
+                    <h3>رفع صورة التحويل</h3>
+                </div>
+                <div class="upload-box" id="upload-box">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>انقر لرفع صورة التحويل</p>
+                    <span>PNG, JPG, JPEG بحد أقصى 5MB</span>
+                </div>
+                <div class="file-preview hidden" id="file-preview">
+                    <div class="file-info">
+                        <i class="fas fa-file-image file-icon"></i>
+                        <span id="file-name">صورة التحويل.png</span>
+                    </div>
+                    <button class="remove-file" id="remove-file">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="payment-notice">
+                <i class="fas fa-info-circle"></i> سيتم إرسال تفاصيل التحويل للبائع بعد تأكيد الطلب. عليك إرسال صورة
+                التحويل.
+            </div>
+        </div>
+
+        <!-- المرحلة 3: الموقع -->
+        <div class="step-content" id="step3">
+            <h2 class="section-title"><i class="fas fa-map-marker-alt"></i> عنوان التوصيل</h2>
+
+            <div class="location-container">
+                <div class="address-section">
+                    <div class="address-header">
+                        <i class="fas fa-home"></i>
+                        <h3>العنوان الحالي</h3>
+                    </div>
+                    <div class="current-address-display" id="current-address-display">
+                        القاهرة، مصر، شارع التحرير، مبنى 12، شقة 5
+                    </div>
+                    <button class="edit-address-btn" id="use-current-address">
+                        <i class="fas fa-check"></i> استخدام هذا العنوان
+                    </button>
+                </div>
+
+                <div class="divider">
+                    <span>أو</span>
+                </div>
+
+                <div class="new-address-section">
+                    <div class="address-header">
+                        <i class="fas fa-plus-circle"></i>
+                        <h3>أدخل عنوان جديد</h3>
+                    </div>
+
+                    <div class="address-form">
+                        <div class="form-group">
+                            <label for="governorate">المحافظة</label>
+                            <select id="governorate" class="form-select">
+                                <option value="">اختر المحافظة</option>
+                                <option value="cairo">القاهرة</option>
+                                <option value="giza">الجيزة</option>
+                                <option value="alexandria">الإسكندرية</option>
+                                <option value="sharqia">الشرقية</option>
+                                <option value="daqahlia">الدقهلية</option>
+                                <option value="gharbia">الغربية</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city">المدينة/الحي</label>
+                            <input type="text" id="city" class="form-input" placeholder="أدخل المدينة أو الحي">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="street">الشارع</label>
+                            <input type="text" id="street" class="form-input" placeholder="اسم الشارع والمبنى">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="details">تفاصيل إضافية</label>
+                            <textarea id="details" class="form-textarea"
+                                placeholder="رقم الشقة، الطابق، أقرب علامة مميزة..." rows="2"></textarea>
+                        </div>
+
+                        <button class="save-address-btn" id="save-new-address">
+                            <i class="fas fa-save"></i> حفظ العنوان الجديد
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shipping-notice">
+                <div class="notice-icon">
+                    <i class="fas fa-shipping-fast"></i>
+                </div>
+                <div class="notice-content">
+                    <strong>معلومات التوصيل:</strong>
+                    <p>التوصيل خلال 3-5 أيام عمل • يمكنك تغيير العنوان حتى تأكيد الطلب</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- المرحلة 4: الفاتورة -->
+        <div class="step-content" id="step4">
+            <h2 class="section-title"><i class="fas fa-file-invoice"></i> الفاتورة النهائية</h2>
+
+            <div class="invoice-container">
+                <div class="invoice-header">
+                    <div class="invoice-title">فاتورة شراء</div>
+                    <div class="invoice-subtitle">رقم الفاتورة: #BIY-7842</div>
+                    <div class="invoice-subtitle">التاريخ: 15 سبتمبر 2024</div>
+                </div>
+
+                <div class="invoice-details">
+                    <div class="invoice-row">
+                        <span>المنتجات (2)</span>
+                        <span id="invoice-subtotal">$500</span>
+                    </div>
+                    <div class="invoice-row">
+                        <span>الشحن</span>
+                        <span id="invoice-shipping">$50</span>
+                    </div>
+                    <div class="invoice-row">
+                        <span>الخصم</span>
+                        <span id="invoice-discount">-$50</span>
+                    </div>
+                    <div class="invoice-row total">
+                        <span>المبلغ الإجمالي</span>
+                        <span id="invoice-total">$500</span>
+                    </div>
+                </div>
+
+                <div class="invoice-notes">
+                    <strong><i class="fas fa-exclamation-circle"></i> ملاحظات مهمة:</strong>
+                    <ul>
+                        <li>الفاتورة سترسل للبائع فور التأكيد</li>
+                        <li>يمكنك تتبع حالة الطلب من صفحة الإعدادات</li>
+                        <li>سيتم إرسال إشعارات عند كل تحديث للطلب</li>
+                        <li>مدة استرجاع المنتج 48 ساعة من وقت الاستلام</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- المرحلة 5: التوقيع -->
+        <div class="step-content" id="step5">
+            <h2 class="section-title"><i class="fas fa-signature"></i> التوقيع والتأكيد</h2>
+
+            <div class="signature-container">
+                <div class="signature-title">التوقيع الإلكتروني</div>
+                <p style="color: #8A8F9C; margin-bottom: 20px; font-size: 14px;">وقع في المساحة أدناه لتأكيد موافقتك على
+                    الشروط</p>
+
+                <canvas class="signature-canvas" id="signature-canvas"></canvas>
+
+                <div class="signature-actions">
+                    <button class="signature-btn" id="clear-signature">
+                        <i class="fas fa-eraser"></i> مسح
+                    </button>
+                    <button class="signature-btn" id="undo-signature">
+                        <i class="fas fa-undo"></i> تراجع
+                    </button>
+                </div>
+
+                <div class="terms-agreement">
+                    <input type="checkbox" id="terms-agree" class="terms-checkbox">
+                    <label for="terms-agree" class="terms-label">
+                        أوافق على <a href="#">الشروط والأحكام</a> وسياسة الاسترجاع
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- رسالة النجاح -->
+        <div class="success-message" id="success-message">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <div class="success-title">تم تأكيد الطلب بنجاح!</div>
+
+            <div class="success-desc">
+                تم إرسال فاتورتك للبائع عبر تليجرام<br>
+                يمكنك متابعة حالة الطلب من صفحة الإعدادات
+            </div>
+
+            <div class="telegram-notice">
+                <i class="fab fa-telegram"></i> تم إرسال إشعار للبائع وسيتم التواصل معك قريباً لتأكيد طريقة الدفع
+            </div>
+
+            <div style="margin-top: 30px;">
+                <button class="step-btn btn-confirm" id="back-to-home" style="max-width: 200px;">
+                    العودة للرئيسية
+                </button>
+            </div>
+        </div>
+
+        <!-- أزرار التنقل -->
+        <div class="step-buttons" id="step-buttons">
+            <button class="step-btn btn-back hidden" id="prev-step">رجوع</button>
+            <button class="step-btn btn-next" id="next-step">التالي</button>
+            <button class="step-btn btn-confirm hidden" id="confirm-order">تأكيد الطلب</button>
+        </div>
+    </div>
+
+    <!-- نافذة تأكيد الإرسال -->
+    <div class="confirm-dialog" id="confirm-dialog">
+        <div class="confirm-box">
+            <div class="confirm-title">تأكيد إرسال الطلب</div>
+            <div class="confirm-text">
+                هل أنت متأكد من إرسال الطلب؟<br>
+                سيتم إرسال الفاتورة للبائع ولا يمكن التراجع بعد التأكيد.
+            </div>
+            <div class="confirm-buttons">
+                <button class="confirm-btn confirm-cancel" id="cancel-confirm">إلغاء</button>
+                <button class="confirm-btn confirm-ok" id="confirm-send">تأكيد الإرسال</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // purchase.js - كود صفحة الشراء الكامل
+
+        // ==== تعريف المتغيرات ====
+        let purchaseState;
+        let signatureCanvas, signatureCtx;
+        let signaturePaths = [];
+        let currentSignaturePath = [];
+        let isDrawing = false;
+        let selectedFile = null;
+
+        // ==== تهيئة حالة الطلب ====
+        function initializePurchaseState() {
+            purchaseState = {
+                currentStep: 0, // بدأنا من المرحلة 0 (تفاصيل المنتج)
+                totalSteps: 6, // أضفنا مرحلة جديدة
+                products: [],
+                productDetails: {
+                    size: 'M',
+                    color: '#000000',
+                    quantity: 1,
+                    unitPrice: 500
+                },
+                paymentMethod: 'vodafone',
+                shippingAddress: '',
+                transferImage: null,
+                signatureData: null,
+                agreedToTerms: false,
+                subtotal: 0,
+                shipping: 50,
+                discount: 50,
+                total: 0
+            };
+        }
+
+        // ==== تحميل بيانات المنتجات ====
+        function loadProductsFromStorage() {
+            const savedProduct = localStorage.getItem('selectedProduct');
+            const savedCart = localStorage.getItem('cartItems');
+
+            if (savedProduct) {
+                const product = JSON.parse(savedProduct);
+                purchaseState.products = [product];
+            } else if (savedCart) {
+                purchaseState.products = JSON.parse(savedCart);
+            } else {
+                // منتج افتراضي مع تفاصيل من المرحلة 0
+                const product = {
+                    id: 1,
+                    name: "تيشيرت CLAZZY",
+                    brand: "CLAZZY",
+                    price: 500,
+                    image: "tshirt",
+                    selected: true,
+                    details: { ...purchaseState.productDetails }
+                };
+                purchaseState.products = [product];
+            }
+
+            const savedAddress = localStorage.getItem('userAddress');
+            if (savedAddress) {
+                purchaseState.shippingAddress = savedAddress;
+                const addressDisplay = document.getElementById('current-address-display');
+                if (addressDisplay) {
+                    addressDisplay.textContent = savedAddress;
+                }
+            }
+
+            calculatePrices();
+            renderProducts();
+            updateProductDetailsSummary();
+        }
+
+        // ==== حساب الأسعار ====
+        function calculatePrices() {
+            const selectedProducts = purchaseState.products.filter(p => p.selected);
+
+            // حساب سعر المنتجات مع مراعاة الكمية
+            purchaseState.subtotal = selectedProducts.reduce((sum, product) => {
+                const quantity = product.details?.quantity || 1;
+                return sum + (product.price * quantity);
+            }, 0);
+
+            purchaseState.total = purchaseState.subtotal + purchaseState.shipping - purchaseState.discount;
+
+            updatePriceDisplay('subtotal-price', purchaseState.subtotal);
+            updatePriceDisplay('total-price', purchaseState.total);
+            updatePriceDisplay('invoice-subtotal', purchaseState.subtotal);
+            updatePriceDisplay('invoice-total', purchaseState.total);
+            updatePriceDisplay('invoice-shipping', purchaseState.shipping);
+            updatePriceDisplay('invoice-discount', -purchaseState.discount);
+
+            // تحديث تفاصيل المنتج في المرحلة 0
+            updateProductDetailsSummary();
+        }
+
+        function updatePriceDisplay(elementId, value) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = `$${value}`;
+            }
+        }
+
+        // ==== تحديث تفاصيل المنتج في المرحلة 0 ====
+        function updateProductDetailsSummary() {
+            const quantity = purchaseState.productDetails.quantity;
+            const unitPrice = purchaseState.productDetails.unitPrice;
+            const total = quantity * unitPrice;
+
+            document.getElementById('summary-quantity').textContent = quantity;
+            document.getElementById('product-total').textContent = `$${total}`;
+        }
+
+        // ==== عرض المنتجات ====
+        function renderProducts() {
+            const productList = document.getElementById('product-list');
+            if (!productList) return;
+
+            productList.innerHTML = '';
+
+            // إضافة المنتج الرئيسي مع تفاصيله
+            const mainProduct = purchaseState.products[0];
+            if (mainProduct) {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+
+                let detailsText = '';
+                if (mainProduct.details) {
+                    detailsText = `
+                        <div class="product-brand">
+                            المقاس: ${mainProduct.details.size} | اللون: ${getColorName(mainProduct.details.color)} | الكمية: ${mainProduct.details.quantity}
+                        </div>
+                    `;
+                }
+
+                productItem.innerHTML = `
+                    <div class="product-checkbox">
+                        <input type="checkbox" id="product-${mainProduct.id}" ${mainProduct.selected ? 'checked' : ''}>
+                    </div>
+                    <div class="product-image">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <div class="product-details">
+                        <div class="product-name">${mainProduct.name}</div>
+                        <div class="product-price">$${mainProduct.price * (mainProduct.details?.quantity || 1)}</div>
+                        ${detailsText}
+                    </div>
+                    ${mainProduct.selected ? `<button class="remove-product" data-id="${mainProduct.id}">
+                        <i class="fas fa-times"></i>
+                    </button>` : ''}
+                `;
+                productList.appendChild(productItem);
+            }
+
+            // إضافة منتجات إضافية من السلة إذا وجدت
+            purchaseState.products.slice(1).forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                productItem.innerHTML = `
+                    <div class="product-checkbox">
+                        <input type="checkbox" id="product-${product.id}" ${product.selected ? 'checked' : ''}>
+                    </div>
+                    <div class="product-image">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <div class="product-details">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">$${product.price}</div>
+                        <div class="product-brand">${product.brand}</div>
+                    </div>
+                    ${product.selected ? `<button class="remove-product" data-id="${product.id}">
+                        <i class="fas fa-times"></i>
+                    </button>` : ''}
+                `;
+                productList.appendChild(productItem);
+            });
+
+            // إضافة مستمعين للأحداث
+            document.querySelectorAll('.product-checkbox input').forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const productId = parseInt(this.id.split('-')[1]);
+                    const product = purchaseState.products.find(p => p.id === productId);
+                    if (product) {
+                        product.selected = this.checked;
+                        calculatePrices();
+                        renderProducts();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.remove-product').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const productId = parseInt(this.dataset.id);
+                    purchaseState.products = purchaseState.products.filter(p => p.id !== productId);
+                    calculatePrices();
+                    renderProducts();
+                });
+            });
+        }
+
+        // ==== إعداد تفاصيل المنتج (المرحلة 0) ====
+        function setupProductDetails() {
+            // إعداد اختيار المقاس
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.addEventListener('click', function () {
+                    document.querySelectorAll('.size-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    purchaseState.productDetails.size = this.dataset.size;
+
+                    // تحديث المنتج الرئيسي
+                    if (purchaseState.products[0]) {
+                        if (!purchaseState.products[0].details) {
+                            purchaseState.products[0].details = {};
+                        }
+                        purchaseState.products[0].details.size = this.dataset.size;
+                        calculatePrices();
+                    }
+                });
+            });
+
+            // إعداد اختيار اللون
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', function () {
+                    document.querySelectorAll('.color-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    purchaseState.productDetails.color = this.dataset.color;
+
+                    // تحديث المنتج الرئيسي
+                    if (purchaseState.products[0]) {
+                        if (!purchaseState.products[0].details) {
+                            purchaseState.products[0].details = {};
+                        }
+                        purchaseState.products[0].details.color = this.dataset.color;
+                    }
+                });
+            });
+
+            // إعداد اختيار الكمية
+            const decreaseBtn = document.getElementById('decrease-qty');
+            const increaseBtn = document.getElementById('increase-qty');
+            const quantityDisplay = document.getElementById('quantity-display');
+
+            if (decreaseBtn && increaseBtn && quantityDisplay) {
+                decreaseBtn.addEventListener('click', function () {
+                    if (purchaseState.productDetails.quantity > 1) {
+                        purchaseState.productDetails.quantity--;
+                        quantityDisplay.textContent = purchaseState.productDetails.quantity;
+
+                        // تحديث المنتج الرئيسي
+                        if (purchaseState.products[0]) {
+                            if (!purchaseState.products[0].details) {
+                                purchaseState.products[0].details = {};
+                            }
+                            purchaseState.products[0].details.quantity = purchaseState.productDetails.quantity;
+                            calculatePrices();
+                        }
+                        updateProductDetailsSummary();
+                    }
+                });
+
+                increaseBtn.addEventListener('click', function () {
+                    if (purchaseState.productDetails.quantity < 10) {
+                        purchaseState.productDetails.quantity++;
+                        quantityDisplay.textContent = purchaseState.productDetails.quantity;
+
+                        // تحديث المنتج الرئيسي
+                        if (purchaseState.products[0]) {
+                            if (!purchaseState.products[0].details) {
+                                purchaseState.products[0].details = {};
+                            }
+                            purchaseState.products[0].details.quantity = purchaseState.productDetails.quantity;
+                            calculatePrices();
+                        }
+                        updateProductDetailsSummary();
+                    }
+                });
+            }
+        }
+
+        // ==== تحويل رمز اللون لاسم ====
+        function getColorName(colorCode) {
+            const colors = {
+                '#000000': 'أسود',
+                '#FFFFFF': 'أبيض',
+                '#1E429F': 'أزرق',
+                '#DC2626': 'أحمر',
+                '#059669': 'أخضر'
+            };
+            return colors[colorCode] || colorCode;
+        }
+
+        // ==== التنقل بين المراحل ====
+        function updateProgress() {
+            const stepCircles = document.querySelectorAll('.step');
+            if (!stepCircles.length) return;
+
+            stepCircles.forEach((step, index) => {
+                const stepNumber = index; // الآن index يبدأ من 0
+                step.classList.remove('active', 'completed');
+
+                if (stepNumber < purchaseState.currentStep) {
+                    step.classList.add('completed');
+                } else if (stepNumber === purchaseState.currentStep) {
+                    step.classList.add('active');
+                }
+            });
+        }
+
+        function showCurrentStep() {
+            const stepContents = document.querySelectorAll('.step-content');
+            if (!stepContents.length) return;
+
+            stepContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            const currentStepContent = document.getElementById(`step${purchaseState.currentStep}`);
+            if (currentStepContent) {
+                currentStepContent.classList.add('active');
+            }
+
+            const prevBtn = document.getElementById('prev-step');
+            const nextBtn = document.getElementById('next-step');
+            const confirmBtn = document.getElementById('confirm-order');
+
+            if (prevBtn) prevBtn.classList.toggle('hidden', purchaseState.currentStep === 0);
+            if (nextBtn) nextBtn.classList.toggle('hidden', purchaseState.currentStep === purchaseState.totalSteps - 1);
+            if (confirmBtn) confirmBtn.classList.toggle('hidden', purchaseState.currentStep !== purchaseState.totalSteps - 1);
+
+            updateProgress();
+
+            // إظهار/إخفاء قسم رفع الصورة بناءً على طريقة الدفع
+            updateTransferUploadVisibility();
+        }
+
+        function goToPrevStep() {
+            if (purchaseState.currentStep > 0) {
+                purchaseState.currentStep--;
+                showCurrentStep();
+            }
+        }
+
+        function goToNextStep() {
+            if (purchaseState.currentStep < purchaseState.totalSteps - 1) {
+                // التحقق من صحة البيانات قبل الانتقال
+                if (!validateStep(purchaseState.currentStep)) {
+                    return;
+                }
+
+                purchaseState.currentStep++;
+                showCurrentStep();
+            }
+        }
+
+        function validateStep(step) {
+            switch (step) {
+                case 0: // تفاصيل المنتج
+                    if (!purchaseState.productDetails.size || !purchaseState.productDetails.color || purchaseState.productDetails.quantity < 1) {
+                        showErrorMessage('يرجى اختيار جميع تفاصيل المنتج');
+                        return false;
+                    }
+                    break;
+
+                case 1: // المنتجات
+                    const hasSelectedProducts = purchaseState.products.some(p => p.selected);
+                    if (!hasSelectedProducts) {
+                        showErrorMessage('يجب اختيار منتج واحد على الأقل للمتابعة');
+                        return false;
+                    }
+                    break;
+
+                case 2: // الدفع
+                    // التحقق من رفع صورة التحويل للدفعات الإلكترونية
+                    if (purchaseState.paymentMethod !== 'cod' && !selectedFile) {
+                        showErrorMessage('يجب رفع صورة التحويل للدفعات الإلكترونية');
+                        return false;
+                    }
+                    break;
+
+                case 3: // العنوان
+                    if (!purchaseState.shippingAddress || purchaseState.shippingAddress.trim() === '') {
+                        showErrorMessage('يجب تحديد عنوان التوصيل للمتابعة');
+                        return false;
+                    }
+                    break;
+
+                case 4: // الفاتورة - لا يحتاج تحقق
+                    break;
+
+                case 5: // التوقيع
+                    const termsAgreed = document.getElementById('terms-agree')?.checked;
+                    if (!termsAgreed) {
+                        showErrorMessage('يجب الموافقة على الشروط والأحكام للمتابعة');
+                        return false;
+                    }
+
+                    // التحقق من وجود توقيع
+                    if (signaturePaths.length === 0) {
+                        showErrorMessage('يرجى التوقيع في المساحة المخصصة');
+                        return false;
+                    }
+                    break;
+            }
+            return true;
+        }
+
+        // ==== طريقة الدفع ====
+        function setupPaymentMethods() {
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.addEventListener('click', function () {
+                    document.querySelectorAll('.payment-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    purchaseState.paymentMethod = this.dataset.method;
+
+                    // تحديث حالة قسم رفع الصورة
+                    updateTransferUploadVisibility();
+                });
+            });
+        }
+
+        // ==== تحديث عرض قسم رفع الصورة ====
+        function updateTransferUploadVisibility() {
+            const uploadSection = document.getElementById('transfer-upload-section');
+            if (!uploadSection) return;
+
+            // إظهار القسم فقط لطرق الدفع الإلكترونية
+            if (purchaseState.paymentMethod !== 'cod') {
+                uploadSection.classList.add('active');
+            } else {
+                uploadSection.classList.remove('active');
+            }
+        }
+
+        // ==== رفع صورة التحويل ====
+        function setupFileUpload() {
+            const uploadBox = document.getElementById('upload-box');
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.style.display = 'none';
+            document.body.appendChild(fileInput);
+
+            const filePreview = document.getElementById('file-preview');
+            const fileName = document.getElementById('file-name');
+            const removeFileBtn = document.getElementById('remove-file');
+
+            uploadBox.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function (e) {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+
+                    // التحقق من حجم الملف (5MB كحد أقصى)
+                    if (file.size > 5 * 1024 * 1024) {
+                        showErrorMessage('حجم الملف يجب أن يكون أقل من 5MB');
+                        return;
+                    }
+
+                    // التحقق من نوع الملف
+                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                    if (!validTypes.includes(file.type)) {
+                        showErrorMessage('نوع الملف غير مدعوم. يرجى رفع صورة بصيغة JPG أو PNG');
+                        return;
+                    }
+
+                    selectedFile = file;
+                    fileName.textContent = file.name;
+                    filePreview.classList.remove('hidden');
+
+                    // حفظ في حالة الشراء
+                    purchaseState.transferImage = {
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        lastModified: file.lastModified
+                    };
+
+                    showSuccessMessage('تم رفع صورة التحويل بنجاح');
+                }
+            });
+
+            removeFileBtn.addEventListener('click', function () {
+                selectedFile = null;
+                purchaseState.transferImage = null;
+                filePreview.classList.add('hidden');
+                fileInput.value = '';
+                showSuccessMessage('تم إزالة صورة التحويل');
+            });
+        }
+
+        // ==== العنوان ====
+        function getGovernorateName(value) {
+            const governorates = {
+                'cairo': 'القاهرة',
+                'giza': 'الجيزة',
+                'alexandria': 'الإسكندرية',
+                'sharqia': 'الشرقية',
+                'daqahlia': 'الدقهلية',
+                'gharbia': 'الغربية'
+            };
+            return governorates[value] || value;
+        }
+
+        function setupAddressEvents() {
+            const useCurrentBtn = document.getElementById('use-current-address');
+            if (useCurrentBtn) {
+                useCurrentBtn.addEventListener('click', function () {
+                    const currentAddress = document.getElementById('current-address-display').textContent;
+                    purchaseState.shippingAddress = currentAddress;
+                    showSuccessMessage('تم استخدام العنوان الحالي بنجاح');
+                });
+            }
+
+            const saveAddressBtn = document.getElementById('save-new-address');
+            if (saveAddressBtn) {
+                saveAddressBtn.addEventListener('click', function () {
+                    const governorate = document.getElementById('governorate')?.value;
+                    const city = document.getElementById('city')?.value;
+                    const street = document.getElementById('street')?.value;
+                    const details = document.getElementById('details')?.value;
+
+                    if (!governorate || !city || !street) {
+                        showErrorMessage('يرجى ملء جميع الحقول المطلوبة');
+                        return;
+                    }
+
+                    let newAddress = `${city}, ${getGovernorateName(governorate)}`;
+                    if (street) newAddress += `, ${street}`;
+                    if (details) newAddress += `, ${details}`;
+
+                    const addressDisplay = document.getElementById('current-address-display');
+                    if (addressDisplay) {
+                        addressDisplay.textContent = newAddress;
+                    }
+                    purchaseState.shippingAddress = newAddress;
+
+                    // حفظ في التخزين المحلي
+                    localStorage.setItem('userAddress', newAddress);
+
+                    showSuccessMessage('تم حفظ العنوان الجديد بنجاح');
+
+                    // مسح الحقول
+                    const cityInput = document.getElementById('city');
+                    const streetInput = document.getElementById('street');
+                    const detailsInput = document.getElementById('details');
+
+                    if (cityInput) cityInput.value = '';
+                    if (streetInput) streetInput.value = '';
+                    if (detailsInput) detailsInput.value = '';
+                });
+            }
+        }
+
+        // ==== التوقيع ====
+        function setupSignature() {
+            const canvas = document.getElementById('signature-canvas');
+            if (!canvas) return;
+
+            signatureCanvas = canvas;
+            signatureCtx = canvas.getContext('2d');
+
+            // ضبط حجم الكانفاس
+            const resizeCanvas = () => {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * window.devicePixelRatio;
+                canvas.height = rect.height * window.devicePixelRatio;
+                signatureCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+                signatureCtx.strokeStyle = '#FF6D1F';
+                signatureCtx.lineWidth = 2;
+                signatureCtx.lineCap = 'round';
+                signatureCtx.lineJoin = 'round';
+                // إعادة رسم التوقيعات السابقة
+                redrawSignature();
+            };
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            function setupSignature() {
+                const canvas = document.getElementById('signature-canvas');
+                if (!canvas) return;
+
+                signatureCanvas = canvas;
+                signatureCtx = canvas.getContext('2d');
+
+                // ضبط حجم الكانفاس
+                const resizeCanvas = () => {
+                    const rect = canvas.getBoundingClientRect();
+                    canvas.width = rect.width;
+                    canvas.height = rect.height;
+
+                    // إعدادات الرسم
+                    signatureCtx.strokeStyle = '#FF6D1F';
+                    signatureCtx.lineWidth = 2;
+                    signatureCtx.lineCap = 'round';
+                    signatureCtx.lineJoin = 'round';
+
+                    // إعادة رسم التوقيعات السابقة
+                    redrawSignature();
+                };
+
+                resizeCanvas();
+                window.addEventListener('resize', resizeCanvas);
+
+                // أحداث الماوس للكمبيوتر
+                canvas.addEventListener('mousedown', startDrawing);
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('mouseup', stopDrawing);
+                canvas.addEventListener('mouseout', stopDrawing);
+
+                // أحداث اللمس للجوال
+                canvas.addEventListener('touchstart', function (e) {
+                    e.preventDefault();
+                    startDrawing(e);
+                }, { passive: false });
+
+                canvas.addEventListener('touchmove', function (e) {
+                    e.preventDefault();
+                    draw(e);
+                }, { passive: false });
+
+                canvas.addEventListener('touchend', function (e) {
+                    e.preventDefault();
+                    stopDrawing();
+                }, { passive: false });
+
+                // منع السلوك الافتراضي للتمرير
+                canvas.addEventListener('touchmove', function (e) {
+                    if (isDrawing) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+
+                const clearBtn = document.getElementById('clear-signature');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', function () {
+                        signatureCtx.clearRect(0, 0, canvas.width, canvas.height);
+                        signaturePaths = [];
+                        currentSignaturePath = [];
+                    });
+                }
+
+                const undoBtn = document.getElementById('undo-signature');
+                if (undoBtn) {
+                    undoBtn.addEventListener('click', function () {
+                        if (signaturePaths.length > 0) {
+                            signaturePaths.pop();
+                            redrawSignature();
+                        }
+                    });
+                }
+            }
+            const signatureColor = '#FF6D1F';
+
+            function startDrawing(e) {
+                e.preventDefault();
+                isDrawing = true;
+                const pos = getTouchPos(e);
+                currentSignaturePath = [{ x: pos.x, y: pos.y }];
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                e.preventDefault();
+
+                const pos = getTouchPos(e);
+                const x = pos.x;
+                const y = pos.y;
+
+                signatureCtx.beginPath();
+                signatureCtx.moveTo(currentSignaturePath[currentSignaturePath.length - 1].x, currentSignaturePath[currentSignaturePath.length - 1].y);
+                signatureCtx.lineTo(x, y);
+                signatureCtx.strokeStyle = signatureColor;
+                signatureCtx.lineWidth = 2;
+                signatureCtx.lineCap = 'round';
+                signatureCtx.lineJoin = 'round';
+                signatureCtx.stroke();
+
+                currentSignaturePath.push({ x, y });
+            }
+
+            function stopDrawing() {
+                if (isDrawing) {
+                    isDrawing = false;
+                    if (currentSignaturePath.length > 0) {
+                        signaturePaths.push([...currentSignaturePath]);
+                    }
+                }
+            }
+
+            function getTouchPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                let clientX, clientY;
+
+                if (e.type.includes('touch')) {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                } else {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                }
+
+                return {
+                    x: (clientX - rect.left) * (canvas.width / (rect.width * window.devicePixelRatio)),
+                    y: (clientY - rect.top) * (canvas.height / (rect.height * window.devicePixelRatio))
+                };
+            }
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            canvas.addEventListener('touchstart', startDrawing);
+            canvas.addEventListener('touchmove', draw);
+            canvas.addEventListener('touchend', stopDrawing);
+
+            canvas.addEventListener('touchmove', function (e) {
+                if (isDrawing) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            const clearBtn = document.getElementById('clear-signature');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function () {
+                    signatureCtx.clearRect(0, 0, canvas.width, canvas.height);
+                    signaturePaths = [];
+                    currentSignaturePath = [];
+                });
+            }
+
+            const undoBtn = document.getElementById('undo-signature');
+            if (undoBtn) {
+                undoBtn.addEventListener('click', function () {
+                    if (signaturePaths.length > 0) {
+                        signaturePaths.pop();
+                        redrawSignature();
+                    }
+                });
+            }
+        }
+
+        function redrawSignature() {
+            signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+            const signatureColor = '#FF6D1F';
+
+            signaturePaths.forEach(path => {
+                if (path.length > 0) {
+                    signatureCtx.beginPath();
+                    signatureCtx.moveTo(path[0].x, path[0].y);
+                    for (let i = 1; i < path.length; i++) {
+                        signatureCtx.lineTo(path[i].x, path[i].y);
+                    }
+                    signatureCtx.strokeStyle = signatureColor;
+                    signatureCtx.lineWidth = 2;
+                    signatureCtx.lineCap = 'round';
+                    signatureCtx.lineJoin = 'round';
+                    signatureCtx.stroke();
+                }
+            });
+        }
+
+        // ==== رسائل النظام ====
+        function showErrorMessage(message) {
+            hideMessages();
+
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'biyala-message error';
+            errorDiv.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(errorDiv);
+
+            // إزالة الرسالة بعد 3 ثوانٍ
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    errorDiv.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        if (errorDiv.parentNode) {
+                            errorDiv.parentNode.removeChild(errorDiv);
+                        }
+                    }, 300);
+                }
+            }, 3000);
+        }
+
+        function showSuccessMessage(message) {
+            hideMessages();
+
+            const successDiv = document.createElement('div');
+            successDiv.className = 'biyala-message success';
+            successDiv.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(successDiv);
+
+            // إزالة الرسالة بعد 3 ثوانٍ
+            setTimeout(() => {
+                if (successDiv.parentNode) {
+                    successDiv.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        if (successDiv.parentNode) {
+                            successDiv.parentNode.removeChild(successDiv);
+                        }
+                    }, 300);
+                }
+            }, 3000);
+        }
+
+        function hideMessages() {
+            const messages = document.querySelectorAll('.biyala-message');
+            messages.forEach(msg => {
+                msg.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    if (msg.parentNode) {
+                        msg.parentNode.removeChild(msg);
+                    }
+                }, 300);
+            });
+        }
+
+        // ==== تأكيد الطلب ====
+        function confirmOrder() {
+            // التحقق النهائي قبل التأكيد
+            if (!validateStep(purchaseState.currentStep)) {
+                return;
+            }
+
+            const confirmDialog = document.getElementById('confirm-dialog');
+            if (confirmDialog) {
+                confirmDialog.style.display = 'flex';
+            }
+        }
+
+        function sendOrder() {
+            const confirmDialog = document.getElementById('confirm-dialog');
+            if (confirmDialog) {
+                confirmDialog.style.display = 'none';
+            }
+
+            const progressSteps = document.querySelector('.progress-steps');
+            const stepButtons = document.getElementById('step-buttons');
+            const stepContents = document.querySelectorAll('.step-content');
+            const successMessage = document.getElementById('success-message');
+
+            if (progressSteps) progressSteps.style.display = 'none';
+            if (stepButtons) stepButtons.style.display = 'none';
+            stepContents.forEach(content => content.style.display = 'none');
+            if (successMessage) successMessage.style.display = 'flex';
+
+            // حفظ بيانات الطلب في التخزين المحلي
+            const orderData = {
+                products: purchaseState.products.filter(p => p.selected),
+                productDetails: purchaseState.productDetails,
+                payment: purchaseState.paymentMethod,
+                address: purchaseState.shippingAddress,
+                transferImage: purchaseState.transferImage,
+                total: purchaseState.total,
+                timestamp: new Date().toISOString(),
+                orderId: 'BIY-' + Date.now()
+            };
+
+            localStorage.setItem('lastOrder', JSON.stringify(orderData));
+            console.log('تم إرسال الطلب:', orderData);
+
+            // إظهار رسالة نجاح
+            setTimeout(() => {
+                showSuccessMessage('تم إرسال الطلب بنجاح! سيتم التواصل معك قريباً.');
+            }, 500);
+        }
+
+        // ==== التنقل ====
+        function backToHome() {
+            window.location.href = 'home.html';
+        }
+
+        // ==== إغلاق صفحة الشراء ====
+        function closePurchase() {
+            // عرض رسالة تأكيد الخروج
+            const dialog = document.createElement('div');
+            dialog.className = 'confirm-dialog';
+            dialog.style.display = 'flex';
+            dialog.innerHTML = `
+                <div class="confirm-box">
+                    <div class="confirm-title">تأكيد الخروج</div>
+                    <div class="confirm-text">
+                        سيتم فقد بيانات الشراء الحالية. هل تريد المتابعة؟
+                    </div>
+                    <div class="confirm-buttons">
+                        <button class="confirm-btn confirm-cancel" id="cancel-close">
+                            إلغاء
+                        </button>
+                        <button class="confirm-btn confirm-ok" id="confirm-close">
+                            تأكيد الخروج
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(dialog);
+
+            document.getElementById('cancel-close').addEventListener('click', () => {
+                document.body.removeChild(dialog);
+            });
+
+            document.getElementById('confirm-close').addEventListener('click', () => {
+                document.body.removeChild(dialog);
+                backToHome();
+            });
+        }
+
+        // ==== إعداد الأزرار ====
+        function setupButtons() {
+            const prevBtn = document.getElementById('prev-step');
+            const nextBtn = document.getElementById('next-step');
+            const confirmBtn = document.getElementById('confirm-order');
+            const closeBtn = document.getElementById('close-purchase');
+            const cancelConfirmBtn = document.getElementById('cancel-confirm');
+            const confirmSendBtn = document.getElementById('confirm-send');
+            const backToHomeBtn = document.getElementById('back-to-home');
+
+            if (prevBtn) prevBtn.addEventListener('click', goToPrevStep);
+            if (nextBtn) nextBtn.addEventListener('click', goToNextStep);
+            if (confirmBtn) confirmBtn.addEventListener('click', confirmOrder);
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closePurchase);
+            }
+            if (cancelConfirmBtn) cancelConfirmBtn.addEventListener('click', () => {
+                const confirmDialog = document.getElementById('confirm-dialog');
+                if (confirmDialog) confirmDialog.style.display = 'none';
+            });
+            if (confirmSendBtn) confirmSendBtn.addEventListener('click', sendOrder);
+            if (backToHomeBtn) backToHomeBtn.addEventListener('click', backToHome);
+        }
+
+        // ==== تهيئة الصفحة ====
+        function initPurchasePage() {
+            initializePurchaseState();
+            setupProductDetails();
+            loadProductsFromStorage();
+            showCurrentStep();
+            setupPaymentMethods();
+            setupFileUpload();
+            setupSignature();
+            setupAddressEvents();
+            setupButtons();
+
+            // إظهار رسالة ترحيب بعد التحميل بقليل
+            setTimeout(() => {
+                showSuccessMessage('مرحباً! ابدأ باختيار تفاصيل المنتج');
+            }, 500);
+
+            // منع سلوك التحديث/الإغلاق غير المقصود
+            window.addEventListener('beforeunload', function (e) {
+                e.preventDefault();
+                e.returnValue = '';
+            });
+
+
+
+        }
+
+        // ==== بدء التطبيق ====
+        document.addEventListener('DOMContentLoaded', initPurchasePage);
+        // ==== وظائف مساعدة للتوقيع ====
+        function getTouchPos(canvas, e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX, clientY;
+
+            if (e.type.includes('touch')) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        function startDrawing(e) {
+            e.preventDefault();
+            isDrawing = true;
+            const pos = getTouchPos(signatureCanvas, e);
+            currentSignaturePath = [{ x: pos.x, y: pos.y }];
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+
+            const pos = getTouchPos(signatureCanvas, e);
+            const x = pos.x;
+            const y = pos.y;
+
+            // إضافة نقطة إلى المسار الحالي
+            currentSignaturePath.push({ x, y });
+
+            // الرسم
+            signatureCtx.beginPath();
+            signatureCtx.moveTo(currentSignaturePath[currentSignaturePath.length - 2].x,
+                currentSignaturePath[currentSignaturePath.length - 2].y);
+            signatureCtx.lineTo(x, y);
+            signatureCtx.strokeStyle = '#FF6D1F';
+            signatureCtx.lineWidth = 2;
+            signatureCtx.lineCap = 'round';
+            signatureCtx.lineJoin = 'round';
+            signatureCtx.stroke();
+        }
+
+        function stopDrawing() {
+            if (isDrawing) {
+                isDrawing = false;
+                if (currentSignaturePath.length > 1) {
+                    signaturePaths.push([...currentSignaturePath]);
+                }
+                currentSignaturePath = [];
+            }
+        }
+    </script>
+
+</body>
+
+</html>
